@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@digiko-npm/cms": "^0.2.0",
-    "@digiko-npm/designsystem": "^0.3.3",
+    "@digiko-npm/designsystem": "^0.3.24",
     "@supabase/supabase-js": "^2.49.0",
     "@upstash/redis": "^1.34.0",
     "clsx": "^2.1.1",

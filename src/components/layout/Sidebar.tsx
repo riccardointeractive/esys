@@ -6,8 +6,10 @@ import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 import {
   LayoutDashboard,
-  FolderKanban,
+  Building2,
+  UserPlus,
   Users,
+  Image,
   BarChart3,
   Settings,
   X,
@@ -15,8 +17,10 @@ import {
 
 const iconMap: Record<string, React.ElementType> = {
   LayoutDashboard,
-  FolderKanban,
+  Building2,
+  UserPlus,
   Users,
+  Image,
   BarChart3,
   Settings,
 }
@@ -62,7 +66,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         {/* Navigation */}
         <nav className="ds-flex-1 ds-overflow-y-auto ds-px-3 ds-py-4">
           <ul className="ds-space-y-1">
-            {siteConfig.nav.map((item) => {
+            {siteConfig.adminNav.map((item) => {
               const Icon = iconMap[item.icon] ?? LayoutDashboard
               const isActive = pathname === item.href
 

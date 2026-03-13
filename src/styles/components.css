@@ -1,8 +1,76 @@
 /* ==========================================================================
-   Project Components — starter-template
+   Project Components — ESYS VIP
    Semantic CSS classes for interactive patterns.
    All values from DS tokens.
    ========================================================================== */
+
+/* ─── Public Site ─── */
+
+/* --- Navbar body offset --- */
+.public-main {
+  padding-top: 4rem; /* matches ds-nav height */
+}
+
+/* --- Site Footer --- */
+.site-footer {
+  border-top: 1px solid var(--ds-color-border);
+  background-color: var(--ds-color-surface);
+  padding-block: var(--ds-space-12);
+}
+
+.site-footer__bottom {
+  border-top: 1px solid var(--ds-color-border);
+  margin-top: var(--ds-space-8);
+  padding-top: var(--ds-space-6);
+}
+
+/* --- Hero Section --- */
+.cx-hero {
+  position: relative;
+  min-height: 28rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.cx-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--ds-color-bg) 60%, transparent),
+    color-mix(in srgb, var(--ds-color-bg) 90%, transparent)
+  );
+}
+
+.cx-hero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+/* --- Search Bar (homepage inline search) --- */
+.cx-search-bar {
+  background-color: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-xl);
+  padding: var(--ds-space-4);
+}
+
+/* --- Account Nav: horizontal scroll on mobile --- */
+.account-nav-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.account-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Admin Panel ─── */
 
 /* --- Sidebar --- */
 .sidebar {

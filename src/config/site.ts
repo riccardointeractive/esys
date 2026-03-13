@@ -1,4 +1,4 @@
-import { ROUTES, ADMIN_ROUTES } from './routes'
+import { ROUTES, USER_ROUTES, ADMIN_ROUTES } from './routes'
 
 export const siteConfig = {
   name: 'ESYS VIP',
@@ -40,5 +40,12 @@ export const siteConfig = {
     { label: 'Media', href: ADMIN_ROUTES.media, icon: 'Image' },
     { label: 'Analytics', href: ADMIN_ROUTES.analytics, icon: 'BarChart3' },
     { label: 'Ajustes', href: ADMIN_ROUTES.settings, icon: 'Settings' },
+  ],
+  accountNav: [
+    { label: 'Mi Cuenta', href: USER_ROUTES.dashboard, icon: 'User' },
+    { label: 'Favoritos', href: USER_ROUTES.favorites, icon: 'Heart' },
+    { label: 'Búsquedas', href: USER_ROUTES.savedSearches, icon: 'Search' },
+    { label: 'Alertas', href: USER_ROUTES.alerts, icon: 'Bell' },
+    { label: 'Ajustes', href: USER_ROUTES.settings, icon: 'Settings' },
   ],
 } as const
