@@ -24,6 +24,7 @@ export const USER_ROUTES = {
 
 /* ─── Admin Panel ─── */
 export const ADMIN_ROUTES = {
+  login: '/admin/login',
   dashboard: '/admin',
   properties: '/admin/propiedades',
   propertyNew: '/admin/propiedades/nueva',
@@ -51,4 +52,13 @@ export const API_ROUTES = {
   alerts: '/api/alerts',
   media: '/api/media',
   leads: '/api/leads',
+} as const
+
+/* ─── Admin API Routes (auth-protected) ─── */
+export const ADMIN_API_ROUTES = {
+  auth: '/api/admin/auth',
+  properties: '/api/admin/properties',
+  propertyById: (id: string) => `/api/admin/properties/${id}`,
+  media: '/api/admin/media',
+  mediaPresign: '/api/admin/media/presign',
 } as const

@@ -1,22 +1,30 @@
 import Link from 'next/link'
-import { ROUTES } from '@/config/routes'
+import { localizedRoutes } from '@/config/i18n/routes'
+import type { Locale, Dictionary } from '@/config/i18n'
 
-export function CTABanner() {
+interface CTABannerProps {
+  lang: Locale
+  dict: Dictionary
+}
+
+export function CTABanner({ lang, dict }: CTABannerProps) {
+  const routes = localizedRoutes(lang)
+
   return (
     <section className="ds-section ds-bg-elevated">
       <div className="ds-container ds-text-center">
         <h2 className="font-display ds-text-2xl ds-md:text-3xl ds-font-bold ds-text-primary ds-mb-4">
-          ¿Buscas algo especial?
+          {dict.cta.title}
         </h2>
         <p className="ds-text-secondary ds-mb-6 ds-mx-auto" style={{ maxWidth: '32rem' }}>
-          Nuestro equipo de profesionales te ayudará a encontrar la propiedad perfecta para ti.
+          {dict.cta.subtitle}
         </p>
         <div className="ds-flex ds-justify-center ds-gap-4">
-          <Link href={ROUTES.contact} className="ds-btn ds-btn--lg">
-            Contáctanos
+          <Link href={routes.contact} className="ds-btn ds-btn--lg">
+            {dict.cta.contact}
           </Link>
-          <Link href={ROUTES.properties} className="ds-btn ds-btn--lg ds-btn--outline">
-            Ver Propiedades
+          <Link href={routes.properties} className="ds-btn ds-btn--lg ds-btn--outline">
+            {dict.cta.viewAll}
           </Link>
         </div>
       </div>

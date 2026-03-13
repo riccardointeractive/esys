@@ -5,25 +5,39 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Menu, X, Heart, User } from 'lucide-react'
 import { siteConfig } from '@/config/site'
-import { ROUTES } from '@/config/routes'
+import { useDictionary, useLocale } from '@/components/providers/LocaleProvider'
+import { localizedRoutes } from '@/config/i18n/routes'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
 import { cn } from '@/lib/utils'
 
 export function Navbar() {
   const pathname = usePathname()
+  const t = useDictionary()
+  const locale = useLocale()
+  const routes = localizedRoutes(locale)
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  const navItems = [
+    { label: t.nav.home, href: routes.home },
+    { label: t.nav.properties, href: routes.properties },
+    { label: t.nav.newBuilds, href: routes.newBuilds },
+    { label: t.nav.resale, href: routes.resale },
+    { label: t.nav.about, href: routes.about },
+    { label: t.nav.contact, href: routes.contact },
+  ]
 
   return (
     <>
       <nav className="ds-nav">
         <div className="ds-nav__inner">
-          <Link href={ROUTES.home} className="ds-nav__brand">
+          <Link href={routes.home} className="ds-nav__brand">
             {siteConfig.name}
           </Link>
 
           {/* Desktop menu */}
           <div className="ds-nav__menu ds-hidden ds-md:flex">
-            {siteConfig.nav.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -39,25 +53,26 @@ export function Navbar() {
 
           {/* Actions */}
           <div className="ds-nav__actions">
+            <LanguageSwitcher />
             <ThemeToggle />
             <Link
-              href={ROUTES.favorites}
+              href={routes.favorites}
               className="ds-nav__icon-btn ds-hidden ds-md:flex"
-              aria-label="Favoritos"
+              aria-label={t.nav.favorites}
             >
               <Heart size={18} />
             </Link>
             <Link
-              href={ROUTES.login}
+              href={routes.login}
               className="ds-nav__icon-btn ds-hidden ds-md:flex"
-              aria-label="Mi cuenta"
+              aria-label={t.nav.myAccount}
             >
               <User size={18} />
             </Link>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="ds-nav__icon-btn ds-md:hidden"
-              aria-label="Menu"
+              aria-label={t.nav.menu}
             >
               {mobileOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
@@ -68,7 +83,7 @@ export function Navbar() {
       {/* Mobile menu */}
       <div className={cn('ds-nav__mobile', mobileOpen && 'ds-nav__mobile--open')}>
         <div className="ds-nav__mobile-links">
-          {siteConfig.nav.map((item) => (
+          {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -82,18 +97,18 @@ export function Navbar() {
             </Link>
           ))}
           <Link
-            href={ROUTES.favorites}
+            href={routes.favorites}
             onClick={() => setMobileOpen(false)}
             className="ds-nav__link"
           >
-            Favoritos
+            {t.nav.favorites}
           </Link>
           <Link
-            href={ROUTES.login}
+            href={routes.login}
             onClick={() => setMobileOpen(false)}
             className="ds-nav__link"
           >
-            Acceder
+            {t.nav.login}
           </Link>
         </div>
       </div>

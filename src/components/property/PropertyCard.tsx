@@ -1,6 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 import { Bed, Bath, Maximize } from 'lucide-react'
-import { PROPERTY_STATUS, PROPERTY_CATEGORY } from '@/config/property'
+import { useDictionary, useLocale } from '@/components/providers/LocaleProvider'
+import { localizedRoutes } from '@/config/i18n/routes'
 import { cn } from '@/lib/utils'
 
 interface PropertyCardProps {
@@ -12,8 +15,8 @@ interface PropertyCardProps {
   bedrooms: number
   bathrooms: number
   area: number
-  status: keyof typeof PROPERTY_STATUS
-  category: keyof typeof PROPERTY_CATEGORY
+  status: 'available' | 'reserved' | 'sold'
+  category: 'newBuild' | 'resale'
 }
 
 export function PropertyCard({
@@ -28,14 +31,18 @@ export function PropertyCard({
   status,
   category,
 }: PropertyCardProps) {
-  const formattedPrice = new Intl.NumberFormat('es-ES', {
+  const t = useDictionary()
+  const locale = useLocale()
+  const routes = localizedRoutes(locale)
+
+  const formattedPrice = new Intl.NumberFormat(locale === 'es' ? 'es-ES' : 'en-GB', {
     style: 'currency',
     currency: 'EUR',
     maximumFractionDigits: 0,
   }).format(price)
 
   return (
-    <Link href={`/propiedades/${slug}`}>
+    <Link href={routes.propertyDetail(slug)}>
       <article className="ds-card ds-card--interactive">
         {/* Image */}
         {image ? (
@@ -65,7 +72,7 @@ export function PropertyCard({
                 status === 'sold' && 'ds-badge--error'
               )}
             >
-              {PROPERTY_STATUS[status]}
+              {t.property.status[status]}
             </span>
           </div>
 
@@ -91,7 +98,7 @@ export function PropertyCard({
         {/* Footer */}
         <div className="ds-card__footer">
           <span className="ds-badge ds-badge--outline">
-            {PROPERTY_CATEGORY[category]}
+            {t.property.category[category]}
           </span>
         </div>
       </article>

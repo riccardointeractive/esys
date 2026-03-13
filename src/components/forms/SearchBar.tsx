@@ -2,11 +2,15 @@
 
 import { useRouter } from 'next/navigation'
 import { Search } from 'lucide-react'
-import { PROPERTY_TYPES, BEDROOMS_OPTIONS } from '@/config/property'
-import { ROUTES } from '@/config/routes'
+import { BEDROOMS_OPTIONS } from '@/config/property'
+import { useDictionary, useLocale } from '@/components/providers/LocaleProvider'
+import { localizedRoutes } from '@/config/i18n/routes'
 
 export function SearchBar() {
   const router = useRouter()
+  const t = useDictionary()
+  const locale = useLocale()
+  const routes = localizedRoutes(locale)
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -17,7 +21,7 @@ export function SearchBar() {
       if (value) params.set(key, value as string)
     }
 
-    router.push(`${ROUTES.properties}?${params.toString()}`)
+    router.push(`${routes.properties}?${params.toString()}`)
   }
 
   return (
@@ -27,14 +31,14 @@ export function SearchBar() {
           <input
             name="location"
             type="text"
-            placeholder="Ciudad, zona o dirección..."
+            placeholder={t.search.placeholder}
             className="ds-input ds-w-full"
           />
         </div>
         <div>
           <select name="type" className="ds-select ds-w-full" defaultValue="">
-            <option value="">Tipo</option>
-            {Object.entries(PROPERTY_TYPES).map(([key, label]) => (
+            <option value="">{t.search.type}</option>
+            {Object.entries(t.property.types).map(([key, label]) => (
               <option key={key} value={key}>
                 {label}
               </option>
@@ -43,7 +47,7 @@ export function SearchBar() {
         </div>
         <div>
           <select name="bedrooms" className="ds-select ds-w-full" defaultValue="">
-            <option value="">Habitaciones</option>
+            <option value="">{t.search.bedrooms}</option>
             {BEDROOMS_OPTIONS.map((n) => (
               <option key={n} value={n}>
                 {n}+
@@ -53,7 +57,7 @@ export function SearchBar() {
         </div>
         <button type="submit" className="ds-btn ds-btn--lg ds-flex ds-items-center ds-gap-2">
           <Search size={18} />
-          <span className="ds-hidden ds-md:inline">Buscar</span>
+          <span className="ds-hidden ds-md:inline">{t.search.submit}</span>
         </button>
       </div>
     </form>

@@ -1,4 +1,5 @@
 import { PropertyCard } from '@/components/property/PropertyCard'
+import type { Dictionary } from '@/config/i18n'
 
 /* Placeholder data — will be replaced with Supabase queries */
 const PLACEHOLDER_PROPERTIES = [
@@ -70,17 +71,21 @@ const PLACEHOLDER_PROPERTIES = [
   },
 ]
 
-export function FeaturedProperties() {
+interface FeaturedPropertiesProps {
+  dict: Dictionary
+}
+
+export function FeaturedProperties({ dict }: FeaturedPropertiesProps) {
   return (
     <section className="ds-section">
       <div className="ds-container">
         <div className="ds-flex ds-justify-between ds-items-end ds-mb-8">
           <div>
             <h2 className="font-display ds-text-2xl ds-md:text-3xl ds-font-bold ds-text-primary">
-              Propiedades Destacadas
+              {dict.featured.title}
             </h2>
             <p className="ds-text-secondary ds-mt-2">
-              Nuestra selección de las mejores oportunidades
+              {dict.featured.subtitle}
             </p>
           </div>
         </div>

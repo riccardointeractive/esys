@@ -1,34 +1,46 @@
 import Link from 'next/link'
 import { siteConfig } from '@/config/site'
-import { ROUTES } from '@/config/routes'
+import { localizedRoutes } from '@/config/i18n/routes'
+import type { Locale, Dictionary } from '@/config/i18n'
 
-export function Footer() {
+interface FooterProps {
+  lang: Locale
+  dict: Dictionary
+}
+
+export function Footer({ lang, dict }: FooterProps) {
+  const routes = localizedRoutes(lang)
+
+  const navItems = [
+    { label: dict.nav.home, href: routes.home },
+    { label: dict.nav.properties, href: routes.properties },
+    { label: dict.nav.newBuilds, href: routes.newBuilds },
+    { label: dict.nav.resale, href: routes.resale },
+    { label: dict.nav.about, href: routes.about },
+    { label: dict.nav.contact, href: routes.contact },
+  ]
+
   return (
     <footer className="site-footer">
       <div className="ds-container">
         <div className="ds-grid ds-grid-cols-1 ds-md:grid-cols-4 ds-gap-8">
-          {/* Brand */}
           <div>
-            <Link href={ROUTES.home} className="font-display ds-text-lg ds-text-primary">
+            <Link href={routes.home} className="font-display ds-text-lg ds-text-primary">
               {siteConfig.name}
             </Link>
             <p className="ds-text-sm ds-text-secondary ds-mt-3">
-              {siteConfig.description}
+              {dict.hero.subtitle}
             </p>
           </div>
 
-          {/* Navigation */}
           <div>
             <h4 className="ds-text-sm ds-font-semibold ds-text-primary ds-mb-4">
-              Navegación
+              {dict.footer.navigation}
             </h4>
             <ul className="ds-space-y-2">
-              {siteConfig.nav.map((item) => (
+              {navItems.map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="ds-text-sm ds-text-secondary"
-                  >
+                  <Link href={item.href} className="ds-text-sm ds-text-secondary">
                     {item.label}
                   </Link>
                 </li>
@@ -36,43 +48,30 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
             <h4 className="ds-text-sm ds-font-semibold ds-text-primary ds-mb-4">
-              Contacto
+              {dict.footer.contact}
             </h4>
             <ul className="ds-space-y-2 ds-text-sm ds-text-secondary">
-              {siteConfig.contact.email && (
-                <li>{siteConfig.contact.email}</li>
-              )}
-              {siteConfig.contact.phone && (
-                <li>{siteConfig.contact.phone}</li>
-              )}
-              {siteConfig.contact.address && (
-                <li>{siteConfig.contact.address}</li>
-              )}
+              {siteConfig.contact.email && <li>{siteConfig.contact.email}</li>}
+              {siteConfig.contact.phone && <li>{siteConfig.contact.phone}</li>}
+              {siteConfig.contact.address && <li>{siteConfig.contact.address}</li>}
               {siteConfig.contact.city && (
-                <li>
-                  {siteConfig.contact.city}, {siteConfig.contact.country}
-                </li>
+                <li>{siteConfig.contact.city}, {siteConfig.contact.country}</li>
               )}
             </ul>
           </div>
 
-          {/* Legal */}
           <div>
             <h4 className="ds-text-sm ds-font-semibold ds-text-primary ds-mb-4">
-              Legal
+              {dict.footer.legal}
             </h4>
             <ul className="ds-space-y-2 ds-text-sm ds-text-secondary">
-              <li>
-                <Link href={ROUTES.contact}>Contacto</Link>
-              </li>
+              <li><Link href={routes.contact}>{dict.nav.contact}</Link></li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="site-footer__bottom">
           <p className="ds-text-xs ds-text-tertiary">
             &copy; {new Date().getFullYear()} {siteConfig.name}
