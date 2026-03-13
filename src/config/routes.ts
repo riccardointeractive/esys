@@ -1,0 +1,54 @@
+/* ─── Public Routes ─── */
+export const ROUTES = {
+  home: '/',
+  properties: '/propiedades',
+  propertyDetail: '/propiedades/[slug]',
+  newBuilds: '/obra-nueva',
+  resale: '/segunda-mano',
+  about: '/nosotros',
+  contact: '/contacto',
+  login: '/login',
+  register: '/registro',
+  favorites: '/favoritos',
+  search: '/buscar',
+} as const
+
+/* ─── Dashboard (registered users) ─── */
+export const USER_ROUTES = {
+  dashboard: '/cuenta',
+  savedSearches: '/cuenta/busquedas',
+  favorites: '/cuenta/favoritos',
+  alerts: '/cuenta/alertas',
+  settings: '/cuenta/ajustes',
+} as const
+
+/* ─── Admin Panel ─── */
+export const ADMIN_ROUTES = {
+  dashboard: '/admin',
+  properties: '/admin/propiedades',
+  propertyNew: '/admin/propiedades/nueva',
+  propertyEdit: '/admin/propiedades/[id]',
+  leads: '/admin/leads',
+  users: '/admin/usuarios',
+  media: '/admin/media',
+  analytics: '/admin/analytics',
+  settings: '/admin/ajustes',
+} as const
+
+/* ─── API Routes ─── */
+export const API_ROUTES = {
+  properties: '/api/properties',
+  propertyById: '/api/properties/[id]',
+  search: '/api/search',
+  contact: '/api/contact',
+  auth: {
+    login: '/api/auth/login',
+    register: '/api/auth/register',
+    logout: '/api/auth/logout',
+    session: '/api/auth/session',
+  },
+  favorites: '/api/favorites',
+  alerts: '/api/alerts',
+  media: '/api/media',
+  leads: '/api/leads',
+} as const
