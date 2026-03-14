@@ -61,19 +61,27 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const supabase = getAdminClient()
-  const media = await insertMedia(supabase, TABLES.media, {
-    filename: body.filename,
-    original_name: body.original_name || body.filename,
-    mime_type: body.mime_type,
-    size_bytes: body.size_bytes || 0,
-    url: body.url,
-    width: body.width,
-    height: body.height,
-    alt_text: body.alt_text,
-  })
+  try {
+    const supabase = getAdminClient()
+    const media = await insertMedia(supabase, TABLES.media, {
+      filename: body.filename,
+      original_name: body.original_name || body.filename,
+      mime_type: body.mime_type,
+      size_bytes: body.size_bytes || 0,
+      url: body.url,
+      width: body.width,
+      height: body.height,
+      alt_text: body.alt_text || '',
+    })
 
-  return NextResponse.json(media, { status: HTTP_STATUS.CREATED })
+    return NextResponse.json(media, { status: HTTP_STATUS.CREATED })
+  } catch (err) {
+    console.error('[POST /api/admin/media]', err)
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Error al registrar media' },
+      { status: 500 }
+    )
+  }
 }
 
 /* ─── DELETE /api/admin/media ─── */

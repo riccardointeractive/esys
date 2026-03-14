@@ -4,7 +4,7 @@
       "allowed": {
         "origins": ["http://localhost:3000"],
         "methods": ["GET", "PUT", "HEAD"],
-        "headers": ["Content-Type"]
+        "headers": ["Content-Type", "Content-Length"]
       },
       "maxAgeSeconds": 3600
     }

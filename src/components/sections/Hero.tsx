@@ -7,7 +7,12 @@ interface HeroProps {
 
 export function Hero({ dict }: HeroProps) {
   return (
-    <section className="cx-hero">
+    <section
+      className="cx-hero"
+      style={{
+        backgroundImage: 'url(https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600&h=900&fit=crop&q=80)',
+      }}
+    >
       <div className="cx-hero__overlay" />
       <div className="cx-hero__content ds-container ds-py-16 ds-md:py-24">
         <h1 className="font-display ds-text-4xl ds-md:text-5xl ds-lg:text-6xl ds-text-primary ds-font-bold ds-mb-4">

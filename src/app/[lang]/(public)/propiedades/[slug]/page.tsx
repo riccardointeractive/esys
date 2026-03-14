@@ -1,6 +1,7 @@
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
 import { localizedRoutes } from '@/config/i18n/routes'
+import { PLACEHOLDER_IMAGES } from '@/config/placeholders'
 
 interface PropertyDetailPageProps {
   params: Promise<{ lang: string; slug: string }>
@@ -26,8 +27,23 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
         {/* Main content */}
         <div className="ds-lg:col-span-2">
           <div className="ds-card">
-            <div className="ds-card__media ds-bg-elevated ds-flex ds-items-center ds-justify-center">
-              <p className="ds-text-tertiary">{dict.property.gallery}</p>
+            <div className="ds-card__media">
+              <img
+                src={PLACEHOLDER_IMAGES[0]}
+                alt="Imagen principal"
+                style={{ width: '100%', height: 400, objectFit: 'cover' }}
+              />
+            </div>
+            <div className="ds-flex ds-gap-2 ds-p-3">
+              {PLACEHOLDER_IMAGES.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt={`Imagen ${i + 1}`}
+                  className="ds-rounded-md"
+                  style={{ width: '33%', height: 80, objectFit: 'cover', opacity: i === 0 ? 1 : 0.7 }}
+                />
+              ))}
             </div>
             <div className="ds-card__body">
               <h1 className="font-display ds-text-2xl ds-font-bold ds-text-primary">

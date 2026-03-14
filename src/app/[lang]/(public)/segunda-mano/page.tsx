@@ -1,5 +1,7 @@
+import { PropertyCard } from '@/components/property/PropertyCard'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
+import { PLACEHOLDER_PROPERTIES } from '@/config/placeholders'
 
 interface ResalePageProps {
   params: Promise<{ lang: string }>
@@ -18,6 +20,8 @@ export default async function ResalePage({ params }: ResalePageProps) {
   const { lang } = await params
   const dict = getDictionary(lang as Locale)
 
+  const resale = PLACEHOLDER_PROPERTIES.filter((p) => p.category === 'resale')
+
   return (
     <div className="ds-container ds-py-8">
       <h1 className="font-display ds-text-3xl ds-font-bold ds-text-primary ds-mb-4">
@@ -26,7 +30,11 @@ export default async function ResalePage({ params }: ResalePageProps) {
       <p className="ds-text-secondary ds-mb-8">
         {dict.seo.resale.description}
       </p>
-      <p className="ds-text-tertiary">{dict.property.listResale}</p>
+      <div className="ds-grid ds-grid-cols-1 ds-sm:grid-cols-2 ds-lg:grid-cols-3 ds-gap-6">
+        {resale.map((property) => (
+          <PropertyCard key={property.slug} {...property} />
+        ))}
+      </div>
     </div>
   )
 }
