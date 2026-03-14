@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminRequest } from '@/lib/admin-auth'
 import { getAdminClient } from '@/lib/supabase/server'
-import { listMedia, insertMedia, deleteMedia } from '@digiko-npm/cms/r2'
+import { listMedia, insertMedia, updateMedia, deleteMedia } from '@digiko-npm/cms/r2'
 import { HTTP_STATUS } from '@digiko-npm/cms/http'
 import { TABLES } from '@/config/supabase-tables'
 
@@ -79,6 +79,54 @@ export async function POST(request: NextRequest) {
     console.error('[POST /api/admin/media]', err)
     return NextResponse.json(
       { error: err instanceof Error ? err.message : 'Error al registrar media' },
+      { status: 500 }
+    )
+  }
+}
+
+/* ─── PATCH /api/admin/media ─── */
+
+export async function PATCH(request: NextRequest) {
+  const auth = await verifyAdminRequest(request)
+  if (!auth.authorized) return auth.response
+
+  let body: { id: string; alt_text?: string; original_name?: string }
+
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json(
+      { error: 'Cuerpo de la petición inválido' },
+      { status: HTTP_STATUS.BAD_REQUEST }
+    )
+  }
+
+  if (!body.id) {
+    return NextResponse.json(
+      { error: 'Se requiere id' },
+      { status: HTTP_STATUS.BAD_REQUEST }
+    )
+  }
+
+  const updates: Record<string, string> = {}
+  if (body.alt_text != null) updates.alt_text = body.alt_text
+  if (body.original_name != null) updates.original_name = body.original_name
+
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json(
+      { error: 'No se proporcionaron campos para actualizar' },
+      { status: HTTP_STATUS.BAD_REQUEST }
+    )
+  }
+
+  try {
+    const supabase = getAdminClient()
+    const media = await updateMedia(supabase, TABLES.media, body.id, updates)
+    return NextResponse.json(media)
+  } catch (err) {
+    console.error('[PATCH /api/admin/media]', err)
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Error al actualizar media' },
       { status: 500 }
     )
   }
