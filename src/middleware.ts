@@ -1,8 +1,33 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { locales, defaultLocale, isValidLocale } from '@/config/i18n'
-import { EN_TO_INTERNAL } from '@/config/i18n/routes'
+import { locales, defaultLocale, isValidLocale, type Locale } from '@/config/i18n'
+import { SLUG_TO_INTERNAL } from '@/config/i18n/routes'
 import { AUTH_CONFIG } from '@/config/auth'
+
+/** Fallback for detection when no Accept-Language match is found */
+const DETECTION_FALLBACK: Locale = 'en'
+
+/** Parse Accept-Language header and return the best matching locale */
+function detectLocale(request: NextRequest): Locale {
+  const header = request.headers.get('accept-language')
+  if (!header) return DETECTION_FALLBACK
+
+  const preferred = header
+    .split(',')
+    .map((part) => {
+      const [lang, q] = part.trim().split(';q=')
+      return { lang: lang.trim().toLowerCase(), q: q ? parseFloat(q) : 1 }
+    })
+    .sort((a, b) => b.q - a.q)
+
+  for (const { lang } of preferred) {
+    const prefix = lang.split('-')[0]
+    const match = locales.find((l) => l === prefix)
+    if (match) return match
+  }
+
+  return DETECTION_FALLBACK
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -25,37 +50,45 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  /* Root → redirect to default locale */
+  /* Root → redirect to browser-preferred locale */
   if (pathname === '/') {
-    return NextResponse.redirect(new URL(`/${defaultLocale}`, request.url))
+    const detected = detectLocale(request)
+    return NextResponse.redirect(new URL(`/${detected}`, request.url))
   }
 
   /* Extract locale from first segment */
   const segments = pathname.split('/')
   const maybeLocale = segments[1]
 
-  /* No valid locale prefix → redirect to default */
+  /* No valid locale prefix → redirect to detected locale */
   if (!isValidLocale(maybeLocale)) {
-    return NextResponse.redirect(new URL(`/${defaultLocale}${pathname}`, request.url))
+    const detected = detectLocale(request)
+    return NextResponse.redirect(new URL(`/${detected}${pathname}`, request.url))
   }
 
-  /* EN route rewrite: /en/properties → /en/propiedades (internal file) */
-  if (maybeLocale === 'en') {
+  /* Non-default locale route rewrite: /en/properties → /en/propiedades (internal file) */
+  if (maybeLocale !== defaultLocale) {
+    const slugMap = SLUG_TO_INTERNAL[maybeLocale]
+    if (!slugMap) return NextResponse.next()
+
     const secondSegment = segments[2]
-    if (secondSegment && secondSegment in EN_TO_INTERNAL) {
-      const internalSlug = EN_TO_INTERNAL[secondSegment]
-      const rest = segments.slice(3).join('/')
-      const rewritePath = `/en/${internalSlug}${rest ? `/${rest}` : ''}`
+
+    /* Handle account nested routes: /{lang}/account/favorites → /{lang}/cuenta/favoritos */
+    const accountSlug = Object.entries(slugMap).find(([, internal]) => internal === 'cuenta')?.[0]
+    if (accountSlug && secondSegment === accountSlug) {
+      const thirdSegment = segments[3]
+      const rewritedThird = thirdSegment && thirdSegment in slugMap
+        ? slugMap[thirdSegment]
+        : thirdSegment
+      const rewritePath = `/${maybeLocale}/cuenta${rewritedThird ? `/${rewritedThird}` : ''}`
       return NextResponse.rewrite(new URL(rewritePath, request.url))
     }
 
-    /* Also handle nested account routes: /en/account/favorites → /en/cuenta/favoritos */
-    if (secondSegment === 'account') {
-      const thirdSegment = segments[3]
-      const accountRest = thirdSegment && thirdSegment in EN_TO_INTERNAL
-        ? EN_TO_INTERNAL[thirdSegment]
-        : thirdSegment
-      const rewritePath = `/en/cuenta${accountRest ? `/${accountRest}` : ''}`
+    /* Standard route rewrite */
+    if (secondSegment && secondSegment in slugMap) {
+      const internalSlug = slugMap[secondSegment]
+      const rest = segments.slice(3).join('/')
+      const rewritePath = `/${maybeLocale}/${internalSlug}${rest ? `/${rest}` : ''}`
       return NextResponse.rewrite(new URL(rewritePath, request.url))
     }
   }

@@ -1,13 +1,14 @@
 import { es } from './es'
 import { en } from './en'
+import { ru } from './ru'
 
-export type Locale = 'es' | 'en'
+export type Locale = 'es' | 'en' | 'ru'
 export type Dictionary = typeof es
 
-export const locales: Locale[] = ['es', 'en']
+export const locales: Locale[] = ['es', 'en', 'ru']
 export const defaultLocale: Locale = 'es'
 
-const dictionaries: Record<Locale, Dictionary> = { es, en }
+const dictionaries: Record<Locale, Dictionary> = { es, en, ru }
 
 export function getDictionary(locale: Locale): Dictionary {
   return dictionaries[locale] ?? dictionaries[defaultLocale]

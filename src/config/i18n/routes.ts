@@ -1,4 +1,5 @@
 import type { Locale } from './index'
+import { defaultLocale, locales } from './index'
 
 /* ─── URL Slug Mapping per Locale ─── */
 
@@ -31,29 +32,62 @@ export const ROUTE_SLUGS = {
     alerts: 'alerts',
     settings: 'settings',
   },
+  ru: {
+    properties: 'nedvizhimost',
+    newBuilds: 'novostrojki',
+    resale: 'vtorichnoe',
+    about: 'o-nas',
+    contact: 'kontakty',
+    login: 'login',
+    register: 'registratsiya',
+    account: 'kabinet',
+    favorites: 'izbrannoe',
+    searches: 'poiski',
+    alerts: 'uvedomleniya',
+    settings: 'nastrojki',
+  },
 } as const
 
-/* ─── Reverse Map: EN slug → internal (ES) slug for middleware rewrite ─── */
+type RouteKey = keyof typeof ROUTE_SLUGS.es
 
-export const EN_TO_INTERNAL: Record<string, string> = {
-  'properties': 'propiedades',
-  'new-builds': 'obra-nueva',
-  'resale': 'segunda-mano',
-  'about': 'nosotros',
-  'contact': 'contacto',
-  'register': 'registro',
-  'account': 'cuenta',
-  'favorites': 'favoritos',
-  'searches': 'busquedas',
-  'alerts': 'alertas',
-  'settings': 'ajustes',
+/* ─── Reverse maps: locale slug → internal (ES) slug for middleware rewrite ─── */
+
+function buildSlugToInternal(lang: Locale): Record<string, string> {
+  const source = ROUTE_SLUGS[lang]
+  const internal = ROUTE_SLUGS[defaultLocale]
+  const map: Record<string, string> = {}
+  for (const key of Object.keys(source) as RouteKey[]) {
+    if (source[key] !== internal[key]) {
+      map[source[key]] = internal[key]
+    }
+  }
+  return map
 }
 
-/* ─── Internal (ES) slug → EN slug for LanguageSwitcher ─── */
+function buildInternalToSlug(lang: Locale): Record<string, string> {
+  const toInternal = buildSlugToInternal(lang)
+  return Object.fromEntries(
+    Object.entries(toInternal).map(([localized, internal]) => [internal, localized])
+  )
+}
 
-export const INTERNAL_TO_EN: Record<string, string> = Object.fromEntries(
-  Object.entries(EN_TO_INTERNAL).map(([en, es]) => [es, en])
+/** Maps from locale slug → internal (ES) slug, per non-default locale */
+export const SLUG_TO_INTERNAL: Partial<Record<Locale, Record<string, string>>> = Object.fromEntries(
+  locales
+    .filter((l) => l !== defaultLocale)
+    .map((l) => [l, buildSlugToInternal(l)])
 )
+
+/** Maps from internal (ES) slug → locale slug, per non-default locale */
+export const INTERNAL_TO_SLUG: Partial<Record<Locale, Record<string, string>>> = Object.fromEntries(
+  locales
+    .filter((l) => l !== defaultLocale)
+    .map((l) => [l, buildInternalToSlug(l)])
+)
+
+/* ─── Backward compat exports ─── */
+export const EN_TO_INTERNAL = SLUG_TO_INTERNAL.en ?? {}
+export const INTERNAL_TO_EN = INTERNAL_TO_SLUG.en ?? {}
 
 /* ─── Generate localized route paths ─── */
 
@@ -84,19 +118,25 @@ export function translatePathname(pathname: string, fromLang: Locale, toLang: Lo
   // Remove current lang prefix
   const withoutLang = pathname.replace(`/${fromLang}`, '') || '/'
 
-  if (toLang === 'es') {
-    // EN → ES: replace EN slugs with ES
-    let result = withoutLang
-    for (const [enSlug, esSlug] of Object.entries(EN_TO_INTERNAL)) {
-      result = result.replace(`/${enSlug}`, `/${esSlug}`)
+  if (fromLang === toLang) return pathname
+
+  // Step 1: Convert fromLang slugs → internal (ES) slugs
+  let internal = withoutLang
+  if (fromLang !== defaultLocale) {
+    const toInternalMap = SLUG_TO_INTERNAL[fromLang] ?? {}
+    for (const [localized, internalSlug] of Object.entries(toInternalMap)) {
+      internal = internal.replace(`/${localized}`, `/${internalSlug}`)
     }
-    return `/es${result === '/' ? '' : result}`
   }
 
-  // ES → EN: replace ES slugs with EN
-  let result = withoutLang
-  for (const [esSlug, enSlug] of Object.entries(INTERNAL_TO_EN)) {
-    result = result.replace(`/${esSlug}`, `/${enSlug}`)
+  // Step 2: Convert internal (ES) slugs → toLang slugs
+  let result = internal
+  if (toLang !== defaultLocale) {
+    const fromInternalMap = INTERNAL_TO_SLUG[toLang] ?? {}
+    for (const [internalSlug, localized] of Object.entries(fromInternalMap)) {
+      result = result.replace(`/${internalSlug}`, `/${localized}`)
+    }
   }
-  return `/en${result === '/' ? '' : result}`
+
+  return `/${toLang}${result === '/' ? '' : result}`
 }
