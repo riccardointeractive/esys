@@ -53,16 +53,6 @@ export const DEFAULT_ENERGY_RATINGS = ['A', 'B', 'C', 'D', 'E', 'F', 'G'] as con
 export const DEFAULT_BEDROOMS_OPTIONS = [1, 2, 3, 4, 5] as const
 export const DEFAULT_BATHROOMS_OPTIONS = [1, 2, 3, 4] as const
 
-/* ─── Backward-compat aliases (used until all consumers are migrated) ─── */
-
-export const PROPERTY_TYPES = DEFAULT_PROPERTY_TYPES
-export const PROPERTY_STATUS = DEFAULT_PROPERTY_STATUS
-export const PROPERTY_CATEGORY = DEFAULT_PROPERTY_CATEGORY
-export const PROPERTY_FEATURES = DEFAULT_PROPERTY_FEATURES
-export const ENERGY_RATINGS = DEFAULT_ENERGY_RATINGS
-export const BEDROOMS_OPTIONS = DEFAULT_BEDROOMS_OPTIONS
-export const BATHROOMS_OPTIONS = DEFAULT_BATHROOMS_OPTIONS
-
 /* ─── Definition Categories (DB column values) ─── */
 
 export const DEFINITION_CATEGORIES = {
