@@ -144,7 +144,7 @@ export function PropertyForm({ property, definitions }: PropertyFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="vip-property-form" autoComplete="off">
+    <form onSubmit={handleSubmit} className="vip-property-form" autoComplete="off" data-1p-ignore data-lpignore="true">
       {/* Header */}
       <div className="ds-flex ds-justify-between ds-items-center ds-mb-6">
         <div className="ds-flex ds-items-center ds-gap-3">

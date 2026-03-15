@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { Search, Pencil, Trash2, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { Search, ExternalLink, Pencil, Trash2, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { DeletePropertyModal } from '@/components/admin/DeletePropertyModal'
-import { ADMIN_ROUTES, ADMIN_API_ROUTES } from '@/config/routes'
+import { ADMIN_ROUTES, ADMIN_API_ROUTES, ROUTES } from '@/config/routes'
 import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 import type { Property, PropertyListResponse } from '@/types/property'
@@ -242,20 +242,29 @@ export function PropertyTable({ definitions }: PropertyTableProps) {
                     <td className="ds-text-secondary">{prop.city}</td>
                     <td>
                       <div className="ds-flex ds-gap-1">
+                        <a
+                          href={ROUTES.propertyDetail.replace('[slug]', prop.slug)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="ds-btn ds-btn--icon ds-btn--ghost ds-btn--sm"
+                          title="Ver en sitio"
+                        >
+                          <ExternalLink size={16} />
+                        </a>
                         <Link
                           href={ADMIN_ROUTES.propertyEdit.replace('[id]', prop.id)}
-                          className="ds-btn ds-btn--ghost ds-btn--xs"
+                          className="ds-btn ds-btn--icon ds-btn--ghost ds-btn--sm"
                           title="Editar"
                         >
-                          <Pencil size={14} />
+                          <Pencil size={16} />
                         </Link>
                         <button
                           type="button"
                           onClick={() => setDeleteTarget(prop)}
-                          className="ds-btn ds-btn--ghost ds-btn--xs ds-text-error"
+                          className="ds-btn ds-btn--icon ds-btn--ghost ds-btn--sm ds-text-error"
                           title="Eliminar"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </td>
