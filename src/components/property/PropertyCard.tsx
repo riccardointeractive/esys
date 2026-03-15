@@ -4,9 +4,11 @@ import Link from 'next/link'
 import { Bed, Bath, Maximize } from 'lucide-react'
 import { useDictionary, useLocale } from '@/components/providers/LocaleProvider'
 import { localizedRoutes } from '@/config/i18n/routes'
+import { FavoriteButton } from '@/components/property/FavoriteButton'
 import { cn } from '@/lib/utils'
 
 interface PropertyCardProps {
+  id?: string
   slug: string
   title: string
   location: string
@@ -17,9 +19,11 @@ interface PropertyCardProps {
   area: number
   status: 'available' | 'reserved' | 'sold'
   category: 'newBuild' | 'resale'
+  isFavorited?: boolean
 }
 
 export function PropertyCard({
+  id,
   slug,
   title,
   location,
@@ -30,6 +34,7 @@ export function PropertyCard({
   area,
   status,
   category,
+  isFavorited,
 }: PropertyCardProps) {
   const t = useDictionary()
   const locale = useLocale()
@@ -45,18 +50,23 @@ export function PropertyCard({
     <Link href={routes.propertyDetail(slug)}>
       <article className="ds-card ds-card--interactive">
         {/* Image */}
-        {image ? (
-          <img
-            src={image}
-            alt={title}
-            className="ds-card__media"
-            loading="lazy"
-          />
-        ) : (
-          <div className="ds-card__media ds-bg-elevated ds-flex ds-items-center ds-justify-center">
-            <Maximize size={32} className="ds-text-tertiary" />
-          </div>
-        )}
+        <div className="ds-relative">
+          {id && (
+            <FavoriteButton propertyId={id} initialFavorited={isFavorited} />
+          )}
+          {image ? (
+            <img
+              src={image}
+              alt={title}
+              className="ds-card__media"
+              loading="lazy"
+            />
+          ) : (
+            <div className="ds-card__media ds-bg-elevated ds-flex ds-items-center ds-justify-center">
+              <Maximize size={32} className="ds-text-tertiary" />
+            </div>
+          )}
+        </div>
 
         {/* Body */}
         <div className="ds-card__body">
