@@ -4,6 +4,12 @@
    All values from DS tokens.
    ========================================================================== */
 
+/* ─── Logo ─── */
+.cx-logo {
+  display: block;
+  height: auto;
+}
+
 /* ─── Public Site ─── */
 
 /* --- Navbar body offset --- */
@@ -36,6 +42,18 @@
   background-position: center;
 }
 
+/* Generous padding variant */
+.cx-hero--full {
+  min-height: auto;
+  padding-block: var(--ds-space-16);
+}
+
+@media (min-width: 768px) {
+  .cx-hero--full {
+    padding-block: var(--ds-space-20);
+  }
+}
+
 .cx-hero__overlay {
   position: absolute;
   inset: 0;
@@ -43,6 +61,15 @@
     to bottom,
     color-mix(in srgb, var(--ds-color-bg) 70%, transparent),
     color-mix(in srgb, var(--ds-color-bg) 92%, transparent)
+  );
+}
+
+/* Subtle overlay — lets the photo show through */
+.cx-hero__overlay--subtle {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--ds-color-bg) 20%, transparent),
+    color-mix(in srgb, var(--ds-color-bg) 40%, transparent)
   );
 }
 
@@ -54,18 +81,159 @@
   );
 }
 
+:root.dark .cx-hero__overlay--subtle {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--ds-color-bg) 30%, transparent),
+    color-mix(in srgb, var(--ds-color-bg) 50%, transparent)
+  );
+}
+
 .cx-hero__content {
   position: relative;
   z-index: 1;
   width: 100%;
 }
 
-/* --- Search Bar (homepage inline search) --- */
-.cx-search-bar {
-  background-color: var(--ds-color-surface);
-  border: 1px solid var(--ds-color-border);
-  border-radius: var(--ds-radius-xl);
-  padding: var(--ds-space-4);
+/*
+ * ┌──────────────────────────────────────────────────────────────────┐
+ * │ HERO: INTENTIONALLY THEME-INDEPENDENT                          │
+ * │                                                                │
+ * │ The hero sits on top of an aerial photo. It ALWAYS uses a      │
+ * │ dark-tinted frosted backdrop with white text/inputs regardless  │
+ * │ of light/dark mode. This is by design — DS semantic tokens      │
+ * │ (--ds-color-text, ds-bg-surface, etc.) would break readability │
+ * │ in light mode where they resolve to dark-on-light values.      │
+ * │                                                                │
+ * │ Hardcoded values here are CORRECT. Do NOT refactor to tokens.  │
+ * │ See CLAUDE.md § "Theme-Independent Sections" for rationale.    │
+ * └──────────────────────────────────────────────────────────────────┘
+ */
+
+/* Hero text backdrop — always dark-tinted frost over aerial photo */
+.cx-hero__backdrop {
+  display: block;
+  padding: var(--ds-space-8);
+  border-radius: var(--ds-radius-2xl);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(32px) saturate(1.6);
+  -webkit-backdrop-filter: blur(32px) saturate(1.6);
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.cx-hero__title {
+  color: #fff;
+}
+
+.cx-hero__subtitle {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* --- Hero Search (inline in hero backdrop) --- */
+
+/* Frost interactive elements — dark frost so white text pops */
+.cx-hero-search .ds-input,
+.cx-search-dropdown__trigger {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--ds-radius-lg);
+  color: #fff;
+  font-size: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transition:
+    background var(--ds-duration-fast) var(--ds-ease-default),
+    border-color var(--ds-duration-fast) var(--ds-ease-default);
+}
+
+.cx-hero-search .ds-input:hover,
+.cx-search-dropdown__trigger:hover {
+  background: rgba(0, 0, 0, 0.42);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.cx-hero-search .ds-input:focus {
+  background: rgba(0, 0, 0, 0.42);
+  border-color: rgba(255, 255, 255, 0.28);
+  outline: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.cx-hero-search .ds-input {
+  color: #fff;
+}
+
+.cx-hero-search .ds-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Dropdown container */
+.cx-hero-search .ds-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .cx-hero-search .ds-dropdown {
+    width: auto;
+  }
+}
+
+/* Dropdown trigger layout */
+.cx-search-dropdown__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2);
+  width: 100%;
+  height: 100%;
+  padding: var(--ds-space-2) var(--ds-space-3);
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 8rem;
+  overflow: hidden;
+}
+
+.cx-search-dropdown__placeholder,
+.cx-search-dropdown__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.cx-search-dropdown__placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cx-search-dropdown__value {
+  color: #fff;
+}
+
+/* Submit — always solid white (hero is always dark-tinted) */
+.cx-hero-search__submit.ds-btn {
+  background: #fff;
+  border: 1px solid #fff;
+  color: #000;
+  border-radius: var(--ds-radius-lg);
+}
+
+.cx-hero-search__submit.ds-btn:hover {
+  background: #e5e5e5;
+}
+
+/* Dropdown menu */
+.cx-hero-search .ds-dropdown__menu {
+  min-width: 100%;
+  margin-top: var(--ds-space-1);
+}
+
+.cx-hero-search .ds-dropdown__item {
+  width: 100%;
+  padding: var(--ds-space-2) var(--ds-space-3);
+  cursor: pointer;
+  text-align: left;
+  justify-content: flex-start;
 }
 
 /* --- Account Nav: horizontal scroll on mobile --- */
