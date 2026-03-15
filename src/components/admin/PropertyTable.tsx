@@ -4,15 +4,11 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { Search, Pencil, Trash2, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { DeletePropertyModal } from '@/components/admin/DeletePropertyModal'
-import { PROPERTY_TYPES, PROPERTY_STATUS, PROPERTY_CATEGORY } from '@/config/property'
 import { ADMIN_ROUTES, ADMIN_API_ROUTES } from '@/config/routes'
 import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 import type { Property, PropertyListResponse } from '@/types/property'
-
-const statusEntries = Object.entries(PROPERTY_STATUS)
-const categoryEntries = Object.entries(PROPERTY_CATEGORY)
-const typeEntries = Object.entries(PROPERTY_TYPES)
+import type { Definition, DefinitionsByCategory } from '@/types/definition'
 
 const ITEMS_PER_PAGE = siteConfig.admin.itemsPerPage.properties
 
@@ -33,7 +29,27 @@ function getStatusBadgeClass(status: string): string {
   }
 }
 
-export function PropertyTable() {
+interface PropertyTableProps {
+  definitions: DefinitionsByCategory
+}
+
+function defMap(defs: Definition[] | undefined): Record<string, string> {
+  const map: Record<string, string> = {}
+  for (const d of defs ?? []) map[d.key] = d.label_es
+  return map
+}
+
+function defEntries(defs: Definition[] | undefined): [string, string][] {
+  return (defs ?? []).map((d) => [d.key, d.label_es])
+}
+
+export function PropertyTable({ definitions }: PropertyTableProps) {
+  const typeMap = defMap(definitions.property_type)
+  const statusMap = defMap(definitions.property_status)
+  const categoryMap = defMap(definitions.property_category)
+  const typeEntries = defEntries(definitions.property_type)
+  const statusEntries = defEntries(definitions.property_status)
+  const categoryEntries = defEntries(definitions.property_category)
   const [properties, setProperties] = useState<Property[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -212,16 +228,16 @@ export function PropertyTable() {
                       </div>
                     </td>
                     <td>
-                      {PROPERTY_TYPES[prop.type as keyof typeof PROPERTY_TYPES] || prop.type}
+                      {typeMap[prop.type] || prop.type}
                     </td>
                     <td className="ds-font-medium">{formatPrice(prop.price)}</td>
                     <td>
                       <span className={cn('ds-badge', getStatusBadgeClass(prop.status))}>
-                        {PROPERTY_STATUS[prop.status as keyof typeof PROPERTY_STATUS] || prop.status}
+                        {statusMap[prop.status] || prop.status}
                       </span>
                     </td>
                     <td>
-                      {PROPERTY_CATEGORY[prop.category as keyof typeof PROPERTY_CATEGORY] || prop.category}
+                      {categoryMap[prop.category] || prop.category}
                     </td>
                     <td className="ds-text-secondary">{prop.city}</td>
                     <td>

@@ -1,15 +1,14 @@
 'use client'
 
-import { PROPERTY_FEATURES } from '@/config/property'
+import type { Definition } from '@/types/definition'
 
 interface PropertyFeatureSelectorProps {
   selected: string[]
   onChange: (features: string[]) => void
+  features: Definition[]
 }
 
-const featureEntries = Object.entries(PROPERTY_FEATURES)
-
-export function PropertyFeatureSelector({ selected, onChange }: PropertyFeatureSelectorProps) {
+export function PropertyFeatureSelector({ selected, onChange, features }: PropertyFeatureSelectorProps) {
   function toggle(key: string) {
     if (selected.includes(key)) {
       onChange(selected.filter((k) => k !== key))
@@ -20,14 +19,14 @@ export function PropertyFeatureSelector({ selected, onChange }: PropertyFeatureS
 
   return (
     <div className="ds-grid ds-grid-cols-2 ds-gap-3">
-      {featureEntries.map(([key, label]) => (
-        <label key={key} className="ds-checkbox">
+      {features.map((def) => (
+        <label key={def.key} className="ds-checkbox">
           <input
             type="checkbox"
-            checked={selected.includes(key)}
-            onChange={() => toggle(key)}
+            checked={selected.includes(def.key)}
+            onChange={() => toggle(def.key)}
           />
-          <span>{label}</span>
+          <span>{def.label_es}</span>
         </label>
       ))}
     </div>

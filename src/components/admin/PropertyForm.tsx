@@ -6,30 +6,27 @@ import { Save, ArrowLeft, Loader2 } from 'lucide-react'
 import { CustomSelect } from '@digiko-npm/cms/ui'
 import { PropertyFeatureSelector } from '@/components/admin/PropertyFeatureSelector'
 import { PropertyImageManager } from '@/components/admin/PropertyImageManager'
-import { PROPERTY_TYPES, PROPERTY_STATUS, PROPERTY_CATEGORY, ENERGY_RATINGS, BEDROOMS_OPTIONS, BATHROOMS_OPTIONS } from '@/config/property'
 import { ADMIN_ROUTES, ADMIN_API_ROUTES } from '@/config/routes'
 import type { PropertyFormData, PropertyWithRelations, PropertyImageInput } from '@/types/property'
+import type { Definition, DefinitionsByCategory } from '@/types/definition'
 
 interface PropertyFormProps {
-  /** Existing property data (edit mode) */
   property?: PropertyWithRelations
+  definitions: DefinitionsByCategory
 }
 
-const typeOptions = Object.entries(PROPERTY_TYPES).map(([k, l]) => ({ value: k, label: l }))
-const statusOptions = Object.entries(PROPERTY_STATUS).map(([k, l]) => ({ value: k, label: l }))
-const categoryOptions = Object.entries(PROPERTY_CATEGORY).map(([k, l]) => ({ value: k, label: l }))
-const bedroomOptions = BEDROOMS_OPTIONS.map((n) => ({ value: String(n), label: String(n) }))
-const bathroomOptions = BATHROOMS_OPTIONS.map((n) => ({ value: String(n), label: String(n) }))
-const energyOptions = ENERGY_RATINGS.map((r) => ({ value: r, label: r }))
+function defsToOptions(defs: Definition[] | undefined): { value: string; label: string }[] {
+  return (defs ?? []).map((d) => ({ value: d.key, label: d.label_es }))
+}
 
 function toFormData(p?: PropertyWithRelations): PropertyFormData {
   if (!p) {
     return {
       title: '',
       description: '',
-      type: 'apartment',
-      status: 'available',
-      category: 'newBuild',
+      type: '',
+      status: '',
+      category: '',
       price: 0,
       area: 0,
       bedrooms: 1,
@@ -80,12 +77,20 @@ function toFormData(p?: PropertyWithRelations): PropertyFormData {
   }
 }
 
-export function PropertyForm({ property }: PropertyFormProps) {
+export function PropertyForm({ property, definitions }: PropertyFormProps) {
   const router = useRouter()
   const isEdit = !!property
   const [form, setForm] = useState<PropertyFormData>(() => toFormData(property))
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  const typeOptions = defsToOptions(definitions.property_type)
+  const statusOptions = defsToOptions(definitions.property_status)
+  const categoryOptions = defsToOptions(definitions.property_category)
+  const bedroomOptions = defsToOptions(definitions.bedroom_option)
+  const bathroomOptions = defsToOptions(definitions.bathroom_option)
+  const energyOptions = defsToOptions(definitions.energy_rating)
+  const features = definitions.property_feature ?? []
 
   function updateField<K extends keyof PropertyFormData>(key: K, value: PropertyFormData[K]) {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -419,7 +424,8 @@ export function PropertyForm({ property }: PropertyFormProps) {
             <div className="ds-card__body">
               <PropertyFeatureSelector
                 selected={form.features}
-                onChange={(features) => updateField('features', features)}
+                onChange={(f) => updateField('features', f)}
+                features={features}
               />
             </div>
           </div>
