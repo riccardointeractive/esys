@@ -20,7 +20,7 @@ export function DeletePropertyModal({
   if (!isOpen) return null
 
   return (
-    <div className="ds-modal">
+    <div className="ds-modal ds-modal--open">
       <div className="ds-modal__content">
         <div className="ds-modal__header">
           <div className="ds-flex ds-items-center ds-gap-2">

@@ -164,6 +164,16 @@ export const en = {
     results: 'Search results will appear here.',
     listNewBuilds: 'New build property listings.',
     listResale: 'Resale property listings.',
+    detail: {
+      type: 'Type',
+      address: 'Address',
+      energyRating: 'Energy rating',
+      yearBuilt: 'Year built',
+      floor: 'Floor',
+      featuresTitle: 'Features',
+      detailsTitle: 'Details',
+      ref: 'Ref.',
+    },
   },
   seo: {
     home: { title: 'Home', description: 'ESYS VIP — Your trusted real estate agency for new builds and resale.' },

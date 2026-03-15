@@ -164,6 +164,16 @@ export const ru = {
     results: 'Результаты поиска появятся здесь.',
     listNewBuilds: 'Список новостроек.',
     listResale: 'Список вторичной недвижимости.',
+    detail: {
+      type: 'Тип',
+      address: 'Адрес',
+      energyRating: 'Энергосертификат',
+      yearBuilt: 'Год постройки',
+      floor: 'Этаж',
+      featuresTitle: 'Характеристики',
+      detailsTitle: 'Детали',
+      ref: 'Реф.',
+    },
   },
   seo: {
     home: { title: 'Главная', description: 'ESYS VIP — Ваше надёжное агентство недвижимости: новостройки и вторичное жильё.' },

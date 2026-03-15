@@ -1,7 +1,7 @@
 import { PropertyCard } from '@/components/property/PropertyCard'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
-import { PLACEHOLDER_PROPERTIES } from '@/config/placeholders'
+import { fetchProperties } from '@/lib/properties'
 
 interface NewBuildsPageProps {
   params: Promise<{ lang: string }>
@@ -18,9 +18,10 @@ export async function generateMetadata({ params }: NewBuildsPageProps) {
 
 export default async function NewBuildsPage({ params }: NewBuildsPageProps) {
   const { lang } = await params
-  const dict = getDictionary(lang as Locale)
+  const locale = lang as Locale
+  const dict = getDictionary(locale)
 
-  const newBuilds = PLACEHOLDER_PROPERTIES.filter((p) => p.category === 'newBuild')
+  const properties = await fetchProperties({ category: 'newBuild' })
 
   return (
     <div className="ds-container ds-py-8">
@@ -31,8 +32,21 @@ export default async function NewBuildsPage({ params }: NewBuildsPageProps) {
         {dict.seo.newBuilds.description}
       </p>
       <div className="ds-grid ds-grid-cols-1 ds-sm:grid-cols-2 ds-lg:grid-cols-3 ds-gap-6">
-        {newBuilds.map((property) => (
-          <PropertyCard key={property.slug} {...property} />
+        {properties.map((p) => (
+          <PropertyCard
+            key={p.id}
+            id={p.id}
+            slug={p.slug}
+            title={p[`title_${locale}`] || p.title_es}
+            location={[p.city, p.province].filter(Boolean).join(', ')}
+            price={p.price}
+            image={p.firstImage?.url}
+            bedrooms={p.bedrooms}
+            bathrooms={p.bathrooms}
+            area={p.area}
+            status={p.status as 'available' | 'reserved' | 'sold'}
+            category={p.category as 'newBuild' | 'resale'}
+          />
         ))}
       </div>
     </div>

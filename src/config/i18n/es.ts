@@ -164,6 +164,16 @@ export const es = {
     results: 'Resultados de búsqueda aparecerán aquí.',
     listNewBuilds: 'Listado de propiedades de obra nueva.',
     listResale: 'Listado de propiedades de segunda mano.',
+    detail: {
+      type: 'Tipo',
+      address: 'Dirección',
+      energyRating: 'Certificación energética',
+      yearBuilt: 'Año de construcción',
+      floor: 'Planta',
+      featuresTitle: 'Características',
+      detailsTitle: 'Detalles',
+      ref: 'Ref.',
+    },
   },
   seo: {
     home: { title: 'Inicio', description: 'ESYS VIP — Tu inmobiliaria de confianza para obra nueva y segunda mano.' },

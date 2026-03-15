@@ -1,12 +1,18 @@
 import { PropertyCard } from '@/components/property/PropertyCard'
-import { PLACEHOLDER_PROPERTIES } from '@/config/placeholders'
-import type { Dictionary } from '@/config/i18n'
+import type { Dictionary, Locale } from '@/config/i18n'
+import type { Property, PropertyImage } from '@/types/property'
+
+type PropertyWithImage = Property & { firstImage: PropertyImage | null }
 
 interface FeaturedPropertiesProps {
   dict: Dictionary
+  locale: Locale
+  properties: PropertyWithImage[]
 }
 
-export function FeaturedProperties({ dict }: FeaturedPropertiesProps) {
+export function FeaturedProperties({ dict, locale, properties }: FeaturedPropertiesProps) {
+  if (!properties.length) return null
+
   return (
     <section className="ds-section">
       <div className="ds-container">
@@ -22,8 +28,21 @@ export function FeaturedProperties({ dict }: FeaturedPropertiesProps) {
         </div>
 
         <div className="ds-grid ds-grid-cols-1 ds-sm:grid-cols-2 ds-lg:grid-cols-3 ds-gap-6">
-          {PLACEHOLDER_PROPERTIES.map((property) => (
-            <PropertyCard key={property.slug} {...property} />
+          {properties.map((p) => (
+            <PropertyCard
+              key={p.id}
+              id={p.id}
+              slug={p.slug}
+              title={p[`title_${locale}`] || p.title_es}
+              location={[p.city, p.province].filter(Boolean).join(', ')}
+              price={p.price}
+              image={p.firstImage?.url}
+              bedrooms={p.bedrooms}
+              bathrooms={p.bathrooms}
+              area={p.area}
+              status={p.status as 'available' | 'reserved' | 'sold'}
+              category={p.category as 'newBuild' | 'resale'}
+            />
           ))}
         </div>
       </div>

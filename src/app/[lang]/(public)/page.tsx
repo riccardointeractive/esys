@@ -6,6 +6,7 @@ import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
 import { localizedRoutes } from '@/config/i18n/routes'
 import { getDefinitions } from '@/lib/definitions'
+import { fetchProperties } from '@/lib/properties'
 
 interface HomePageProps {
   params: Promise<{ lang: string }>
@@ -13,18 +14,20 @@ interface HomePageProps {
 
 export default async function HomePage({ params }: HomePageProps) {
   const { lang } = await params
-  const dict = getDictionary(lang as Locale)
-  const routes = localizedRoutes(lang as Locale)
-  const [typeDefinitions, bedroomDefinitions] = await Promise.all([
+  const locale = lang as Locale
+  const dict = getDictionary(locale)
+  const routes = localizedRoutes(locale)
+  const [typeDefinitions, bedroomDefinitions, featuredProperties] = await Promise.all([
     getDefinitions('property_type'),
     getDefinitions('bedroom_option'),
+    fetchProperties({ featured: true, limit: 6 }),
   ])
 
   return (
     <>
       <Hero dict={dict} typeDefinitions={typeDefinitions} bedroomDefinitions={bedroomDefinitions} />
 
-      <FeaturedProperties dict={dict} />
+      <FeaturedProperties dict={dict} locale={locale} properties={featuredProperties} />
 
       {/* Category cards */}
       <section className="ds-section">
