@@ -115,6 +115,9 @@ export function PropertyTable() {
             placeholder="Título, ciudad, dirección..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            autoComplete="off"
+            data-1p-ignore
+            data-lpignore="true"
           />
         </div>
 

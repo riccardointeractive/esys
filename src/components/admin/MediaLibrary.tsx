@@ -220,6 +220,9 @@ export function MediaLibrary() {
                 placeholder="Buscar archivos..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                autoComplete="off"
+                data-1p-ignore
+                data-lpignore="true"
               />
             </div>
 
@@ -340,6 +343,9 @@ export function MediaLibrary() {
                       value={editName}
                       onChange={(e) => { setEditName(e.target.value); setSaveStatus('idle') }}
                       className="ds-input ds-w-full"
+                      autoComplete="off"
+                      data-1p-ignore
+                      data-lpignore="true"
                     />
                     <span className="ds-text-sm ds-text-tertiary ds-flex-shrink-0">
                       {splitName(selected.original_name).ext}
@@ -354,6 +360,9 @@ export function MediaLibrary() {
                     rows={2}
                     className="ds-textarea ds-w-full"
                     placeholder="Descripción para accesibilidad y SEO"
+                    autoComplete="off"
+                    data-1p-ignore
+                    data-lpignore="true"
                   />
                 </div>
                 {hasChanges && (

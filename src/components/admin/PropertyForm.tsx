@@ -119,7 +119,7 @@ export function PropertyForm({ property }: PropertyFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="cx-property-form">
+    <form onSubmit={handleSubmit} className="cx-property-form" autoComplete="off">
       {/* Header */}
       <div className="ds-flex ds-justify-between ds-items-center ds-mb-6">
         <div className="ds-flex ds-items-center ds-gap-3">

@@ -106,6 +106,9 @@ export function PropertyImageManager({ images, onChange }: PropertyImageManagerP
               onChange={(e) => handleAltChange(index, e.target.value)}
               placeholder="Texto alternativo"
               className="ds-input ds-input--sm ds-flex-1"
+              autoComplete="off"
+              data-1p-ignore
+              data-lpignore="true"
             />
 
             {/* Remove */}
