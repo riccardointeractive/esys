@@ -1,5 +1,3 @@
-import type { PROPERTY_TYPES, PROPERTY_STATUS, PROPERTY_CATEGORY, PROPERTY_FEATURES, ENERGY_RATINGS } from '@/config/property'
-
 /* ─── Database Row Types ─── */
 
 export interface Property {
@@ -7,9 +5,9 @@ export interface Property {
   title: string
   slug: string
   description: string
-  type: keyof typeof PROPERTY_TYPES
-  status: keyof typeof PROPERTY_STATUS
-  category: keyof typeof PROPERTY_CATEGORY
+  type: string
+  status: string
+  category: string
   price: number
   area: number
   bedrooms: number
@@ -20,7 +18,7 @@ export interface Property {
   postal_code: string
   latitude: number | null
   longitude: number | null
-  energy_rating: (typeof ENERGY_RATINGS)[number] | null
+  energy_rating: string | null
   year_built: number | null
   floor: number | null
   featured: boolean
@@ -42,7 +40,7 @@ export interface PropertyImage {
 export interface PropertyFeature {
   id: string
   property_id: string
-  feature_key: keyof typeof PROPERTY_FEATURES
+  feature_key: string
 }
 
 /* ─── Property with relations ─── */

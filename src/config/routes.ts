@@ -68,4 +68,6 @@ export const ADMIN_API_ROUTES = {
   users: '/api/admin/users',
   media: '/api/admin/media',
   mediaPresign: '/api/admin/media/presign',
+  definitions: '/api/admin/definitions',
+  definitionById: (id: string) => `/api/admin/definitions/${id}`,
 } as const

@@ -13,6 +13,7 @@ export const TABLES = {
   admins: 'esys_admins',
   media: 'esys_media',
   analytics: 'esys_analytics_events',
+  definitions: 'esys_definitions',
 } as const
 
 /* ─── Supabase Storage Buckets ─── */
