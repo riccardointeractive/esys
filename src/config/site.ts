@@ -35,11 +35,11 @@ export const siteConfig = {
   adminNav: [
     { label: 'Dashboard', href: ADMIN_ROUTES.dashboard, icon: 'LayoutDashboard' },
     { label: 'Propiedades', href: ADMIN_ROUTES.properties, icon: 'Building2' },
-    { label: 'Leads', href: ADMIN_ROUTES.leads, icon: 'UserPlus' },
+    { label: 'Leads', href: ADMIN_ROUTES.leads, icon: 'UserPlus', disabled: true },
     { label: 'Usuarios', href: ADMIN_ROUTES.users, icon: 'Users' },
     { label: 'Media', href: ADMIN_ROUTES.media, icon: 'Image' },
-    { label: 'Analytics', href: ADMIN_ROUTES.analytics, icon: 'BarChart3' },
-    { label: 'Ajustes', href: ADMIN_ROUTES.settings, icon: 'Settings' },
+    { label: 'Analytics', href: ADMIN_ROUTES.analytics, icon: 'BarChart3', disabled: true },
+    { label: 'Ajustes', href: ADMIN_ROUTES.settings, icon: 'Settings', disabled: true },
   ],
   accountNav: [
     { label: 'Mi Cuenta', href: USER_ROUTES.dashboard, icon: 'User' },

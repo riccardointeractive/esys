@@ -70,20 +70,34 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             {siteConfig.adminNav.map((item) => {
               const Icon = iconMap[item.icon] ?? LayoutDashboard
               const isActive = pathname === item.href
+              const isDisabled = 'disabled' in item && item.disabled
 
               return (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={onClose}
-                    className={cn(
-                      'nav-item',
-                      isActive && 'nav-item--active'
-                    )}
-                  >
-                    <Icon size={18} />
-                    {item.label}
-                  </Link>
+                  {isDisabled ? (
+                    <span
+                      className="nav-item"
+                      style={{ cursor: 'default', pointerEvents: 'none', color: 'var(--ds-color-text-tertiary)' }}
+                    >
+                      <Icon size={18} />
+                      {item.label}
+                      <span className="ds-badge ds-badge--secondary ds-ml-auto" style={{ fontSize: '0.6rem' }}>
+                        SOON
+                      </span>
+                    </span>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={onClose}
+                      className={cn(
+                        'nav-item',
+                        isActive && 'nav-item--active'
+                      )}
+                    >
+                      <Icon size={18} />
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               )
             })}
