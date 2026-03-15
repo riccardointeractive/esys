@@ -173,6 +173,16 @@ className="ds-bg-surface ds-text-primary ds-border"
 
 Don't remove existing functionality without explicit confirmation.
 
+### 6. Theme-Independent Sections
+
+Some UI sections intentionally bypass DS semantic tokens and use hardcoded RGBA/hex values. **Do NOT refactor these to use `--ds-color-*` tokens or `ds-text-*` / `ds-bg-*` classes.**
+
+| Section | Why | Where |
+|---------|-----|-------|
+| **Hero** (`cx-hero__backdrop`, `cx-hero-search`) | Sits over an aerial photo — always uses dark-tinted frosted glass with white text/inputs regardless of light/dark mode. DS tokens would break readability in light mode. | `src/styles/components.css` (look for the `HERO: INTENTIONALLY THEME-INDEPENDENT` block comment) |
+
+When adding new photo-overlay sections in the future, follow the same pattern: hardcode RGBA values and add a block comment explaining the exception.
+
 ---
 
 ## Project Architecture
