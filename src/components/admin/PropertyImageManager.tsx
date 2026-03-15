@@ -90,7 +90,7 @@ export function PropertyImageManager({ images, onChange }: PropertyImageManagerP
             </div>
 
             {/* Thumbnail */}
-            <div className="cx-image-grid__item">
+            <div className="vip-image-grid__item">
               <img
                 src={img.url}
                 alt={img.alt_text || `Imagen ${index + 1}`}
@@ -131,7 +131,7 @@ export function PropertyImageManager({ images, onChange }: PropertyImageManagerP
           folder={MEDIA_CONFIG.paths.properties}
           accept={MEDIA_CONFIG.allowedImageTypes.join(',')}
           onUpload={handleUpload}
-          className="cx-image-uploader"
+          className="vip-image-uploader"
         />
       )}
     </div>

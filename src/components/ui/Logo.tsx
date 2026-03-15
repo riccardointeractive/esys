@@ -19,7 +19,7 @@ export function Logo({ className, height = 28 }: LogoProps) {
       viewBox="0 0 1213 170"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn('cx-logo', className)}
+      className={cn('vip-logo', className)}
       aria-label="ESYS VIP"
       role="img"
     >

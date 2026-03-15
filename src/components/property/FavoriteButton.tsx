@@ -54,8 +54,8 @@ export function FavoriteButton({ propertyId, initialFavorited = false }: Favorit
     <button
       onClick={handleToggle}
       className={cn(
-        'cx-favorite-btn',
-        favorited && 'cx-favorite-btn--active'
+        'vip-favorite-btn',
+        favorited && 'vip-favorite-btn--active'
       )}
       aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
       disabled={loading}

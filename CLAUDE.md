@@ -27,33 +27,53 @@ The project uses `@digiko-npm/designsystem` as the **sole styling engine** — n
 @import "../styles/components.css";
 ```
 
-### Three Layers of CSS
+### Two Layers of CSS
 
 | Layer | Prefix | Purpose | Where |
 |-------|--------|---------|-------|
-| **DS Utilities** | `ds-*` | Tokenized layout, spacing, color, typography | `@digiko-npm/designsystem` |
-| **Component Classes** | `cx-*`, project-specific | Interactive patterns, property cards, gallery | `src/styles/components.css` |
-| **Base Styles** | — | Body, selection, overrides | `src/app/globals.css` |
+| **DS (components + utilities)** | `ds-*` | Self-contained components, tokenized layout | `@digiko-npm/designsystem` |
+| **Project-specific classes** | project-specific (no prefix convention) | Hero overlay, admin layout, property form, media grid | `src/styles/components.css` |
 
-### How to Use Tokens
+Base styles (body, selection, overrides) live in `src/app/globals.css`.
 
-**DS utility classes (primary approach):**
+### Component-First Approach (CRITICAL)
+
+DS components are **self-contained and fully styled by default**. Follow this priority:
+
+**1. Use DS components first** — they work out of the box:
 ```tsx
-className="ds-flex ds-items-center ds-gap-4 ds-text-sm ds-text-secondary"
-className="ds-bg-surface ds-border ds-rounded-xl ds-p-6"
-className="ds-grid ds-grid-cols-3 ds-gap-6"
+<input className="ds-input" />
+<button className="ds-btn">Guardar</button>
+<div className="ds-card"><div className="ds-card__body">Content</div></div>
 ```
 
-**DS component classes (28 components available):**
+**2. Use BEM modifiers for variants:**
 ```tsx
-className="ds-btn ds-btn--secondary"
-className="ds-card ds-card__body"
-className="ds-badge ds-badge--success"
-className="ds-input"
-className="ds-table"
+<input className="ds-input ds-input--error" />
+<button className="ds-btn ds-btn--secondary ds-btn--sm">Cancelar</button>
+<span className="ds-badge ds-badge--success">Disponible</span>
 ```
 
-**DS sources of truth:**
+**3. Use utilities ONLY for layout** — arranging components in a container:
+```tsx
+<div className="ds-flex ds-gap-4">
+  <input className="ds-input" />
+  <button className="ds-btn">Buscar</button>
+</div>
+<div className="ds-grid ds-grid-cols-3 ds-gap-6">
+  {properties.map(p => <PropertyCard key={p.id} />)}
+</div>
+```
+
+**Anti-patterns — NEVER do this:**
+```tsx
+// WRONG: utility soup to style what a component already handles
+<input className="ds-bg-surface ds-border ds-rounded-xl ds-p-4 ds-text-sm" />
+// RIGHT:
+<input className="ds-input" />
+```
+
+### DS Sources of Truth
 
 | What you need | Where to look |
 |---------------|---------------|
@@ -67,9 +87,9 @@ className="ds-table"
 import { cn } from '@/lib/utils'
 
 className={cn(
-  'ds-flex ds-items-center ds-gap-2 ds-p-3 ds-rounded-lg',
-  isActive && 'ds-bg-elevated',
-  property.status === 'sold' && 'cx-property--sold'
+  'ds-badge',
+  status === 'available' && 'ds-badge--success',
+  status === 'sold' && 'ds-badge--error'
 )}
 ```
 
@@ -121,15 +141,14 @@ className="ds-bg-surface"
 // ❌ FORBIDDEN — Bare Tailwind classes (Tailwind is NOT installed)
 className="flex items-center gap-4 text-sm"
 
-// ✅ REQUIRED — Use ds-* prefixed utilities
-className="ds-flex ds-items-center ds-gap-4 ds-text-sm"
+// ✅ REQUIRED — Use ds-* prefixed utilities (only for layout)
+className="ds-flex ds-items-center ds-gap-4"
 
-// ❌ FORBIDDEN — Tailwind pseudo-class syntax
-className="hover:bg-gray-100 focus:ring-2"
+// ❌ FORBIDDEN — Utility soup instead of DS components
+className="ds-bg-surface ds-border ds-rounded-xl ds-p-4 ds-text-sm"
 
-// ✅ REQUIRED — Use component classes for interactive states
-className="cx-hover-row"
-className="cx-focus"
+// ✅ REQUIRED — Use the self-contained component
+className="ds-input"
 
 // ❌ FORBIDDEN — Arbitrary pixel values
 className="ds-max-w-[1200px]"
@@ -179,7 +198,7 @@ Some UI sections intentionally bypass DS semantic tokens and use hardcoded RGBA/
 
 | Section | Why | Where |
 |---------|-----|-------|
-| **Hero** (`cx-hero__backdrop`, `cx-hero-search`) | Sits over an aerial photo — always uses dark-tinted frosted glass with white text/inputs regardless of light/dark mode. DS tokens would break readability in light mode. | `src/styles/components.css` (look for the `HERO: INTENTIONALLY THEME-INDEPENDENT` block comment) |
+| **Hero** (`vip-hero__backdrop`, `vip-hero-search`) | Sits over an aerial photo — always uses dark-tinted frosted glass with white text/inputs regardless of light/dark mode. DS tokens would break readability in light mode. | `src/styles/components.css` (look for the `HERO: INTENTIONALLY THEME-INDEPENDENT` block comment) |
 
 When adding new photo-overlay sections in the future, follow the same pattern: hardcode RGBA values and add a block comment explaining the exception.
 
@@ -262,8 +281,8 @@ cn, formatPrice, formatArea
 // Files: match export name
 PropertyCard.tsx, SearchForm.tsx, useSearch.ts
 
-// CSS classes: ds-* (DS), cx-* (interactive), kebab-case (project)
-ds-flex, ds-text-primary, cx-hover-row, property-card, filter-bar
+// CSS classes: ds-* (DS components + utilities), kebab-case (project-specific)
+ds-flex, ds-text-primary, ds-input, ds-btn--secondary, property-card, filter-bar
 ```
 
 ### Import Alias
@@ -357,6 +376,7 @@ CMS utilities:  @digiko-npm/cms (auth, sessions, media, Supabase, R2)
 ### Code Quality
 - [ ] No hardcoded colors, arbitrary values, magic strings — everything in `src/config/`
 - [ ] DS utilities only (`ds-*` prefix) — no bare Tailwind classes
+- [ ] No utility soup — if an element has 3+ `ds-*` classes, check if a DS component already covers it
 - [ ] Component CSS in `src/styles/components.css` — not inline hacks
 - [ ] Import aliases `@/` — no relative paths
 - [ ] CMS package used for auth, sessions, media — no custom implementations

@@ -35,11 +35,11 @@ export function LanguageSwitcher() {
   const otherLocales = locales.filter((l) => l !== locale)
 
   return (
-    <div ref={ref} className="cx-lang-switcher">
+    <div ref={ref} className="vip-lang-switcher">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className={cn('ds-nav__icon-btn ds-text-xs ds-font-semibold cx-lang-switcher__trigger')}
+        className={cn('ds-nav__icon-btn ds-text-xs ds-font-semibold vip-lang-switcher__trigger')}
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label={`Language: ${LOCALE_LABELS[locale].name}`}
@@ -48,18 +48,18 @@ export function LanguageSwitcher() {
       </button>
 
       {open && (
-        <div className="cx-lang-switcher__dropdown" role="listbox">
+        <div className="vip-lang-switcher__dropdown" role="listbox">
           {otherLocales.map((l) => (
             <Link
               key={l}
               href={translatePathname(pathname, locale, l)}
-              className="cx-lang-switcher__option"
+              className="vip-lang-switcher__option"
               role="option"
               aria-selected={false}
               onClick={() => setOpen(false)}
             >
-              <span className="cx-lang-switcher__flag">{LOCALE_LABELS[l].flag}</span>
-              <span className="cx-lang-switcher__name">{LOCALE_LABELS[l].name}</span>
+              <span className="vip-lang-switcher__flag">{LOCALE_LABELS[l].flag}</span>
+              <span className="vip-lang-switcher__name">{LOCALE_LABELS[l].name}</span>
             </Link>
           ))}
         </div>

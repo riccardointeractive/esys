@@ -203,7 +203,7 @@ export function MediaLibrary() {
         multiple
         maxSizeMb={MEDIA_CONFIG.maxFileSizeMb}
         onUpload={handleUploadComplete}
-        className={cn('cx-image-uploader', items.length === 0 && !loading && 'cx-image-uploader--large')}
+        className={cn('vip-image-uploader', items.length === 0 && !loading && 'vip-image-uploader--large')}
       />
 
       {/* Toolbar + grid only when there are items or loading */}
@@ -256,8 +256,8 @@ export function MediaLibrary() {
                     type="button"
                     onClick={() => setSelected(selected?.id === item.id ? null : item)}
                     className={cn(
-                      'cx-media-item ds-rounded-lg ds-overflow-hidden ds-border ds-bg-surface',
-                      selected?.id === item.id && 'cx-media-item--selected'
+                      'vip-media-item ds-rounded-lg ds-overflow-hidden ds-border ds-bg-surface',
+                      selected?.id === item.id && 'vip-media-item--selected'
                     )}
                   >
                     <div className="ds-aspect-square ds-bg-elevated ds-flex ds-items-center ds-justify-center ds-overflow-hidden">
@@ -317,7 +317,7 @@ export function MediaLibrary() {
 
         {/* Detail panel */}
         {selected && (
-          <div className="cx-media-detail ds-card" style={{ width: 280, flexShrink: 0 }}>
+          <div className="vip-media-detail ds-card" style={{ width: 280, flexShrink: 0 }}>
             <div className="ds-card__body ds-flex ds-flex-col ds-gap-4">
               {/* Preview */}
               <div className="ds-aspect-video ds-bg-elevated ds-rounded-lg ds-overflow-hidden ds-flex ds-items-center ds-justify-center">

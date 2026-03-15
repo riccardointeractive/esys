@@ -119,7 +119,7 @@ export function PropertyForm({ property }: PropertyFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="cx-property-form" autoComplete="off">
+    <form onSubmit={handleSubmit} className="vip-property-form" autoComplete="off">
       {/* Header */}
       <div className="ds-flex ds-justify-between ds-items-center ds-mb-6">
         <div className="ds-flex ds-items-center ds-gap-3">
@@ -146,9 +146,9 @@ export function PropertyForm({ property }: PropertyFormProps) {
         </div>
       )}
 
-      <div className="cx-property-form__layout">
+      <div className="vip-property-form__layout">
         {/* ─── Main Column ─── */}
-        <div className="cx-property-form__main">
+        <div className="vip-property-form__main">
           {/* Basic Info */}
           <div className="ds-card ds-mb-4">
             <div className="ds-card__header">
@@ -353,7 +353,7 @@ export function PropertyForm({ property }: PropertyFormProps) {
         </div>
 
         {/* ─── Sidebar Column ─── */}
-        <div className="cx-property-form__sidebar">
+        <div className="vip-property-form__sidebar">
           {/* Status & Visibility */}
           <div className="ds-card ds-mb-4">
             <div className="ds-card__header">

@@ -42,10 +42,10 @@ function SearchDropdown({
     <div className="ds-dropdown" ref={ref}>
       <button
         type="button"
-        className="cx-search-dropdown__trigger"
+        className="vip-search-dropdown__trigger"
         onClick={() => setOpen(!open)}
       >
-        <span className={selected ? 'cx-search-dropdown__value' : 'cx-search-dropdown__placeholder'}>
+        <span className={selected ? 'vip-search-dropdown__value' : 'vip-search-dropdown__placeholder'}>
           {selected ? selected.label : placeholder}
         </span>
         <ChevronDown size={14} />
@@ -101,7 +101,7 @@ export function SearchBar() {
   }))
 
   return (
-    <form onSubmit={handleSubmit} className="cx-hero-search">
+    <form onSubmit={handleSubmit} className="vip-hero-search">
       <div className="ds-flex ds-flex-col ds-md:flex-row ds-md:items-stretch ds-gap-3">
         <div className="ds-flex-1">
           <input
@@ -124,7 +124,7 @@ export function SearchBar() {
           onChange={setBedrooms}
         />
       </div>
-      <button type="submit" className="ds-btn cx-hero-search__submit ds-w-full ds-flex ds-items-center ds-justify-center ds-gap-2 ds-mt-3">
+      <button type="submit" className="ds-btn vip-hero-search__submit ds-w-full ds-flex ds-items-center ds-justify-center ds-gap-2 ds-mt-3">
         <Search size={18} />
         {t.search.submit}
       </button>
