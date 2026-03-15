@@ -38,8 +38,9 @@ export const siteConfig = {
     { label: 'Leads', href: ADMIN_ROUTES.leads, icon: 'UserPlus', disabled: true },
     { label: 'Usuarios', href: ADMIN_ROUTES.users, icon: 'Users' },
     { label: 'Media', href: ADMIN_ROUTES.media, icon: 'Image' },
+    { label: 'Opciones', href: ADMIN_ROUTES.options, icon: 'ListChecks' },
     { label: 'Analytics', href: ADMIN_ROUTES.analytics, icon: 'BarChart3', disabled: true },
-    { label: 'Ajustes', href: ADMIN_ROUTES.settings, icon: 'Settings' },
+    { label: 'Ajustes', href: ADMIN_ROUTES.settings, icon: 'Settings', disabled: true },
   ],
   admin: {
     itemsPerPage: {

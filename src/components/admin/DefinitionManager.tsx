@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { Plus, Pencil, Trash2, Check, X, ArrowUp, ArrowDown } from 'lucide-react'
+import { useState, useCallback } from 'react'
+import { Plus, Pencil, Trash2, Check, X, GripVertical } from 'lucide-react'
 import { ADMIN_API_ROUTES } from '@/config/routes'
 import { cn } from '@/lib/utils'
+import { useDragReorder } from '@/hooks/useDragReorder'
 import type { Definition, DefinitionCategory } from '@/types/definition'
 
 interface DefinitionManagerProps {
@@ -28,6 +29,31 @@ export function DefinitionManager({ category, initialDefinitions }: DefinitionMa
   const [newDef, setNewDef] = useState(EMPTY_EDIT)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  /* ─── Drag reorder ─── */
+
+  const handleReorder = useCallback(async (reordered: Definition[]) => {
+    setDefinitions(reordered)
+
+    try {
+      await Promise.all(
+        reordered.map((def, index) =>
+          fetch(ADMIN_API_ROUTES.definitionById(def.id), {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sort_order: index }),
+          })
+        )
+      )
+    } catch {
+      setError('Error al reordenar')
+    }
+  }, [])
+
+  const { getDragProps, getItemState } = useDragReorder({
+    items: definitions,
+    onReorder: handleReorder,
+  })
 
   /* ─── Create ─── */
 
@@ -153,38 +179,6 @@ export function DefinitionManager({ category, initialDefinitions }: DefinitionMa
     }
   }
 
-  /* ─── Reorder ─── */
-
-  async function handleMove(index: number, direction: 'up' | 'down') {
-    const swapIndex = direction === 'up' ? index - 1 : index + 1
-    if (swapIndex < 0 || swapIndex >= definitions.length) return
-
-    const newDefs = [...definitions]
-    const temp = newDefs[index]
-    newDefs[index] = newDefs[swapIndex]
-    newDefs[swapIndex] = temp
-
-    setDefinitions(newDefs)
-
-    // Persist sort_order for both swapped items
-    try {
-      await Promise.all([
-        fetch(ADMIN_API_ROUTES.definitionById(newDefs[index].id), {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sort_order: index }),
-        }),
-        fetch(ADMIN_API_ROUTES.definitionById(newDefs[swapIndex].id), {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sort_order: swapIndex }),
-        }),
-      ])
-    } catch {
-      setError('Error al reordenar')
-    }
-  }
-
   return (
     <div className="ds-card">
       <div className="ds-card__header ds-flex ds-items-center ds-justify-between">
@@ -212,146 +206,146 @@ export function DefinitionManager({ category, initialDefinitions }: DefinitionMa
           <table className="ds-table ds-w-full">
             <thead>
               <tr>
-                <th className="ds-text-left ds-text-xs ds-text-secondary ds-font-medium" style={{ width: '2.5rem' }}>#</th>
+                <th style={{ width: '2.5rem' }} />
                 <th className="ds-text-left ds-text-xs ds-text-secondary ds-font-medium">Clave</th>
                 <th className="ds-text-left ds-text-xs ds-text-secondary ds-font-medium">ES</th>
                 <th className="ds-text-left ds-text-xs ds-text-secondary ds-font-medium">EN</th>
                 <th className="ds-text-left ds-text-xs ds-text-secondary ds-font-medium">RU</th>
                 <th className="ds-text-left ds-text-xs ds-text-secondary ds-font-medium" style={{ width: '5rem' }}>Activo</th>
-                <th className="ds-text-right ds-text-xs ds-text-secondary ds-font-medium" style={{ width: '10rem' }}>Acciones</th>
+                <th className="ds-text-right ds-text-xs ds-text-secondary ds-font-medium" style={{ width: '8rem' }}>Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {definitions.map((def, index) => (
-                <tr key={def.id} className={cn(!def.active && 'ds-opacity-50')}>
-                  {editing?.id === def.id ? (
-                    /* ─── Editing row ─── */
-                    <>
-                      <td className="ds-text-sm ds-text-tertiary">{index + 1}</td>
-                      <td>
-                        <input
-                          className="ds-input ds-input--sm"
-                          value={editing.key}
-                          onChange={(e) => setEditing({ ...editing, key: e.target.value })}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          className="ds-input ds-input--sm"
-                          value={editing.label_es}
-                          onChange={(e) => setEditing({ ...editing, label_es: e.target.value })}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          className="ds-input ds-input--sm"
-                          value={editing.label_en}
-                          onChange={(e) => setEditing({ ...editing, label_en: e.target.value })}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          className="ds-input ds-input--sm"
-                          value={editing.label_ru}
-                          onChange={(e) => setEditing({ ...editing, label_ru: e.target.value })}
-                        />
-                      </td>
-                      <td />
-                      <td className="ds-text-right">
-                        <div className="ds-flex ds-gap-1 ds-justify-end">
+              {definitions.map((def) => {
+                const { isDragging, isOver } = getItemState(def.id)
+
+                return (
+                  <tr
+                    key={def.id}
+                    className={cn(
+                      !def.active && 'ds-opacity-50',
+                      isDragging && 'ds-sortable--dragging',
+                      isOver && 'ds-sortable--over'
+                    )}
+                    {...(editing?.id !== def.id ? getDragProps(def.id) : {})}
+                  >
+                    {editing?.id === def.id ? (
+                      /* ─── Editing row ─── */
+                      <>
+                        <td />
+                        <td>
+                          <input
+                            className="ds-input ds-input--sm"
+                            value={editing.key}
+                            onChange={(e) => setEditing({ ...editing, key: e.target.value })}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            className="ds-input ds-input--sm"
+                            value={editing.label_es}
+                            onChange={(e) => setEditing({ ...editing, label_es: e.target.value })}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            className="ds-input ds-input--sm"
+                            value={editing.label_en}
+                            onChange={(e) => setEditing({ ...editing, label_en: e.target.value })}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            className="ds-input ds-input--sm"
+                            value={editing.label_ru}
+                            onChange={(e) => setEditing({ ...editing, label_ru: e.target.value })}
+                          />
+                        </td>
+                        <td />
+                        <td className="ds-text-right">
+                          <div className="ds-flex ds-gap-1 ds-justify-end">
+                            <button
+                              onClick={handleUpdate}
+                              disabled={loading}
+                              className="ds-btn ds-btn--sm ds-btn--ghost"
+                              title="Guardar"
+                            >
+                              <Check size={16} />
+                            </button>
+                            <button
+                              onClick={() => { setEditing(null); setError('') }}
+                              className="ds-btn ds-btn--sm ds-btn--ghost"
+                              title="Cancelar"
+                            >
+                              <X size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </>
+                    ) : (
+                      /* ─── Display row ─── */
+                      <>
+                        <td>
+                          <span className="ds-sortable__handle ds-sortable__handle--visible">
+                            <GripVertical size={16} />
+                          </span>
+                        </td>
+                        <td className="ds-text-sm">
+                          <code className="ds-text-xs">{def.key}</code>
+                        </td>
+                        <td className="ds-text-sm">{def.label_es}</td>
+                        <td className="ds-text-sm ds-text-secondary">{def.label_en || '—'}</td>
+                        <td className="ds-text-sm ds-text-secondary">{def.label_ru || '—'}</td>
+                        <td>
                           <button
-                            onClick={handleUpdate}
-                            disabled={loading}
-                            className="ds-btn ds-btn--sm ds-btn--ghost"
-                            title="Guardar"
+                            onClick={() => handleToggleActive(def)}
+                            className={cn(
+                              'ds-badge',
+                              def.active ? 'ds-badge--success' : 'ds-badge--secondary'
+                            )}
+                            style={{ cursor: 'pointer' }}
                           >
-                            <Check size={16} />
+                            {def.active ? 'Sí' : 'No'}
                           </button>
-                          <button
-                            onClick={() => { setEditing(null); setError('') }}
-                            className="ds-btn ds-btn--sm ds-btn--ghost"
-                            title="Cancelar"
-                          >
-                            <X size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </>
-                  ) : (
-                    /* ─── Display row ─── */
-                    <>
-                      <td className="ds-text-sm ds-text-tertiary">{index + 1}</td>
-                      <td className="ds-text-sm">
-                        <code className="ds-text-xs">{def.key}</code>
-                      </td>
-                      <td className="ds-text-sm">{def.label_es}</td>
-                      <td className="ds-text-sm ds-text-secondary">{def.label_en || '—'}</td>
-                      <td className="ds-text-sm ds-text-secondary">{def.label_ru || '—'}</td>
-                      <td>
-                        <button
-                          onClick={() => handleToggleActive(def)}
-                          className={cn(
-                            'ds-badge',
-                            def.active ? 'ds-badge--success' : 'ds-badge--secondary'
-                          )}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          {def.active ? 'Sí' : 'No'}
-                        </button>
-                      </td>
-                      <td className="ds-text-right">
-                        <div className="ds-flex ds-gap-1 ds-justify-end">
-                          <button
-                            onClick={() => handleMove(index, 'up')}
-                            disabled={index === 0}
-                            className="ds-btn ds-btn--sm ds-btn--ghost"
-                            title="Subir"
-                          >
-                            <ArrowUp size={14} />
-                          </button>
-                          <button
-                            onClick={() => handleMove(index, 'down')}
-                            disabled={index === definitions.length - 1}
-                            className="ds-btn ds-btn--sm ds-btn--ghost"
-                            title="Bajar"
-                          >
-                            <ArrowDown size={14} />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setEditing({
-                                id: def.id,
-                                key: def.key,
-                                label_es: def.label_es,
-                                label_en: def.label_en,
-                                label_ru: def.label_ru,
-                              })
-                              setAdding(false)
-                              setError('')
-                            }}
-                            className="ds-btn ds-btn--sm ds-btn--ghost"
-                            title="Editar"
-                          >
-                            <Pencil size={14} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(def)}
-                            className="ds-btn ds-btn--sm ds-btn--ghost ds-text-error"
-                            title="Eliminar"
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </td>
-                    </>
-                  )}
-                </tr>
-              ))}
+                        </td>
+                        <td className="ds-text-right">
+                          <div className="ds-flex ds-gap-1 ds-justify-end">
+                            <button
+                              onClick={() => {
+                                setEditing({
+                                  id: def.id,
+                                  key: def.key,
+                                  label_es: def.label_es,
+                                  label_en: def.label_en,
+                                  label_ru: def.label_ru,
+                                })
+                                setAdding(false)
+                                setError('')
+                              }}
+                              className="ds-btn ds-btn--sm ds-btn--ghost"
+                              title="Editar"
+                            >
+                              <Pencil size={14} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(def)}
+                              className="ds-btn ds-btn--sm ds-btn--ghost ds-text-error"
+                              title="Eliminar"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                )
+              })}
 
               {/* ─── Add new row ─── */}
               {adding && (
                 <tr>
-                  <td className="ds-text-sm ds-text-tertiary">+</td>
+                  <td />
                   <td>
                     <input
                       className="ds-input ds-input--sm"

@@ -34,6 +34,7 @@ export const ADMIN_ROUTES = {
   users: '/admin/usuarios',
   media: '/admin/media',
   analytics: '/admin/analytics',
+  options: '/admin/opciones',
   settings: '/admin/ajustes',
 } as const
 

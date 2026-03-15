@@ -12,6 +12,7 @@ import {
   Users,
   Image,
   BarChart3,
+  ListChecks,
   Settings,
   X,
 } from 'lucide-react'
@@ -22,6 +23,7 @@ const iconMap: Record<string, React.ElementType> = {
   UserPlus,
   Users,
   Image,
+  ListChecks,
   BarChart3,
   Settings,
 }
