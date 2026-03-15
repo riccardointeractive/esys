@@ -5,6 +5,7 @@ import { CTABanner } from '@/components/sections/CTABanner'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
 import { localizedRoutes } from '@/config/i18n/routes'
+import { getDefinitions } from '@/lib/definitions'
 
 interface HomePageProps {
   params: Promise<{ lang: string }>
@@ -14,10 +15,14 @@ export default async function HomePage({ params }: HomePageProps) {
   const { lang } = await params
   const dict = getDictionary(lang as Locale)
   const routes = localizedRoutes(lang as Locale)
+  const [typeDefinitions, bedroomDefinitions] = await Promise.all([
+    getDefinitions('property_type'),
+    getDefinitions('bedroom_option'),
+  ])
 
   return (
     <>
-      <Hero dict={dict} />
+      <Hero dict={dict} typeDefinitions={typeDefinitions} bedroomDefinitions={bedroomDefinitions} />
 
       <FeaturedProperties dict={dict} />
 

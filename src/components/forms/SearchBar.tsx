@@ -3,9 +3,17 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, ChevronDown } from 'lucide-react'
-import { BEDROOMS_OPTIONS } from '@/config/property'
 import { useDictionary, useLocale } from '@/components/providers/LocaleProvider'
 import { localizedRoutes } from '@/config/i18n/routes'
+import type { Definition } from '@/types/definition'
+
+function defLabel(def: Definition, locale: string): string {
+  switch (locale) {
+    case 'en': return def.label_en || def.label_es
+    case 'ru': return def.label_ru || def.label_es
+    default: return def.label_es
+  }
+}
 
 interface DropdownOption {
   value: string
@@ -69,7 +77,12 @@ function SearchDropdown({
   )
 }
 
-export function SearchBar() {
+interface SearchBarProps {
+  typeDefinitions?: Definition[]
+  bedroomDefinitions?: Definition[]
+}
+
+export function SearchBar({ typeDefinitions, bedroomDefinitions }: SearchBarProps) {
   const router = useRouter()
   const t = useDictionary()
   const locale = useLocale()
@@ -90,15 +103,13 @@ export function SearchBar() {
     router.push(`${routes.properties}?${params.toString()}`)
   }
 
-  const typeOptions: DropdownOption[] = Object.entries(t.property.types).map(([key, label]) => ({
-    value: key,
-    label: label as string,
-  }))
+  const typeOptions: DropdownOption[] = typeDefinitions
+    ? typeDefinitions.map((d) => ({ value: d.key, label: defLabel(d, locale) }))
+    : Object.entries(t.property.types).map(([key, label]) => ({ value: key, label: label as string }))
 
-  const bedroomOptions: DropdownOption[] = BEDROOMS_OPTIONS.map((n) => ({
-    value: String(n),
-    label: `${n}+`,
-  }))
+  const bedroomOptions: DropdownOption[] = bedroomDefinitions
+    ? bedroomDefinitions.map((d) => ({ value: d.key, label: `${d.key}+` }))
+    : [1, 2, 3, 4, 5].map((n) => ({ value: String(n), label: `${n}+` }))
 
   return (
     <form onSubmit={handleSubmit} className="vip-hero-search">

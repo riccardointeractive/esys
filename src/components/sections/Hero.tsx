@@ -1,14 +1,17 @@
 import { SearchBar } from '@/components/forms/SearchBar'
 import type { Dictionary } from '@/config/i18n'
+import type { Definition } from '@/types/definition'
 
 // Alicante — sunset with palm trees (Unsplash: Pe_SJm0aHqs)
 const HERO_IMAGE = 'https://images.unsplash.com/photo-1680537732160-01750bae5217?w=1920&h=1080&fit=crop&q=80'
 
 interface HeroProps {
   dict: Dictionary
+  typeDefinitions?: Definition[]
+  bedroomDefinitions?: Definition[]
 }
 
-export function Hero({ dict }: HeroProps) {
+export function Hero({ dict, typeDefinitions, bedroomDefinitions }: HeroProps) {
   return (
     <section
       className="vip-hero vip-hero--full"
@@ -24,7 +27,7 @@ export function Hero({ dict }: HeroProps) {
           <p className="ds-text-lg ds-md:text-xl ds-mb-8 vip-hero__subtitle" style={{ maxWidth: '36rem', marginInline: 'auto' }}>
             {dict.hero.subtitle}
           </p>
-          <SearchBar />
+          <SearchBar typeDefinitions={typeDefinitions} bedroomDefinitions={bedroomDefinitions} />
         </div>
       </div>
     </section>
