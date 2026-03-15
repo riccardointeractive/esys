@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { siteConfig } from '@/config/site'
+import { Logo } from '@/components/ui/Logo'
 import { localizedRoutes } from '@/config/i18n/routes'
 import type { Locale } from '@/config/i18n'
 
@@ -16,9 +16,9 @@ export default async function AuthLayout({ children, params }: AuthLayoutProps) 
     <div className="ds-min-h-screen ds-flex ds-flex-col ds-items-center ds-justify-center ds-bg-base ds-px-4">
       <Link
         href={routes.home}
-        className="font-display ds-text-2xl ds-text-primary ds-mb-8"
+        className="ds-mb-8"
       >
-        {siteConfig.name}
+        <Logo height={32} />
       </Link>
       <div className="ds-w-full" style={{ maxWidth: '24rem' }}>
         {children}
