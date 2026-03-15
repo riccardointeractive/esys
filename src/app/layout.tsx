@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 
 import { GeistMono } from 'geist/font/mono'
 import { ThemeProvider } from '@/components/layout/ThemeProvider'
+import { AuthProvider } from '@/components/providers/AuthProvider'
 import { siteConfig } from '@/config/site'
 import './globals.css'
 
@@ -43,7 +44,9 @@ export default function RootLayout({
       <body
         className={`${clashDisplay.variable} ${switzer.variable} ${GeistMono.variable}`}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
