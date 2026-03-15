@@ -6,7 +6,7 @@ import { TABLES } from '@/config/supabase-tables'
 import { DEFINITION_CATEGORIES } from '@/config/property'
 import type { DefinitionCategory } from '@/types/definition'
 
-const VALID_CATEGORIES = new Set(Object.values(DEFINITION_CATEGORIES))
+const VALID_CATEGORIES = new Set<string>(Object.values(DEFINITION_CATEGORIES))
 
 /* ─── GET /api/admin/definitions?category=property_type ─── */
 
