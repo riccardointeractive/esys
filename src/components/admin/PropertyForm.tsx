@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Save, ArrowLeft, Loader2 } from 'lucide-react'
+import { CustomSelect } from '@digiko-npm/cms/ui'
 import { PropertyFeatureSelector } from '@/components/admin/PropertyFeatureSelector'
 import { PropertyImageManager } from '@/components/admin/PropertyImageManager'
-import { PROPERTY_TYPES, PROPERTY_STATUS, PROPERTY_CATEGORY, ENERGY_RATINGS } from '@/config/property'
+import { PROPERTY_TYPES, PROPERTY_STATUS, PROPERTY_CATEGORY, ENERGY_RATINGS, BEDROOMS_OPTIONS, BATHROOMS_OPTIONS } from '@/config/property'
 import { ADMIN_ROUTES, ADMIN_API_ROUTES } from '@/config/routes'
 import type { PropertyFormData, PropertyWithRelations, PropertyImageInput } from '@/types/property'
 
@@ -14,9 +15,12 @@ interface PropertyFormProps {
   property?: PropertyWithRelations
 }
 
-const typeEntries = Object.entries(PROPERTY_TYPES)
-const statusEntries = Object.entries(PROPERTY_STATUS)
-const categoryEntries = Object.entries(PROPERTY_CATEGORY)
+const typeOptions = Object.entries(PROPERTY_TYPES).map(([k, l]) => ({ value: k, label: l }))
+const statusOptions = Object.entries(PROPERTY_STATUS).map(([k, l]) => ({ value: k, label: l }))
+const categoryOptions = Object.entries(PROPERTY_CATEGORY).map(([k, l]) => ({ value: k, label: l }))
+const bedroomOptions = BEDROOMS_OPTIONS.map((n) => ({ value: String(n), label: String(n) }))
+const bathroomOptions = BATHROOMS_OPTIONS.map((n) => ({ value: String(n), label: String(n) }))
+const energyOptions = ENERGY_RATINGS.map((r) => ({ value: r, label: r }))
 
 function toFormData(p?: PropertyWithRelations): PropertyFormData {
   if (!p) {
@@ -154,27 +158,29 @@ export function PropertyForm({ property }: PropertyFormProps) {
             <div className="ds-card__header">
               <h2 className="ds-card__title">Información básica</h2>
             </div>
-            <div className="ds-card__body ds-flex ds-flex-col ds-gap-4">
-              <div className="ds-form-group">
-                <label className="ds-label">Título</label>
-                <input
-                  type="text"
-                  className="ds-input"
-                  value={form.title}
-                  onChange={(e) => updateField('title', e.target.value)}
-                  placeholder="Ej: Ático con vistas al mar"
-                  required
-                />
-              </div>
-              <div className="ds-form-group">
-                <label className="ds-label">Descripción</label>
-                <textarea
-                  className="ds-textarea"
-                  value={form.description}
-                  onChange={(e) => updateField('description', e.target.value)}
-                  placeholder="Describe la propiedad..."
-                  rows={5}
-                />
+            <div className="ds-card__body">
+              <div className="ds-form">
+                <div>
+                  <label className="ds-label">Título</label>
+                  <input
+                    type="text"
+                    className="ds-input ds-input--lg"
+                    value={form.title}
+                    onChange={(e) => updateField('title', e.target.value)}
+                    placeholder="Ej: Ático con vistas al mar"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="ds-label">Descripción</label>
+                  <textarea
+                    className="ds-textarea"
+                    value={form.description}
+                    onChange={(e) => updateField('description', e.target.value)}
+                    placeholder="Describe la propiedad..."
+                    rows={5}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -186,71 +192,67 @@ export function PropertyForm({ property }: PropertyFormProps) {
             </div>
             <div className="ds-card__body">
               <div className="ds-grid ds-grid-cols-2 ds-md:grid-cols-3 ds-gap-4">
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Tipo</label>
-                  <select
-                    className="ds-select"
+                  <CustomSelect
+                    options={typeOptions}
                     value={form.type}
-                    onChange={(e) => updateField('type', e.target.value)}
-                  >
-                    {typeEntries.map(([key, label]) => (
-                      <option key={key} value={key}>{label}</option>
-                    ))}
-                  </select>
+                    onChange={(v) => updateField('type', v)}
+                    label="Tipo"
+                    size="lg"
+                  />
                 </div>
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Categoría</label>
-                  <select
-                    className="ds-select"
+                  <CustomSelect
+                    options={categoryOptions}
                     value={form.category}
-                    onChange={(e) => updateField('category', e.target.value)}
-                  >
-                    {categoryEntries.map(([key, label]) => (
-                      <option key={key} value={key}>{label}</option>
-                    ))}
-                  </select>
+                    onChange={(v) => updateField('category', v)}
+                    label="Categoría"
+                    size="lg"
+                  />
                 </div>
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Precio (€)</label>
                   <input
                     type="number"
-                    className="ds-input"
+                    className="ds-input ds-input--lg"
                     value={form.price || ''}
                     onChange={(e) => updateField('price', Number(e.target.value))}
                     min={0}
                     step={1000}
                   />
                 </div>
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Superficie (m²)</label>
                   <input
                     type="number"
-                    className="ds-input"
+                    className="ds-input ds-input--lg"
                     value={form.area || ''}
                     onChange={(e) => updateField('area', Number(e.target.value))}
                     min={0}
                   />
                 </div>
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Habitaciones</label>
-                  <input
-                    type="number"
-                    className="ds-input"
-                    value={form.bedrooms}
-                    onChange={(e) => updateField('bedrooms', Number(e.target.value))}
-                    min={0}
-                    max={20}
+                  <CustomSelect
+                    options={bedroomOptions}
+                    value={String(form.bedrooms)}
+                    onChange={(v) => updateField('bedrooms', Number(v))}
+                    label="Habitaciones"
+                    size="lg"
+                    searchable={false}
                   />
                 </div>
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Baños</label>
-                  <input
-                    type="number"
-                    className="ds-input"
-                    value={form.bathrooms}
-                    onChange={(e) => updateField('bathrooms', Number(e.target.value))}
-                    min={0}
-                    max={10}
+                  <CustomSelect
+                    options={bathroomOptions}
+                    value={String(form.bathrooms)}
+                    onChange={(v) => updateField('bathrooms', Number(v))}
+                    label="Baños"
+                    size="lg"
+                    searchable={false}
                   />
                 </div>
               </div>
@@ -264,39 +266,39 @@ export function PropertyForm({ property }: PropertyFormProps) {
             </div>
             <div className="ds-card__body">
               <div className="ds-grid ds-grid-cols-2 ds-gap-4">
-                <div className="ds-form-group ds-col-span-2">
+                <div className="ds-col-span-2">
                   <label className="ds-label">Dirección</label>
                   <input
                     type="text"
-                    className="ds-input"
+                    className="ds-input ds-input--lg"
                     value={form.address}
                     onChange={(e) => updateField('address', e.target.value)}
                     placeholder="Calle, número..."
                   />
                 </div>
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Ciudad</label>
                   <input
                     type="text"
-                    className="ds-input"
+                    className="ds-input ds-input--lg"
                     value={form.city}
                     onChange={(e) => updateField('city', e.target.value)}
                   />
                 </div>
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Provincia</label>
                   <input
                     type="text"
-                    className="ds-input"
+                    className="ds-input ds-input--lg"
                     value={form.province}
                     onChange={(e) => updateField('province', e.target.value)}
                   />
                 </div>
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Código Postal</label>
                   <input
                     type="text"
-                    className="ds-input"
+                    className="ds-input ds-input--lg"
                     value={form.postal_code}
                     onChange={(e) => updateField('postal_code', e.target.value)}
                   />
@@ -312,35 +314,34 @@ export function PropertyForm({ property }: PropertyFormProps) {
             </div>
             <div className="ds-card__body">
               <div className="ds-grid ds-grid-cols-2 ds-md:grid-cols-3 ds-gap-4">
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Certificación Energética</label>
-                  <select
-                    className="ds-select"
+                  <CustomSelect
+                    options={energyOptions}
                     value={form.energy_rating}
-                    onChange={(e) => updateField('energy_rating', e.target.value)}
-                  >
-                    <option value="">Sin certificar</option>
-                    {ENERGY_RATINGS.map((rating) => (
-                      <option key={rating} value={rating}>{rating}</option>
-                    ))}
-                  </select>
+                    onChange={(v) => updateField('energy_rating', v)}
+                    placeholder="Sin certificar"
+                    label="Certificación Energética"
+                    size="lg"
+                    searchable={false}
+                  />
                 </div>
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Año de construcción</label>
                   <input
                     type="number"
-                    className="ds-input"
+                    className="ds-input ds-input--lg"
                     value={form.year_built ?? ''}
                     onChange={(e) => updateField('year_built', e.target.value ? Number(e.target.value) : null)}
                     min={1900}
                     max={new Date().getFullYear() + 5}
                   />
                 </div>
-                <div className="ds-form-group">
+                <div>
                   <label className="ds-label">Planta</label>
                   <input
                     type="number"
-                    className="ds-input"
+                    className="ds-input ds-input--lg"
                     value={form.floor ?? ''}
                     onChange={(e) => updateField('floor', e.target.value ? Number(e.target.value) : null)}
                     min={-3}
@@ -359,35 +360,37 @@ export function PropertyForm({ property }: PropertyFormProps) {
             <div className="ds-card__header">
               <h2 className="ds-card__title">Estado</h2>
             </div>
-            <div className="ds-card__body ds-flex ds-flex-col ds-gap-4">
-              <div className="ds-form-group">
-                <label className="ds-label">Estado</label>
-                <select
-                  className="ds-select"
-                  value={form.status}
-                  onChange={(e) => updateField('status', e.target.value)}
-                >
-                  {statusEntries.map(([key, label]) => (
-                    <option key={key} value={key}>{label}</option>
-                  ))}
-                </select>
+            <div className="ds-card__body">
+              <div className="ds-form">
+                <div>
+                  <CustomSelect
+                    options={statusOptions}
+                    value={form.status}
+                    onChange={(v) => updateField('status', v)}
+                    label="Estado"
+                    size="lg"
+                    searchable={false}
+                  />
+                </div>
+                <div className="ds-flex ds-flex-col ds-gap-3">
+                  <label className="ds-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={form.published}
+                      onChange={(e) => updateField('published', e.target.checked)}
+                    />
+                    <span>Publicada</span>
+                  </label>
+                  <label className="ds-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={form.featured}
+                      onChange={(e) => updateField('featured', e.target.checked)}
+                    />
+                    <span>Destacada</span>
+                  </label>
+                </div>
               </div>
-              <label className="ds-checkbox">
-                <input
-                  type="checkbox"
-                  checked={form.published}
-                  onChange={(e) => updateField('published', e.target.checked)}
-                />
-                <span>Publicada</span>
-              </label>
-              <label className="ds-checkbox">
-                <input
-                  type="checkbox"
-                  checked={form.featured}
-                  onChange={(e) => updateField('featured', e.target.checked)}
-                />
-                <span>Destacada</span>
-              </label>
             </div>
           </div>
 

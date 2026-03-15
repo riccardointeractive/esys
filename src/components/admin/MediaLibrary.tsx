@@ -203,7 +203,9 @@ export function MediaLibrary() {
         multiple
         maxSizeMb={MEDIA_CONFIG.maxFileSizeMb}
         onUpload={handleUploadComplete}
-        className={cn('vip-image-uploader', items.length === 0 && !loading && 'vip-image-uploader--large')}
+        label="Arrastra archivos aquí o haz clic para subir"
+        hint={`JPG, PNG, WebP, GIF, MP4, WebM · Max ${MEDIA_CONFIG.maxFileSizeMb} MB`}
+        className={cn(items.length === 0 && !loading && 'ds-drop-zone--lg')}
       />
 
       {/* Toolbar + grid only when there are items or loading */}

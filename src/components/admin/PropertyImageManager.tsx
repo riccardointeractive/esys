@@ -66,8 +66,9 @@ export function PropertyImageManager({ images, onChange }: PropertyImageManagerP
         {images.map((img, index) => (
           <div
             key={`${img.url}-${index}`}
-            className="ds-flex ds-items-center ds-gap-3 ds-p-3 ds-bg-surface ds-border ds-rounded-lg"
+            className="ds-card ds-card--compact"
           >
+          <div className="ds-card__body ds-flex ds-items-center ds-gap-3">
             <div className="ds-flex ds-flex-col ds-gap-1">
               <button
                 type="button"
@@ -121,6 +122,7 @@ export function PropertyImageManager({ images, onChange }: PropertyImageManagerP
               <X size={16} />
             </button>
           </div>
+          </div>
         ))}
       </div>
 
@@ -131,7 +133,9 @@ export function PropertyImageManager({ images, onChange }: PropertyImageManagerP
           folder={MEDIA_CONFIG.paths.properties}
           accept={MEDIA_CONFIG.allowedImageTypes.join(',')}
           onUpload={handleUpload}
-          className="vip-image-uploader"
+          label="Arrastra imágenes aquí o haz clic para subir"
+          hint={`JPG, PNG, WebP, GIF · Max ${MEDIA_CONFIG.maxFileSizeMb} MB`}
+          className=""
         />
       )}
     </div>

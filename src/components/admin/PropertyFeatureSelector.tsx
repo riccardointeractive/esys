@@ -19,7 +19,7 @@ export function PropertyFeatureSelector({ selected, onChange }: PropertyFeatureS
   }
 
   return (
-    <div className="ds-grid ds-grid-cols-2 ds-md:grid-cols-3 ds-lg:grid-cols-4 ds-gap-3">
+    <div className="ds-grid ds-grid-cols-2 ds-gap-3">
       {featureEntries.map(([key, label]) => (
         <label key={key} className="ds-checkbox">
           <input

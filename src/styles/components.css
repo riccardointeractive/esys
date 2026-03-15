@@ -358,25 +358,6 @@
   display: block;
 }
 
-/* ─── Admin: Image Uploader ─── */
-
-.vip-image-uploader {
-  border: 2px dashed var(--ds-color-border);
-  border-radius: var(--ds-radius-lg);
-  padding: var(--ds-space-6);
-  text-align: center;
-  transition: border-color var(--ds-duration-fast) var(--ds-ease-default);
-}
-
-.vip-image-uploader:hover {
-  border-color: var(--ds-color-border-hover);
-}
-
-.vip-image-uploader--large {
-  padding: var(--ds-space-16) var(--ds-space-4);
-  min-height: 16rem;
-}
-
 /* ─── Admin: Media Library ─── */
 
 .vip-media-item {
