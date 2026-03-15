@@ -24,6 +24,12 @@ export const REDIS_KEYS = {
   pageViews: (slug: string) => `${PREFIX}:views:${slug}` as const,
   dailyVisits: (date: string) => `${PREFIX}:visits:${date}` as const,
 
+  /* User Sessions */
+  userSessionByToken: (token: string) => `${PREFIX}:user-session:${token}` as const,
+
   /* User */
   userFavorites: (userId: string) => `${PREFIX}:favorites:${userId}` as const,
+
+  /* Rate Limiting — Reset Password */
+  resetRateLimit: (ip: string) => `${PREFIX}:rate:reset:${ip}` as const,
 } as const

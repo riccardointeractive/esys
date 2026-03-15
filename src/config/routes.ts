@@ -9,6 +9,7 @@ export const ROUTES = {
   contact: '/contacto',
   login: '/login',
   register: '/registro',
+  resetPassword: '/reset-password',
   favorites: '/favoritos',
   search: '/buscar',
 } as const
@@ -47,6 +48,11 @@ export const API_ROUTES = {
     register: '/api/auth/register',
     logout: '/api/auth/logout',
     session: '/api/auth/session',
+    resetPassword: '/api/auth/reset-password',
+    changePassword: '/api/auth/change-password',
+    updateProfile: '/api/auth/profile',
+    setup2fa: '/api/auth/2fa/setup',
+    verify2fa: '/api/auth/2fa/verify',
   },
   favorites: '/api/favorites',
   alerts: '/api/alerts',
@@ -59,6 +65,7 @@ export const ADMIN_API_ROUTES = {
   auth: '/api/admin/auth',
   properties: '/api/admin/properties',
   propertyById: (id: string) => `/api/admin/properties/${id}`,
+  users: '/api/admin/users',
   media: '/api/admin/media',
   mediaPresign: '/api/admin/media/presign',
 } as const
