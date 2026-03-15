@@ -1,9 +1,11 @@
 'use client'
 
-import { X, GripVertical, Plus } from 'lucide-react'
+import { useState } from 'react'
+import { X, GripVertical, Image } from 'lucide-react'
 import { MediaUploader } from '@digiko-npm/cms/media'
 import { ADMIN_API_ROUTES } from '@/config/routes'
 import { MEDIA_CONFIG } from '@/config/media'
+import { MediaPickerModal } from '@/components/admin/MediaPickerModal'
 import type { PropertyImageInput } from '@/types/property'
 
 interface PropertyImageManagerProps {
@@ -17,12 +19,26 @@ const uploadConfig = {
 }
 
 export function PropertyImageManager({ images, onChange }: PropertyImageManagerProps) {
+  const [pickerOpen, setPickerOpen] = useState(false)
+
+  const remaining = MEDIA_CONFIG.maxPropertyImages - images.length
+  const atLimit = remaining <= 0
+
   function handleUpload(url: string) {
-    if (images.length >= MEDIA_CONFIG.maxPropertyImages) return
+    if (atLimit) return
     onChange([
       ...images,
       { url, alt_text: '', sort_order: images.length },
     ])
+  }
+
+  function handlePickerSelect(urls: string[]) {
+    const newImages: PropertyImageInput[] = urls.map((url, i) => ({
+      url,
+      alt_text: '',
+      sort_order: images.length + i,
+    }))
+    onChange([...images, ...newImages])
   }
 
   function handleRemove(index: number) {
@@ -126,18 +142,38 @@ export function PropertyImageManager({ images, onChange }: PropertyImageManagerP
         ))}
       </div>
 
-      {/* Upload button */}
-      {images.length < MEDIA_CONFIG.maxPropertyImages && (
-        <MediaUploader
-          uploadConfig={uploadConfig}
-          folder={MEDIA_CONFIG.paths.properties}
-          accept={MEDIA_CONFIG.allowedImageTypes.join(',')}
-          onUpload={handleUpload}
-          label="Arrastra imágenes aquí o haz clic para subir"
-          hint={`JPG, PNG, WebP, GIF · Max ${MEDIA_CONFIG.maxFileSizeMb} MB`}
-          className=""
-        />
+      {/* Actions: Upload + Pick from library */}
+      {!atLimit && (
+        <div className="ds-flex ds-flex-col ds-gap-3">
+          <MediaUploader
+            uploadConfig={uploadConfig}
+            folder={MEDIA_CONFIG.paths.properties}
+            accept={MEDIA_CONFIG.allowedImageTypes.join(',')}
+            onUpload={handleUpload}
+            label="Arrastra imágenes aquí o haz clic para subir"
+            hint={`JPG, PNG, WebP, GIF · Max ${MEDIA_CONFIG.maxFileSizeMb} MB`}
+            className=""
+          />
+
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="ds-btn ds-btn--secondary ds-w-full"
+          >
+            <Image size={16} />
+            <span className="ds-ml-2">Seleccionar de la biblioteca</span>
+          </button>
+        </div>
       )}
+
+      {/* Media Picker Modal */}
+      <MediaPickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={handlePickerSelect}
+        excludeUrls={images.map((i) => i.url)}
+        maxSelectable={remaining}
+      />
     </div>
   )
 }
