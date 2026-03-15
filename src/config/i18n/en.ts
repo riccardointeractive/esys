@@ -12,8 +12,8 @@ export const en = {
     menu: 'Menu',
   },
   hero: {
-    title: 'ESYS VIP',
-    subtitle: 'Find your ideal home. New build and resale properties with professional guidance.',
+    title: 'Find your ideal home',
+    subtitle: 'New build and resale properties with professional guidance.',
   },
   search: {
     placeholder: 'City, area or address...',

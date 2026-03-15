@@ -12,8 +12,8 @@ export const es = {
     menu: 'Menú',
   },
   hero: {
-    title: 'ESYS VIP',
-    subtitle: 'Encuentra tu hogar ideal. Propiedades de obra nueva y segunda mano con asesoramiento profesional.',
+    title: 'Encuentra tu hogar ideal',
+    subtitle: 'Propiedades de obra nueva y segunda mano con asesoramiento profesional.',
   },
   search: {
     placeholder: 'Ciudad, zona o dirección...',
