@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
+
 import { GeistMono } from 'geist/font/mono'
 import { ThemeProvider } from '@/components/layout/ThemeProvider'
 import { siteConfig } from '@/config/site'

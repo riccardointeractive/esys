@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Menu, X, Heart, User } from 'lucide-react'
 import { siteConfig } from '@/config/site'
+import { Logo } from '@/components/ui/Logo'
 import { useDictionary, useLocale } from '@/components/providers/LocaleProvider'
 import { localizedRoutes } from '@/config/i18n/routes'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
@@ -32,7 +33,7 @@ export function Navbar() {
       <nav className="ds-nav">
         <div className="ds-nav__inner">
           <Link href={routes.home} className="ds-nav__brand">
-            {siteConfig.name}
+            <Logo height={18} />
           </Link>
 
           {/* Desktop menu */}

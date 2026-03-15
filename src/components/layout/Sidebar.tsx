@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { siteConfig } from '@/config/site'
+import { Logo } from '@/components/ui/Logo'
 import { cn } from '@/lib/utils'
 import {
   LayoutDashboard,
@@ -51,8 +52,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       >
         {/* Brand */}
         <div className="ds-flex ds-h-16 ds-items-center ds-justify-between ds-border-b ds-px-6">
-          <Link href="/" className="font-display ds-text-lg ds-text-primary">
-            {siteConfig.name}
+          <Link href="/" className="ds-text-primary">
+            <Logo height={16} />
           </Link>
           <button
             onClick={onClose}

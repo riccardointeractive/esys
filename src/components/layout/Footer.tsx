@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { siteConfig } from '@/config/site'
+import { Logo } from '@/components/ui/Logo'
 import { localizedRoutes } from '@/config/i18n/routes'
 import type { Locale, Dictionary } from '@/config/i18n'
 
@@ -25,8 +26,8 @@ export function Footer({ lang, dict }: FooterProps) {
       <div className="ds-container">
         <div className="ds-grid ds-grid-cols-1 ds-md:grid-cols-4 ds-gap-8">
           <div>
-            <Link href={routes.home} className="font-display ds-text-lg ds-text-primary">
-              {siteConfig.name}
+            <Link href={routes.home} className="ds-text-primary">
+              <Logo height={16} />
             </Link>
             <p className="ds-text-sm ds-text-secondary ds-mt-3">
               {dict.hero.subtitle}
