@@ -448,6 +448,48 @@
 }
 
 /* ─── Favorite Button ─── */
+/* ─── Admin: Settings Tabs ─── */
+
+.vip-settings-tabs {
+  display: flex;
+  gap: var(--ds-space-1);
+  overflow-x: auto;
+  border-bottom: 1px solid var(--ds-color-border);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.vip-settings-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.vip-settings-tab {
+  padding: var(--ds-space-2) var(--ds-space-4);
+  font-size: var(--ds-text-sm);
+  color: var(--ds-color-text-secondary);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition:
+    color var(--ds-duration-fast) var(--ds-ease-default),
+    border-color var(--ds-duration-fast) var(--ds-ease-default);
+  cursor: pointer;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.vip-settings-tab:hover {
+  color: var(--ds-color-text);
+}
+
+.vip-settings-tab--active {
+  color: var(--ds-color-text);
+  border-bottom-color: var(--ds-color-interactive);
+  font-weight: var(--ds-weight-medium);
+}
+
+/* ─── Favorite Button ─── */
 .vip-favorite-btn {
   position: absolute;
   top: 0.5rem;

@@ -39,7 +39,7 @@ export const siteConfig = {
     { label: 'Usuarios', href: ADMIN_ROUTES.users, icon: 'Users' },
     { label: 'Media', href: ADMIN_ROUTES.media, icon: 'Image' },
     { label: 'Analytics', href: ADMIN_ROUTES.analytics, icon: 'BarChart3', disabled: true },
-    { label: 'Ajustes', href: ADMIN_ROUTES.settings, icon: 'Settings', disabled: true },
+    { label: 'Ajustes', href: ADMIN_ROUTES.settings, icon: 'Settings' },
   ],
   admin: {
     itemsPerPage: {
