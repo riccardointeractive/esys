@@ -217,7 +217,7 @@ export function PropertyTable({ definitions }: PropertyTableProps) {
                           href={ADMIN_ROUTES.propertyEdit.replace('[id]', prop.id)}
                           className="ds-text-interactive ds-font-medium"
                         >
-                          {prop.title}
+                          {prop.title_es}
                         </Link>
                         {!prop.published && (
                           <span className="ds-badge ds-badge--secondary ds-ml-2">Borrador</span>
@@ -299,7 +299,7 @@ export function PropertyTable({ definitions }: PropertyTableProps) {
 
       {/* Delete modal */}
       <DeletePropertyModal
-        propertyTitle={deleteTarget?.title ?? ''}
+        propertyTitle={deleteTarget?.title_es ?? ''}
         isOpen={!!deleteTarget}
         isDeleting={isDeleting}
         onConfirm={handleDelete}

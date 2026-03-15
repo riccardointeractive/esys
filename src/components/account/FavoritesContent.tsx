@@ -12,7 +12,7 @@ interface FavoriteProperty {
   image: string | null
   esys_properties: {
     id: string
-    title: string
+    title_es: string
     slug: string
     price: number
     area: number
@@ -71,7 +71,7 @@ export function FavoritesContent() {
                 key={fav.id}
                 id={prop.id}
                 slug={prop.slug}
-                title={prop.title}
+                title={prop.title_es}
                 location={`${prop.city}, ${prop.province}`}
                 price={prop.price}
                 image={fav.image || undefined}

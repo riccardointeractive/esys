@@ -489,6 +489,40 @@
   font-weight: var(--ds-weight-medium);
 }
 
+/* ─── Locale Pills ─── */
+.vip-locale-pills {
+  display: flex;
+  gap: 2px;
+  background: var(--ds-color-elevated);
+  border-radius: var(--ds-radius-md);
+  padding: 2px;
+}
+
+.vip-locale-pill {
+  padding: var(--ds-space-0-5) var(--ds-space-2);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  color: var(--ds-color-text-tertiary);
+  background: none;
+  border: none;
+  border-radius: var(--ds-radius-sm);
+  cursor: pointer;
+  transition:
+    color var(--ds-duration-fast) var(--ds-ease-default),
+    background-color var(--ds-duration-fast) var(--ds-ease-default);
+  line-height: 1.5;
+}
+
+.vip-locale-pill:hover {
+  color: var(--ds-color-text-secondary);
+}
+
+.vip-locale-pill--active {
+  color: var(--ds-color-text);
+  background: var(--ds-color-surface);
+  box-shadow: var(--ds-shadow-xs);
+}
+
 /* ─── Favorite Button ─── */
 .vip-favorite-btn {
   position: absolute;

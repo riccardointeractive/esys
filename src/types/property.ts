@@ -2,9 +2,13 @@
 
 export interface Property {
   id: string
-  title: string
+  title_es: string
+  title_en: string
+  title_ru: string
   slug: string
-  description: string
+  description_es: string
+  description_en: string
+  description_ru: string
   type: string
   status: string
   category: string
@@ -53,8 +57,12 @@ export interface PropertyWithRelations extends Property {
 /* ─── Form Data (create / edit) ─── */
 
 export interface PropertyFormData {
-  title: string
-  description: string
+  title_es: string
+  title_en: string
+  title_ru: string
+  description_es: string
+  description_en: string
+  description_ru: string
   type: string
   status: string
   category: string

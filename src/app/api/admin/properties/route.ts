@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     .is('deleted_at', null)
 
   if (search) {
-    query = query.or(`title.ilike.%${search}%,city.ilike.%${search}%,address.ilike.%${search}%`)
+    query = query.or(`title_es.ilike.%${search}%,title_en.ilike.%${search}%,city.ilike.%${search}%,address.ilike.%${search}%`)
   }
   if (status) query = query.eq('status', status)
   if (category) query = query.eq('category', category)
@@ -91,15 +91,15 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  if (!body.title?.trim()) {
+  if (!body.title_es?.trim()) {
     return NextResponse.json(
-      { error: 'El título es obligatorio' },
+      { error: 'El título (ES) es obligatorio' },
       { status: HTTP_STATUS.BAD_REQUEST }
     )
   }
 
   const supabase = getAdminClient()
-  const slug = generateSlug(body.title)
+  const slug = generateSlug(body.title_es)
 
   // Check slug uniqueness
   const { data: existing } = await supabase
@@ -115,9 +115,13 @@ export async function POST(request: NextRequest) {
   const { data: property, error: propError } = await supabase
     .from(TABLES.properties)
     .insert({
-      title: body.title.trim(),
+      title_es: body.title_es.trim(),
+      title_en: body.title_en?.trim() ?? '',
+      title_ru: body.title_ru?.trim() ?? '',
       slug: finalSlug,
-      description: body.description?.trim() ?? '',
+      description_es: body.description_es?.trim() ?? '',
+      description_en: body.description_en?.trim() ?? '',
+      description_ru: body.description_ru?.trim() ?? '',
       type: body.type,
       status: body.status || 'available',
       category: body.category,

@@ -6,9 +6,12 @@ import { Save, ArrowLeft, Loader2 } from 'lucide-react'
 import { CustomSelect } from '@digiko-npm/cms/ui'
 import { PropertyFeatureSelector } from '@/components/admin/PropertyFeatureSelector'
 import { PropertyImageManager } from '@/components/admin/PropertyImageManager'
+import { LocalePills } from '@/components/admin/LocalePills'
 import { ADMIN_ROUTES, ADMIN_API_ROUTES } from '@/config/routes'
-import type { PropertyFormData, PropertyWithRelations, PropertyImageInput } from '@/types/property'
+import type { PropertyFormData, PropertyWithRelations } from '@/types/property'
 import type { Definition, DefinitionsByCategory } from '@/types/definition'
+
+type FormLocale = 'es' | 'en' | 'ru'
 
 interface PropertyFormProps {
   property?: PropertyWithRelations
@@ -22,8 +25,12 @@ function defsToOptions(defs: Definition[] | undefined): { value: string; label: 
 function toFormData(p?: PropertyWithRelations): PropertyFormData {
   if (!p) {
     return {
-      title: '',
-      description: '',
+      title_es: '',
+      title_en: '',
+      title_ru: '',
+      description_es: '',
+      description_en: '',
+      description_ru: '',
       type: '',
       status: '',
       category: '',
@@ -48,8 +55,12 @@ function toFormData(p?: PropertyWithRelations): PropertyFormData {
   }
 
   return {
-    title: p.title,
-    description: p.description,
+    title_es: p.title_es,
+    title_en: p.title_en,
+    title_ru: p.title_ru,
+    description_es: p.description_es,
+    description_en: p.description_en,
+    description_ru: p.description_ru,
     type: p.type,
     status: p.status,
     category: p.category,
@@ -83,6 +94,8 @@ export function PropertyForm({ property, definitions }: PropertyFormProps) {
   const [form, setForm] = useState<PropertyFormData>(() => toFormData(property))
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [titleLocale, setTitleLocale] = useState<FormLocale>('es')
+  const [descLocale, setDescLocale] = useState<FormLocale>('es')
 
   const typeOptions = defsToOptions(definitions.property_type)
   const statusOptions = defsToOptions(definitions.property_status)
@@ -95,6 +108,9 @@ export function PropertyForm({ property, definitions }: PropertyFormProps) {
   function updateField<K extends keyof PropertyFormData>(key: K, value: PropertyFormData[K]) {
     setForm((prev) => ({ ...prev, [key]: value }))
   }
+
+  const titleField = `title_${titleLocale}` as const
+  const descField = `description_${descLocale}` as const
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -166,23 +182,29 @@ export function PropertyForm({ property, definitions }: PropertyFormProps) {
             <div className="ds-card__body">
               <div className="ds-form">
                 <div>
-                  <label className="ds-label">Título</label>
+                  <div className="ds-flex ds-items-center ds-justify-between ds-mb-1">
+                    <label className="ds-label ds-mb-0">Título</label>
+                    <LocalePills value={titleLocale} onChange={setTitleLocale} />
+                  </div>
                   <input
                     type="text"
                     className="ds-input ds-input--lg"
-                    value={form.title}
-                    onChange={(e) => updateField('title', e.target.value)}
-                    placeholder="Ej: Ático con vistas al mar"
-                    required
+                    value={form[titleField] as string}
+                    onChange={(e) => updateField(titleField, e.target.value)}
+                    placeholder={titleLocale === 'es' ? 'Ej: Ático con vistas al mar' : titleLocale === 'en' ? 'e.g.: Penthouse with sea views' : 'Напр.: Пентхаус с видом на море'}
+                    required={titleLocale === 'es'}
                   />
                 </div>
                 <div>
-                  <label className="ds-label">Descripción</label>
+                  <div className="ds-flex ds-items-center ds-justify-between ds-mb-1">
+                    <label className="ds-label ds-mb-0">Descripción</label>
+                    <LocalePills value={descLocale} onChange={setDescLocale} />
+                  </div>
                   <textarea
                     className="ds-textarea"
-                    value={form.description}
-                    onChange={(e) => updateField('description', e.target.value)}
-                    placeholder="Describe la propiedad..."
+                    value={form[descField] as string}
+                    onChange={(e) => updateField(descField, e.target.value)}
+                    placeholder={descLocale === 'es' ? 'Describe la propiedad...' : descLocale === 'en' ? 'Describe the property...' : 'Опишите объект...'}
                     rows={5}
                   />
                 </div>
