@@ -92,7 +92,9 @@ export function middleware(request: NextRequest) {
         ? slugMap[thirdSegment]
         : thirdSegment
       const rewritePath = `/${maybeLocale}/cuenta${rewritedThird ? `/${rewritedThird}` : ''}`
-      return NextResponse.rewrite(new URL(rewritePath, request.url))
+      const rewriteUrl = new URL(rewritePath, request.url)
+      rewriteUrl.search = request.nextUrl.search
+      return NextResponse.rewrite(rewriteUrl)
     }
 
     /* Standard route rewrite */
@@ -100,7 +102,9 @@ export function middleware(request: NextRequest) {
       const internalSlug = slugMap[secondSegment]
       const rest = segments.slice(3).join('/')
       const rewritePath = `/${maybeLocale}/${internalSlug}${rest ? `/${rest}` : ''}`
-      return NextResponse.rewrite(new URL(rewritePath, request.url))
+      const rewriteUrl = new URL(rewritePath, request.url)
+      rewriteUrl.search = request.nextUrl.search
+      return NextResponse.rewrite(rewriteUrl)
     }
   }
 

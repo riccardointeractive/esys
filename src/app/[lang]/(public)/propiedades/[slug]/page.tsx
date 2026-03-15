@@ -5,6 +5,7 @@ import type { Locale } from '@/config/i18n'
 import { localizedRoutes } from '@/config/i18n/routes'
 import { fetchPropertyBySlug } from '@/lib/properties'
 import { cn } from '@/lib/utils'
+import { PropertyGallery } from '@/components/property/PropertyGallery'
 
 interface PropertyDetailPageProps {
   params: Promise<{ lang: string; slug: string }>
@@ -32,7 +33,6 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
     maximumFractionDigits: 0,
   }).format(property.price)
 
-  const mainImage = property.images[0]
   const typeLabel = dict.property.types[property.type as keyof typeof dict.property.types] ?? property.type
   const statusLabel = dict.property.status[property.status as keyof typeof dict.property.status] ?? property.status
   const categoryLabel = dict.property.category[property.category as keyof typeof dict.property.category] ?? property.category
@@ -52,30 +52,9 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
         {/* Main content */}
         <div className="ds-lg:col-span-2 ds-flex ds-flex-col ds-gap-6">
           {/* Gallery */}
-          <div className="ds-card">
-            {mainImage && (
-              <div className="ds-card__media">
-                <img
-                  src={mainImage.url}
-                  alt={mainImage.alt_text || title}
-                  style={{ width: '100%', height: 400, objectFit: 'cover' }}
-                />
-              </div>
-            )}
-            {property.images.length > 1 && (
-              <div className="ds-flex ds-gap-2 ds-p-3">
-                {property.images.slice(0, 4).map((img, i) => (
-                  <img
-                    key={img.id}
-                    src={img.url}
-                    alt={img.alt_text || `${title} ${i + 1}`}
-                    className="ds-rounded-md"
-                    style={{ width: '25%', height: 80, objectFit: 'cover', opacity: i === 0 ? 1 : 0.7 }}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+          {property.images.length > 0 && (
+            <PropertyGallery images={property.images} title={title} />
+          )}
 
           {/* Title + badges + stats */}
           <div className="ds-card">

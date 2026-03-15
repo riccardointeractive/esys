@@ -8,6 +8,9 @@ interface FetchPropertiesOptions {
   category?: 'newBuild' | 'resale'
   featured?: boolean
   limit?: number
+  location?: string
+  type?: string
+  bedrooms?: number
 }
 
 /** Fetch published properties with their first image. */
@@ -23,6 +26,11 @@ export async function fetchProperties(opts: FetchPropertiesOptions = {}) {
 
   if (opts.category) query = query.eq('category', opts.category)
   if (opts.featured) query = query.eq('featured', true)
+  if (opts.type) query = query.eq('type', opts.type)
+  if (opts.bedrooms) query = query.gte('bedrooms', opts.bedrooms)
+  if (opts.location) {
+    query = query.or(`city.ilike.%${opts.location}%,address.ilike.%${opts.location}%,province.ilike.%${opts.location}%`)
+  }
   if (opts.limit) query = query.limit(opts.limit)
 
   const { data: properties, error } = await query
