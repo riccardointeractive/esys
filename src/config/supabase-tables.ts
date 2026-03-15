@@ -12,6 +12,7 @@ export const TABLES = {
   contactMessages: 'esys_contact_messages',
   admins: 'esys_admins',
   media: 'esys_media',
+  mediaFolders: 'esys_media_folders',
   analytics: 'esys_analytics_events',
   definitions: 'esys_definitions',
 } as const

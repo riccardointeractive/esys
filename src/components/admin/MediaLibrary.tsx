@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Search, Trash2, Copy, Check, ChevronLeft, ChevronRight, Film } from 'lucide-react'
+import { Search, Trash2, Copy, Check, ChevronLeft, ChevronRight, Film, FolderPlus, FolderOpen, Pencil } from 'lucide-react'
 import { MediaUploader } from '@digiko-npm/cms/media'
 import { ADMIN_API_ROUTES } from '@/config/routes'
 import { MEDIA_CONFIG } from '@/config/media'
@@ -18,6 +18,7 @@ interface MediaRecord {
   width?: number | null
   height?: number | null
   alt_text?: string | null
+  folder_id?: string | null
   created_at: string
 }
 
@@ -63,11 +64,29 @@ export function MediaLibrary() {
   const [deleting, setDeleting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
 
+  // Folder state
+  const [folders, setFolders] = useState<{ id: string; name: string; created_at: string }[]>([])
+  const [activeFolder, setActiveFolder] = useState<string | null | undefined>(undefined)
+  const [creatingFolder, setCreatingFolder] = useState(false)
+  const [newFolderName, setNewFolderName] = useState('')
+  const [renamingFolderId, setRenamingFolderId] = useState<string | null>(null)
+  const [renameFolderName, setRenameFolderName] = useState('')
+
   // Edit state
   const [editName, setEditName] = useState('')
   const [editAlt, setEditAlt] = useState('')
   const [saving, setSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle')
+
+  const fetchFolders = useCallback(async () => {
+    try {
+      const res = await fetch(ADMIN_API_ROUTES.mediaFolders)
+      const data = await res.json()
+      setFolders(Array.isArray(data) ? data : [])
+    } catch {
+      console.error('Failed to fetch folders')
+    }
+  }, [])
 
   const fetchMedia = useCallback(async () => {
     setLoading(true)
@@ -77,6 +96,9 @@ export function MediaLibrary() {
     })
     if (search) params.set('search', search)
     if (filterType) params.set('type', filterType)
+    if (activeFolder !== undefined) {
+      params.set('folder_id', activeFolder === null ? 'null' : activeFolder)
+    }
 
     try {
       const res = await fetch(`${ADMIN_API_ROUTES.media}?${params}`)
@@ -89,11 +111,12 @@ export function MediaLibrary() {
     } finally {
       setLoading(false)
     }
-  }, [page, search, filterType])
+  }, [page, search, filterType, activeFolder])
 
   useEffect(() => {
     fetchMedia()
-  }, [fetchMedia])
+    fetchFolders()
+  }, [fetchMedia, fetchFolders])
 
   useEffect(() => {
     setPage(1)
@@ -144,6 +167,82 @@ export function MediaLibrary() {
       }
     } finally {
       setDeleting(false)
+    }
+  }
+
+  function handleFolderClick(folderId: string | null | undefined) {
+    setActiveFolder(folderId)
+    setPage(1)
+  }
+
+  async function handleCreateFolder() {
+    const name = newFolderName.trim()
+    if (!name) return
+    try {
+      const res = await fetch(ADMIN_API_ROUTES.mediaFolders, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      })
+      if (res.ok) {
+        setNewFolderName('')
+        setCreatingFolder(false)
+        fetchFolders()
+      }
+    } catch {
+      console.error('Failed to create folder')
+    }
+  }
+
+  async function handleRenameFolder(folderId: string) {
+    const name = renameFolderName.trim()
+    if (!name) return
+    try {
+      const res = await fetch(ADMIN_API_ROUTES.mediaFolders, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: folderId, name }),
+      })
+      if (res.ok) {
+        setRenamingFolderId(null)
+        setRenameFolderName('')
+        fetchFolders()
+      }
+    } catch {
+      console.error('Failed to rename folder')
+    }
+  }
+
+  async function handleDeleteFolder(folderId: string) {
+    if (!confirm('Eliminar esta carpeta? Los archivos no se eliminarán.')) return
+    try {
+      const res = await fetch(`${ADMIN_API_ROUTES.mediaFolders}?id=${folderId}`, {
+        method: 'DELETE',
+      })
+      if (res.ok) {
+        if (activeFolder === folderId) setActiveFolder(undefined)
+        fetchFolders()
+        fetchMedia()
+      }
+    } catch {
+      console.error('Failed to delete folder')
+    }
+  }
+
+  async function handleMoveToFolder(mediaId: string, folderId: string | null) {
+    try {
+      const res = await fetch(ADMIN_API_ROUTES.media, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: mediaId, folder_id: folderId }),
+      })
+      if (res.ok) {
+        const updated = await res.json()
+        setItems((prev) => prev.map((i) => (i.id === updated.id ? updated : i)))
+        if (selected?.id === mediaId) setSelected(updated)
+      }
+    } catch {
+      console.error('Failed to move media')
     }
   }
 
@@ -209,8 +308,8 @@ export function MediaLibrary() {
         className={cn(items.length === 0 && !loading && 'ds-drop-zone--lg')}
       />
 
-      {/* Toolbar + grid only when there are items or loading */}
-      {(loading || items.length > 0) && (
+      {/* Toolbar + grid — visible when loading, has items, or has folders/active filter */}
+      {(loading || items.length > 0 || folders.length > 0 || activeFolder !== undefined) && (
         <>
           <div className="ds-flex ds-flex-wrap ds-gap-3 ds-items-center ds-mb-4">
             <div className="ds-input-group ds-flex-1" style={{ minWidth: 200 }}>
@@ -242,6 +341,107 @@ export function MediaLibrary() {
           </div>
 
           <div className="ds-flex ds-gap-4">
+            {/* Folder sidebar */}
+            <div className="media-folder-sidebar">
+              <div className="ds-flex ds-items-center ds-justify-between ds-mb-2">
+                <span className="ds-text-xs ds-font-semibold ds-text-tertiary ds-uppercase">Carpetas</span>
+                <button
+                  type="button"
+                  className="ds-btn ds-btn--ghost ds-btn--xs"
+                  onClick={() => setCreatingFolder(true)}
+                  title="Carpeta nueva"
+                >
+                  <FolderPlus size={14} />
+                </button>
+              </div>
+
+              {/* "All" and "Uncategorized" */}
+              <button
+                type="button"
+                className={cn('media-folder-item', activeFolder === undefined && 'media-folder-item--active')}
+                onClick={() => handleFolderClick(undefined)}
+              >
+                <FolderOpen size={14} />
+                <span>Todas</span>
+              </button>
+              <button
+                type="button"
+                className={cn('media-folder-item', activeFolder === null && 'media-folder-item--active')}
+                onClick={() => handleFolderClick(null)}
+              >
+                <FolderOpen size={14} />
+                <span>Sin carpeta</span>
+              </button>
+
+              {/* Dynamic folders */}
+              {folders.map((folder) => (
+                <div key={folder.id} className="ds-flex ds-items-center">
+                  {renamingFolderId === folder.id ? (
+                    <form
+                      className="ds-flex ds-gap-1 ds-flex-1"
+                      onSubmit={(e) => { e.preventDefault(); handleRenameFolder(folder.id) }}
+                    >
+                      <input
+                        type="text"
+                        value={renameFolderName}
+                        onChange={(e) => setRenameFolderName(e.target.value)}
+                        className="ds-input ds-input--sm ds-flex-1"
+                        autoFocus
+                        autoComplete="off"
+                        data-1p-ignore
+                        data-lpignore="true"
+                      />
+                    </form>
+                  ) : (
+                    <button
+                      type="button"
+                      className={cn('media-folder-item ds-flex-1', activeFolder === folder.id && 'media-folder-item--active')}
+                      onClick={() => handleFolderClick(folder.id)}
+                    >
+                      <FolderOpen size={14} />
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{folder.name}</span>
+                      <span className="media-folder-item__actions">
+                        <button
+                          type="button"
+                          className="ds-btn ds-btn--ghost ds-btn--xs"
+                          onClick={(e) => { e.stopPropagation(); setRenamingFolderId(folder.id); setRenameFolderName(folder.name) }}
+                        >
+                          <Pencil size={12} />
+                        </button>
+                        <button
+                          type="button"
+                          className="ds-btn ds-btn--ghost ds-btn--xs"
+                          onClick={(e) => { e.stopPropagation(); handleDeleteFolder(folder.id) }}
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </span>
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              {/* New folder input */}
+              {creatingFolder && (
+                <form
+                  className="ds-flex ds-gap-1 ds-mt-1"
+                  onSubmit={(e) => { e.preventDefault(); handleCreateFolder() }}
+                >
+                  <input
+                    type="text"
+                    value={newFolderName}
+                    onChange={(e) => setNewFolderName(e.target.value)}
+                    placeholder="Carpeta nueva"
+                    className="ds-input ds-input--sm ds-flex-1"
+                    autoFocus
+                    autoComplete="off"
+                    data-1p-ignore
+                    data-lpignore="true"
+                  />
+                </form>
+              )}
+            </div>
+
             {/* Grid */}
             <div className="ds-flex-1">
               {loading ? (
@@ -386,6 +586,24 @@ export function MediaLibrary() {
                     )}
                   </button>
                 )}
+              </div>
+
+              {/* Move to folder */}
+              <div className="ds-form-group">
+                <label className="ds-label">Mover a carpeta</label>
+                <select
+                  value={selected.folder_id ?? ''}
+                  onChange={(e) => {
+                    const val = e.target.value
+                    handleMoveToFolder(selected.id, val === '' ? null : val)
+                  }}
+                  className="ds-select ds-w-full"
+                >
+                  <option value="">Sin carpeta</option>
+                  {folders.map((f) => (
+                    <option key={f.id} value={f.id}>{f.name}</option>
+                  ))}
+                </select>
               </div>
 
               {/* Info */}

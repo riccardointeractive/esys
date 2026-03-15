@@ -16,12 +16,15 @@ export async function GET(request: NextRequest) {
   const limit = Number(searchParams.get('limit')) || 24
   const type = searchParams.get('type') || undefined
   const search = searchParams.get('search') || undefined
+  const rawFolderId = searchParams.get('folder_id')
+  const folderId = rawFolderId === 'null' ? null : rawFolderId === null ? undefined : rawFolderId
 
   const supabase = getAdminClient()
   const result = await listMedia(supabase, TABLES.media, {
     page,
     limit,
     type,
+    folderId,
     search,
   })
 
@@ -43,6 +46,7 @@ export async function POST(request: NextRequest) {
     width?: number
     height?: number
     alt_text?: string
+    folder_id?: string
   }
 
   try {
@@ -72,6 +76,7 @@ export async function POST(request: NextRequest) {
       width: body.width,
       height: body.height,
       alt_text: body.alt_text || '',
+      folder_id: body.folder_id,
     })
 
     return NextResponse.json(media, { status: HTTP_STATUS.CREATED })
@@ -90,7 +95,7 @@ export async function PATCH(request: NextRequest) {
   const auth = await verifyAdminRequest(request)
   if (!auth.authorized) return auth.response
 
-  let body: { id: string; alt_text?: string; original_name?: string }
+  let body: { id: string; alt_text?: string; original_name?: string; folder_id?: string | null }
 
   try {
     body = await request.json()
@@ -108,9 +113,10 @@ export async function PATCH(request: NextRequest) {
     )
   }
 
-  const updates: Record<string, string> = {}
+  const updates: Record<string, string | null> = {}
   if (body.alt_text != null) updates.alt_text = body.alt_text
   if (body.original_name != null) updates.original_name = body.original_name
+  if ('folder_id' in body) updates.folder_id = body.folder_id ?? null
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json(
