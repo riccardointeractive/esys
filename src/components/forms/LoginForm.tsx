@@ -96,7 +96,7 @@ export function LoginForm() {
           )}
 
           {error && (
-            <p className="ds-text-sm" style={{ color: 'var(--ds-color-error)' }}>
+            <p className="ds-text-sm ds-text-error">
               {error}
             </p>
           )}

@@ -199,6 +199,8 @@ export function PropertyForm({ property }: PropertyFormProps) {
                     value={form.type}
                     onChange={(v) => updateField('type', v)}
                     label="Tipo"
+                    placeholder="Seleccionar..."
+                    searchPlaceholder="Buscar..."
                     size="lg"
                   />
                 </div>
@@ -209,6 +211,8 @@ export function PropertyForm({ property }: PropertyFormProps) {
                     value={form.category}
                     onChange={(v) => updateField('category', v)}
                     label="Categoría"
+                    placeholder="Seleccionar..."
+                    searchPlaceholder="Buscar..."
                     size="lg"
                   />
                 </div>

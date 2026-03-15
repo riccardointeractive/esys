@@ -41,6 +41,13 @@ export const siteConfig = {
     { label: 'Analytics', href: ADMIN_ROUTES.analytics, icon: 'BarChart3', disabled: true },
     { label: 'Ajustes', href: ADMIN_ROUTES.settings, icon: 'Settings', disabled: true },
   ],
+  admin: {
+    itemsPerPage: {
+      properties: 20,
+      media: 24,
+    },
+  },
+
   accountNav: [
     { label: 'Mi Cuenta', href: USER_ROUTES.dashboard, icon: 'User' },
     { label: 'Favoritos', href: USER_ROUTES.favorites, icon: 'Heart' },

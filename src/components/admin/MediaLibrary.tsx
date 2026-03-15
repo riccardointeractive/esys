@@ -5,6 +5,7 @@ import { Search, Trash2, Copy, Check, ChevronLeft, ChevronRight, Film } from 'lu
 import { MediaUploader } from '@digiko-npm/cms/media'
 import { ADMIN_API_ROUTES } from '@/config/routes'
 import { MEDIA_CONFIG } from '@/config/media'
+import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 
 interface MediaRecord {
@@ -28,7 +29,7 @@ interface MediaListResult {
   totalPages: number
 }
 
-const ITEMS_PER_PAGE = 24
+const ITEMS_PER_PAGE = siteConfig.admin.itemsPerPage.media
 
 const uploadConfig = {
   uploadEndpoint: ADMIN_API_ROUTES.mediaPresign,

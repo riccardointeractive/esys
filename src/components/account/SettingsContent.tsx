@@ -221,12 +221,12 @@ export function SettingsContent() {
               />
             </div>
             {profileError && (
-              <p className="ds-text-sm" style={{ color: 'var(--ds-color-error)' }}>
+              <p className="ds-text-sm ds-text-error">
                 {profileError}
               </p>
             )}
             {profileMsg && (
-              <p className="ds-text-sm" style={{ color: 'var(--ds-color-success)' }}>
+              <p className="ds-text-sm ds-text-success">
                 {profileMsg}
               </p>
             )}
@@ -275,12 +275,12 @@ export function SettingsContent() {
               />
             </div>
             {passwordError && (
-              <p className="ds-text-sm" style={{ color: 'var(--ds-color-error)' }}>
+              <p className="ds-text-sm ds-text-error">
                 {passwordError}
               </p>
             )}
             {passwordMsg && (
-              <p className="ds-text-sm" style={{ color: 'var(--ds-color-success)' }}>
+              <p className="ds-text-sm ds-text-success">
                 {passwordMsg}
               </p>
             )}
@@ -304,12 +304,12 @@ export function SettingsContent() {
           </p>
 
           {twoFaMsg && (
-            <p className="ds-text-sm ds-mb-4" style={{ color: 'var(--ds-color-success)' }}>
+            <p className="ds-text-sm ds-mb-4 ds-text-success">
               {twoFaMsg}
             </p>
           )}
           {twoFaError && (
-            <p className="ds-text-sm ds-mb-4" style={{ color: 'var(--ds-color-error)' }}>
+            <p className="ds-text-sm ds-mb-4 ds-text-error">
               {twoFaError}
             </p>
           )}

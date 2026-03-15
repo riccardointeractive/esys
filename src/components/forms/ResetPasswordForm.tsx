@@ -104,7 +104,7 @@ export function ResetPasswordForm() {
             </div>
 
             {error && (
-              <p className="ds-text-sm" style={{ color: 'var(--ds-color-error)' }}>
+              <p className="ds-text-sm ds-text-error">
                 {error}
               </p>
             )}
@@ -120,7 +120,7 @@ export function ResetPasswordForm() {
         ) : (
           <form className="ds-space-y-4" onSubmit={handleConfirmReset}>
             {message && (
-              <p className="ds-text-sm" style={{ color: 'var(--ds-color-success)' }}>
+              <p className="ds-text-sm ds-text-success">
                 {message}
               </p>
             )}
@@ -157,7 +157,7 @@ export function ResetPasswordForm() {
             </div>
 
             {error && (
-              <p className="ds-text-sm" style={{ color: 'var(--ds-color-error)' }}>
+              <p className="ds-text-sm ds-text-error">
                 {error}
               </p>
             )}

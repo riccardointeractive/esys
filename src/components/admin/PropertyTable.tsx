@@ -6,6 +6,7 @@ import { Search, Pencil, Trash2, ChevronLeft, ChevronRight, Plus } from 'lucide-
 import { DeletePropertyModal } from '@/components/admin/DeletePropertyModal'
 import { PROPERTY_TYPES, PROPERTY_STATUS, PROPERTY_CATEGORY } from '@/config/property'
 import { ADMIN_ROUTES, ADMIN_API_ROUTES } from '@/config/routes'
+import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 import type { Property, PropertyListResponse } from '@/types/property'
 
@@ -13,7 +14,7 @@ const statusEntries = Object.entries(PROPERTY_STATUS)
 const categoryEntries = Object.entries(PROPERTY_CATEGORY)
 const typeEntries = Object.entries(PROPERTY_TYPES)
 
-const ITEMS_PER_PAGE = 20
+const ITEMS_PER_PAGE = siteConfig.admin.itemsPerPage.properties
 
 function formatPrice(price: number): string {
   return new Intl.NumberFormat('es-ES', {
