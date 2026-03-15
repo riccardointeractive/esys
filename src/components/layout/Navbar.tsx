@@ -3,10 +3,11 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { Menu, X, Heart, User } from 'lucide-react'
+import { Menu, X, Heart, User, LogOut } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 import { Logo } from '@/components/ui/Logo'
 import { useDictionary, useLocale } from '@/components/providers/LocaleProvider'
+import { useAuth } from '@/components/providers/AuthProvider'
 import { localizedRoutes } from '@/config/i18n/routes'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
@@ -17,6 +18,7 @@ export function Navbar() {
   const t = useDictionary()
   const locale = useLocale()
   const routes = localizedRoutes(locale)
+  const { isAuthenticated, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const navItems = [
@@ -63,13 +65,32 @@ export function Navbar() {
             >
               <Heart size={18} />
             </Link>
-            <Link
-              href={routes.login}
-              className="ds-nav__icon-btn ds-hidden ds-md:flex"
-              aria-label={t.nav.myAccount}
-            >
-              <User size={18} />
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href={routes.account}
+                  className="ds-nav__icon-btn ds-hidden ds-md:flex"
+                  aria-label={t.nav.myAccount}
+                >
+                  <User size={18} />
+                </Link>
+                <button
+                  onClick={() => logout()}
+                  className="ds-nav__icon-btn ds-hidden ds-md:flex"
+                  aria-label={t.auth.logout}
+                >
+                  <LogOut size={18} />
+                </button>
+              </>
+            ) : (
+              <Link
+                href={routes.login}
+                className="ds-nav__icon-btn ds-hidden ds-md:flex"
+                aria-label={t.nav.login}
+              >
+                <User size={18} />
+              </Link>
+            )}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="ds-nav__icon-btn ds-md:hidden"
@@ -104,13 +125,31 @@ export function Navbar() {
           >
             {t.nav.favorites}
           </Link>
-          <Link
-            href={routes.login}
-            onClick={() => setMobileOpen(false)}
-            className="ds-nav__link"
-          >
-            {t.nav.login}
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link
+                href={routes.account}
+                onClick={() => setMobileOpen(false)}
+                className="ds-nav__link"
+              >
+                {t.nav.myAccount}
+              </Link>
+              <button
+                onClick={() => { logout(); setMobileOpen(false) }}
+                className="ds-nav__link"
+              >
+                {t.auth.logout}
+              </button>
+            </>
+          ) : (
+            <Link
+              href={routes.login}
+              onClick={() => setMobileOpen(false)}
+              className="ds-nav__link"
+            >
+              {t.nav.login}
+            </Link>
+          )}
         </div>
       </div>
     </>

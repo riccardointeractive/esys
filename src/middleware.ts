@@ -58,6 +58,17 @@ export function middleware(request: NextRequest) {
 
   /* Extract locale from first segment */
   const segments = pathname.split('/')
+
+  /* ─── User account guard ─── */
+  const accountSlugs = ['cuenta', 'account', 'kabinet']
+  const pathSecondSegment = segments[2]
+  if (pathSecondSegment && accountSlugs.includes(pathSecondSegment)) {
+    const userSessionCookie = request.cookies.get(AUTH_CONFIG.userSessionCookieName)
+    if (!userSessionCookie?.value) {
+      const lang = segments[1] || 'es'
+      return NextResponse.redirect(new URL(`/${lang}/login`, request.url))
+    }
+  }
   const maybeLocale = segments[1]
 
   /* No valid locale prefix → redirect to detected locale */
