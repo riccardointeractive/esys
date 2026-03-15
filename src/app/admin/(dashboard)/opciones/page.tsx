@@ -1,6 +1,8 @@
 import { SettingsContent } from '@/components/admin/SettingsContent'
 import { getAllDefinitionsAdmin } from '@/lib/definitions'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminOptionsPage() {
   const definitions = await getAllDefinitionsAdmin()
 

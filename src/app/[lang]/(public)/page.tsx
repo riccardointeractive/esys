@@ -8,6 +8,8 @@ import { localizedRoutes } from '@/config/i18n/routes'
 import { getDefinitions } from '@/lib/definitions'
 import { fetchProperties } from '@/lib/properties'
 
+export const dynamic = 'force-dynamic'
+
 interface HomePageProps {
   params: Promise<{ lang: string }>
 }

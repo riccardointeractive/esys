@@ -4,6 +4,8 @@ import { getAdminClient } from '@/lib/supabase/server'
 import { TABLES } from '@/config/supabase-tables'
 import type { PropertyWithRelations } from '@/types/property'
 
+export const dynamic = 'force-dynamic'
+
 interface Props {
   params: Promise<{ id: string }>
 }

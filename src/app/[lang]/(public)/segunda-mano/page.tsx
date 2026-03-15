@@ -3,6 +3,8 @@ import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
 import { fetchProperties } from '@/lib/properties'
 
+export const dynamic = 'force-dynamic'
+
 interface ResalePageProps {
   params: Promise<{ lang: string }>
 }

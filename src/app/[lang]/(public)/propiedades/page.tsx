@@ -5,6 +5,8 @@ import type { Locale } from '@/config/i18n'
 import { getDefinitions } from '@/lib/definitions'
 import { fetchProperties } from '@/lib/properties'
 
+export const dynamic = 'force-dynamic'
+
 interface PropertiesPageProps {
   params: Promise<{ lang: string }>
   searchParams: Promise<{ location?: string; type?: string; bedrooms?: string }>
