@@ -36,6 +36,49 @@ The project uses `@digiko-npm/designsystem` as the **sole styling engine** — n
 
 Base styles (body, selection, overrides) live in `src/app/globals.css`.
 
+### CSS Variable vs Utility Class — Critical Distinction
+
+`--ds-*` are CSS custom properties (for `var()` in CSS). They are **NOT** class names.
+`ds-*` are utility/component classes (for `className` in JSX).
+
+```tsx
+// ❌ WRONG — CSS variable names used as classes, do nothing
+className="ds-color-text"        // use ds-text-primary instead
+className="ds-radius-lg"         // use ds-rounded-lg instead
+className="ds-color-border"      // use ds-border instead
+
+// ✅ CORRECT utility classes
+className="ds-text-primary"      // text color
+className="ds-text-secondary"    // secondary text
+className="ds-rounded-lg"        // border radius
+className="ds-bg-surface"        // background
+className="ds-border"            // border color
+```
+
+| Want to use in `className` | Use this class | NOT this (CSS variable) |
+|---|---|---|
+| Text color | `ds-text-primary` | `ds-color-text` ❌ |
+| Background | `ds-bg-surface` | `ds-color-surface` ❌ |
+| Border | `ds-border` | `ds-color-border` ❌ |
+| Border radius | `ds-rounded-lg` | `ds-radius-lg` ❌ |
+| Padding | `ds-p-4` | `ds-space-4` ❌ |
+
+### Responsive Utilities
+
+The DS ships built-in responsive variants — use them directly:
+
+```tsx
+// Grid columns
+<div className="ds-grid ds-grid-cols-1 ds-sm:grid-cols-2 ds-lg:grid-cols-3">
+
+// Show/hide
+<div className="ds-lg:hidden">      {/* hidden on lg+ */}
+<div className="ds-hidden ds-lg:block">  {/* visible only on lg+ */}
+```
+
+Available: `ds-sm/md/lg:hidden`, `ds-sm/md/lg:block`, `ds-sm/md/lg:flex`,
+`ds-sm/md/lg:grid-cols-{2-4}`, `ds-md/lg:col-span-{1-3}`, `ds-sm/md:flex-row`
+
 ### Component-First Approach (CRITICAL)
 
 DS components are **self-contained and fully styled by default**. Follow this priority:
@@ -72,6 +115,8 @@ DS components are **self-contained and fully styled by default**. Follow this pr
 // RIGHT:
 <input className="ds-input" />
 ```
+
+**Use DS size tiers for alignment.** When mixing elements (icons, text, buttons, inputs, etc.) in a flex row, use the same size tier (`--ds-size-1` through `--ds-size-4`) to ensure consistent heights. Don't reinvent heights with padding math.
 
 ### DS Sources of Truth
 
