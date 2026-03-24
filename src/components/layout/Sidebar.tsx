@@ -83,7 +83,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                     >
                       <Icon size={18} />
                       {item.label}
-                      <span className="ds-badge ds-badge--secondary ds-ml-auto" style={{ fontSize: '0.6rem' }}>
+                      <span className="ds-badge ds-badge--outline ds-ml-auto" style={{ fontSize: '0.6rem' }}>
                         SOON
                       </span>
                     </span>

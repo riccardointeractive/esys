@@ -550,7 +550,7 @@ export function MediaLibrary() {
                       data-1p-ignore
                       data-lpignore="true"
                     />
-                    <span className="ds-text-sm ds-text-tertiary ds-flex-shrink-0">
+                    <span className="ds-text-sm ds-text-tertiary ds-shrink-0">
                       {splitName(selected.original_name).ext}
                     </span>
                   </div>

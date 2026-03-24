@@ -220,7 +220,7 @@ export function PropertyTable({ definitions }: PropertyTableProps) {
                           {prop.title_es}
                         </Link>
                         {!prop.published && (
-                          <span className="ds-badge ds-badge--secondary ds-ml-2">Borrador</span>
+                          <span className="ds-badge ds-badge--outline ds-ml-2">Borrador</span>
                         )}
                         {prop.featured && (
                           <span className="ds-badge ds-badge--info ds-ml-2">Destacada</span>

@@ -140,7 +140,7 @@ export function PropertySearchBar({ typeDefinitions, bedroomDefinitions }: Prope
           value={bedrooms}
           onChange={setBedrooms}
         />
-        <button type="submit" className="ds-btn ds-btn--primary ds-btn--lg property-search-bar__submit">
+        <button type="submit" className="ds-btn ds-btn--lg property-search-bar__submit">
           <Search size={18} />
           {t.search.submit}
         </button>

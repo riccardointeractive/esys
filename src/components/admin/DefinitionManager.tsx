@@ -301,7 +301,7 @@ export function DefinitionManager({ category, initialDefinitions }: DefinitionMa
                             onClick={() => handleToggleActive(def)}
                             className={cn(
                               'ds-badge',
-                              def.active ? 'ds-badge--success' : 'ds-badge--secondary'
+                              def.active ? 'ds-badge--success' : 'ds-badge--outline'
                             )}
                             style={{ cursor: 'pointer' }}
                           >
