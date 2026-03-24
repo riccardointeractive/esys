@@ -332,7 +332,6 @@ export function MediaLibrary() {
               className="ds-select ds-input--lg"
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              style={{ width: 'auto' }}
             >
               <option value="">Todos</option>
               <option value="image">Imágenes</option>
@@ -597,7 +596,7 @@ export function MediaLibrary() {
                     const val = e.target.value
                     handleMoveToFolder(selected.id, val === '' ? null : val)
                   }}
-                  className="ds-select ds-w-full"
+                  className="ds-select ds-select--full"
                 >
                   <option value="">Sin carpeta</option>
                   {folders.map((f) => (

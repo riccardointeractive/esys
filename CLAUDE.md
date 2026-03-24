@@ -226,7 +226,7 @@ import { createRateLimiter } from '@digiko-npm/cms/session'
 
 ### 4. Light/Dark Mode
 
-Dark + light + system via `next-themes`. DS handles theme switching automatically via `.dark` class:
+Dark + light + system via `next-themes`. DS handles theme switching automatically via `[data-theme]` attribute:
 
 ```tsx
 // Colors adapt automatically — never hardcode dark/light variants

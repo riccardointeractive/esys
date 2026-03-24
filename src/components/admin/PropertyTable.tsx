@@ -142,7 +142,6 @@ export function PropertyTable({ definitions }: PropertyTableProps) {
           className="ds-select ds-input--lg"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          style={{ width: 'auto' }}
         >
           <option value="">Estado</option>
           {statusEntries.map(([key, label]) => (
@@ -154,7 +153,6 @@ export function PropertyTable({ definitions }: PropertyTableProps) {
           className="ds-select ds-input--lg"
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
-          style={{ width: 'auto' }}
         >
           <option value="">Categoría</option>
           {categoryEntries.map(([key, label]) => (
@@ -166,7 +164,6 @@ export function PropertyTable({ definitions }: PropertyTableProps) {
           className="ds-select ds-input--lg"
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          style={{ width: 'auto' }}
         >
           <option value="">Tipo</option>
           {typeEntries.map(([key, label]) => (

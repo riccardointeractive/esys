@@ -73,7 +73,7 @@
   );
 }
 
-:root.dark .vip-hero__overlay {
+[data-theme="dark"] .vip-hero__overlay {
   background: linear-gradient(
     to bottom,
     color-mix(in srgb, var(--ds-color-bg) 80%, transparent),
@@ -81,7 +81,7 @@
   );
 }
 
-:root.dark .vip-hero__overlay--subtle {
+[data-theme="dark"] .vip-hero__overlay--subtle {
   background: linear-gradient(
     to bottom,
     color-mix(in srgb, var(--ds-color-bg) 30%, transparent),
@@ -155,7 +155,6 @@
 .vip-hero-search .ds-input:focus {
   background: rgba(0, 0, 0, 0.42);
   border-color: rgba(255, 255, 255, 0.28);
-  outline: none;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 

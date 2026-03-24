@@ -2,7 +2,11 @@
   "rules": [
     {
       "allowed": {
-        "origins": ["http://localhost:3000"],
+        "origins": [
+          "http://localhost:3000",
+          "https://esysvip.vercel.app",
+          "https://esysvip2.vercel.app"
+        ],
         "methods": ["GET", "PUT", "HEAD"],
         "headers": ["Content-Type", "Content-Length"]
       },
