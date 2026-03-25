@@ -41,16 +41,14 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       {/* Mobile overlay */}
       {open && (
         <div
-          className="sidebar-overlay ds-lg:hidden"
+          className="ds-admin__overlay ds-lg:hidden"
           onClick={onClose}
         />
       )}
 
       <aside
-        className={cn(
-          'sidebar',
-          open && 'sidebar--open'
-        )}
+        className="ds-admin__sidebar"
+        style={open ? { display: 'flex' } : undefined}
       >
         {/* Brand */}
         <div className="ds-flex ds-h-16 ds-items-center ds-justify-between ds-border-b ds-px-6">
@@ -78,7 +76,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 <li key={item.href}>
                   {isDisabled ? (
                     <span
-                      className="nav-item"
+                      className="ds-admin__nav-item"
                       style={{ cursor: 'default', pointerEvents: 'none', color: 'var(--ds-color-text-tertiary)' }}
                     >
                       <Icon size={18} />
@@ -92,8 +90,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                       href={item.href}
                       onClick={onClose}
                       className={cn(
-                        'nav-item',
-                        isActive && 'nav-item--active'
+                        'ds-admin__nav-item',
+                        isActive && 'ds-admin__nav-item--active'
                       )}
                     >
                       <Icon size={18} />

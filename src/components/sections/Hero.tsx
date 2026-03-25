@@ -14,17 +14,17 @@ interface HeroProps {
 export function Hero({ dict, typeDefinitions, bedroomDefinitions }: HeroProps) {
   return (
     <section
-      className="vip-hero vip-hero--full"
+      className="ds-hero ds-hero--full"
       style={{
         backgroundImage: `url(${HERO_IMAGE})`,
       }}
     >
-      <div className="vip-hero__content ds-container ds-py-16 ds-md:py-24">
-        <div className="vip-hero__backdrop">
-          <h1 className="font-display ds-text-4xl ds-md:text-5xl ds-lg:text-6xl ds-font-bold ds-mb-4 vip-hero__title">
+      <div className="ds-hero__content ds-container ds-py-16 ds-md:py-24">
+        <div className="ds-hero__backdrop">
+          <h1 className="font-display ds-text-4xl ds-md:text-5xl ds-lg:text-6xl ds-font-bold ds-mb-4 ds-hero__title">
             {dict.hero.title}
           </h1>
-          <p className="ds-text-lg ds-md:text-xl ds-mb-8 vip-hero__subtitle" style={{ maxWidth: '36rem', marginInline: 'auto' }}>
+          <p className="ds-text-lg ds-md:text-xl ds-mb-8 ds-hero__subtitle" style={{ maxWidth: '36rem', marginInline: 'auto' }}>
             {dict.hero.subtitle}
           </p>
           <SearchBar typeDefinitions={typeDefinitions} bedroomDefinitions={bedroomDefinitions} />

@@ -9,7 +9,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   return (
-    <header className="dashboard-header ds-flex ds-h-16 ds-items-center ds-justify-between ds-px-6">
+    <header className="ds-admin__header ds-flex ds-h-16 ds-items-center ds-justify-between ds-px-6">
       <div className="ds-flex ds-items-center ds-gap-3">
         <button
           onClick={onMenuClick}

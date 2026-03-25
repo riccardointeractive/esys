@@ -1,4 +1,5 @@
 @import "@digiko-npm/designsystem" layer(ds);
+@import "@digiko-npm/cms/styles/media";
 @import "../styles/components.css";
 
 /* ============================================

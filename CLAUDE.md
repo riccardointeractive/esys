@@ -24,6 +24,7 @@ The project uses `@digiko-npm/designsystem` as the **sole styling engine** — n
 ```css
 /* globals.css */
 @import "@digiko-npm/designsystem";
+@import "@digiko-npm/cms/styles/media";
 @import "../styles/components.css";
 ```
 
@@ -32,7 +33,7 @@ The project uses `@digiko-npm/designsystem` as the **sole styling engine** — n
 | Layer | Prefix | Purpose | Where |
 |-------|--------|---------|-------|
 | **DS (components + utilities)** | `ds-*` | Self-contained components, tokenized layout | `@digiko-npm/designsystem` |
-| **Project-specific classes** | project-specific (no prefix convention) | Hero overlay, admin layout, property form, media grid | `src/styles/components.css` |
+| **Project-specific classes** | project-specific (no prefix convention) | Property form, media grid, hero search bar (`vip-hero-search`) | `src/styles/components.css` |
 
 Base styles (body, selection, overrides) live in `src/app/globals.css`.
 
@@ -237,15 +238,13 @@ className="ds-bg-surface ds-text-primary ds-border"
 
 Don't remove existing functionality without explicit confirmation.
 
-### 6. Theme-Independent Sections
+### 6. Hero Section
 
-Some UI sections intentionally bypass DS semantic tokens and use hardcoded RGBA/hex values. **Do NOT refactor these to use `--ds-color-*` tokens or `ds-text-*` / `ds-bg-*` classes.**
+**Hero Section:** Uses `ds-hero` component from the DS (v0.9.1+). The overlay uses `color-mix()` for theme-aware darkening. Search bar styling (`.vip-hero-search`) remains project-specific in `components.css`.
 
-| Section | Why | Where |
-|---------|-----|-------|
-| **Hero** (`vip-hero__backdrop`, `vip-hero-search`) | Sits over an aerial photo — always uses dark-tinted frosted glass with white text/inputs regardless of light/dark mode. DS tokens would break readability in light mode. | `src/styles/components.css` (look for the `HERO: INTENTIONALLY THEME-INDEPENDENT` block comment) |
+### 7. Admin Layout
 
-When adding new photo-overlay sections in the future, follow the same pattern: hardcode RGBA values and add a block comment explaining the exception.
+**Admin Layout:** Uses `ds-admin-layout` component from the DS. Sidebar, header, nav items, and main content area are all DS components (`ds-admin__sidebar`, `ds-admin__header`, `ds-admin__nav-item`, etc.).
 
 ---
 
