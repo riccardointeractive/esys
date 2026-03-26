@@ -2,6 +2,7 @@
 For dev conventions (API shape, TanStack Query, Supabase, Redis, commit) → [DEV_CONVENTIONS.md](/Projects/DEV_CONVENTIONS.md)
 
 QUARANTINE attiva. Regole DS, azioni aperte, metriche, QUARANTINE rules: tutto centralizzato in [DS_HEALTH.md](/Projects/DS_HEALTH.md).
+Customizzazioni CSS project-specific: [DS_CUSTOM.md](DS_CUSTOM.md) — consultare prima di aggiungere/modificare CSS custom.
 
 ---
 
