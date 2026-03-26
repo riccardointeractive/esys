@@ -88,7 +88,7 @@ export function PropertyCard({
 
           <p className="ds-text-sm ds-text-secondary ds-mt-1">{location}</p>
 
-          <p className="font-display ds-text-xl ds-font-bold ds-text-primary ds-mt-3">
+          <p className="ds-font-display ds-text-xl ds-font-bold ds-text-primary ds-mt-3">
             {formattedPrice}
           </p>
 

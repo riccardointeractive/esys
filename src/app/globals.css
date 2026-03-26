@@ -14,11 +14,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Display font weight from token */
-.font-display {
-  font-weight: var(--ds-font-display-weight);
-}
-
 /* Selection */
 ::selection {
   background-color: var(--ds-color-text);

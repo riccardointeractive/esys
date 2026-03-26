@@ -82,7 +82,7 @@ export function AdminUsersContent() {
   return (
     <div>
       <div className="ds-flex ds-justify-between ds-items-center ds-mb-6">
-        <h1 className="font-display ds-text-2xl ds-font-bold ds-text-primary">
+        <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary">
           Usuarios
         </h1>
         <span className="ds-badge">{total} total</span>

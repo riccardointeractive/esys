@@ -13,7 +13,7 @@ export function CTABanner({ lang, dict }: CTABannerProps) {
   return (
     <section className="ds-section ds-bg-elevated">
       <div className="ds-container ds-text-center">
-        <h2 className="font-display ds-text-2xl ds-md:text-3xl ds-font-bold ds-text-primary ds-mb-4">
+        <h2 className="ds-font-display ds-text-2xl ds-md:text-3xl ds-font-bold ds-text-primary ds-mb-4">
           {dict.cta.title}
         </h2>
         <p className="ds-text-secondary ds-mb-6 ds-mx-auto" style={{ maxWidth: '32rem' }}>

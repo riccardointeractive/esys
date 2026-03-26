@@ -39,7 +39,7 @@ export default async function PropertiesPage({ params, searchParams }: Propertie
 
   return (
     <div className="ds-container ds-py-8">
-      <h1 className="font-display ds-text-3xl ds-font-bold ds-text-primary ds-mb-6">
+      <h1 className="ds-font-display ds-text-3xl ds-font-bold ds-text-primary ds-mb-6">
         {dict.nav.properties}
       </h1>
       <PropertySearchBar typeDefinitions={typeDefinitions} bedroomDefinitions={bedroomDefinitions} />

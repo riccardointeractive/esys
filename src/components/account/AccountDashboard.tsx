@@ -27,7 +27,7 @@ export function AccountDashboard() {
 
   return (
     <div>
-      <h1 className="font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-2">
+      <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-2">
         {t.account.myAccount}
       </h1>
       {user && (

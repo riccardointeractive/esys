@@ -61,7 +61,7 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
             <div className="ds-card__body">
               <div className="ds-flex ds-justify-between ds-items-start ds-gap-4">
                 <div>
-                  <h1 className="font-display ds-text-2xl ds-font-bold ds-text-primary">
+                  <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary">
                     {title}
                   </h1>
                   {location && (
@@ -185,7 +185,7 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
         <div>
           <div className="ds-card" style={{ position: 'sticky', top: 'var(--ds-space-6, 1.5rem)' }}>
             <div className="ds-card__body">
-              <p className="font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-2">
+              <p className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-2">
                 {formattedPrice}
               </p>
               <p className="ds-text-xs ds-text-tertiary ds-mb-4">

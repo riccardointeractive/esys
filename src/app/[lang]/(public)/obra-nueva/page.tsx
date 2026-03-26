@@ -27,7 +27,7 @@ export default async function NewBuildsPage({ params }: NewBuildsPageProps) {
 
   return (
     <div className="ds-container ds-py-8">
-      <h1 className="font-display ds-text-3xl ds-font-bold ds-text-primary ds-mb-4">
+      <h1 className="ds-font-display ds-text-3xl ds-font-bold ds-text-primary ds-mb-4">
         {dict.nav.newBuilds}
       </h1>
       <p className="ds-text-secondary ds-mb-8">

@@ -155,7 +155,7 @@ export function PropertyForm({ property, definitions }: PropertyFormProps) {
           >
             <ArrowLeft size={18} />
           </button>
-          <h1 className="font-display ds-text-2xl ds-font-bold ds-text-primary">
+          <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary">
             {isEdit ? 'Editar Propiedad' : 'Nueva Propiedad'}
           </h1>
         </div>
