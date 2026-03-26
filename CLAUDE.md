@@ -1,3 +1,10 @@
+## Design System → [DS_HEALTH.md](/Projects/DS_HEALTH.md)
+For dev conventions (API shape, TanStack Query, Supabase, Redis, commit) → [DEV_CONVENTIONS.md](/Projects/DEV_CONVENTIONS.md)
+
+QUARANTINE attiva. Regole DS, azioni aperte, metriche, QUARANTINE rules: tutto centralizzato in [DS_HEALTH.md](/Projects/DS_HEALTH.md).
+
+---
+
 # CLAUDE.md — ESYS VIP Project Guidelines
 
 ## Project Overview
@@ -15,18 +22,7 @@ Real estate platform for ESYS VIP. Public-facing property listings (new builds +
 
 ---
 
-## Design System Integration
-
-### Architecture
-
-The project uses `@digiko-npm/designsystem` as the **sole styling engine** — no Tailwind, no PostCSS, no build-time class scanning. Pure CSS with custom properties.
-
-```css
-/* globals.css */
-@import "@digiko-npm/designsystem";
-@import "@digiko-npm/cms/styles/media";
-@import "../styles/components.css";
-```
+## ESYS-Specific Styling
 
 ### Two Layers of CSS
 
@@ -37,107 +33,7 @@ The project uses `@digiko-npm/designsystem` as the **sole styling engine** — n
 
 Base styles (body, selection, overrides) live in `src/app/globals.css`.
 
-### CSS Variable vs Utility Class — Critical Distinction
-
-`--ds-*` are CSS custom properties (for `var()` in CSS). They are **NOT** class names.
-`ds-*` are utility/component classes (for `className` in JSX).
-
-```tsx
-// ❌ WRONG — CSS variable names used as classes, do nothing
-className="ds-color-text"        // use ds-text-primary instead
-className="ds-radius-lg"         // use ds-rounded-lg instead
-className="ds-color-border"      // use ds-border instead
-
-// ✅ CORRECT utility classes
-className="ds-text-primary"      // text color
-className="ds-text-secondary"    // secondary text
-className="ds-rounded-lg"        // border radius
-className="ds-bg-surface"        // background
-className="ds-border"            // border color
-```
-
-| Want to use in `className` | Use this class | NOT this (CSS variable) |
-|---|---|---|
-| Text color | `ds-text-primary` | `ds-color-text` ❌ |
-| Background | `ds-bg-surface` | `ds-color-surface` ❌ |
-| Border | `ds-border` | `ds-color-border` ❌ |
-| Border radius | `ds-rounded-lg` | `ds-radius-lg` ❌ |
-| Padding | `ds-p-4` | `ds-space-4` ❌ |
-
-### Responsive Utilities
-
-The DS ships built-in responsive variants — use them directly:
-
-```tsx
-// Grid columns
-<div className="ds-grid ds-grid-cols-1 ds-sm:grid-cols-2 ds-lg:grid-cols-3">
-
-// Show/hide
-<div className="ds-lg:hidden">      {/* hidden on lg+ */}
-<div className="ds-hidden ds-lg:block">  {/* visible only on lg+ */}
-```
-
-Available: `ds-sm/md/lg:hidden`, `ds-sm/md/lg:block`, `ds-sm/md/lg:flex`,
-`ds-sm/md/lg:grid-cols-{2-4}`, `ds-md/lg:col-span-{1-3}`, `ds-sm/md:flex-row`
-
-### Component-First Approach (CRITICAL)
-
-DS components are **self-contained and fully styled by default**. Follow this priority:
-
-**1. Use DS components first** — they work out of the box:
-```tsx
-<input className="ds-input" />
-<button className="ds-btn">Guardar</button>
-<div className="ds-card"><div className="ds-card__body">Content</div></div>
-```
-
-**2. Use BEM modifiers for variants:**
-```tsx
-<input className="ds-input ds-input--error" />
-<button className="ds-btn ds-btn--secondary ds-btn--sm">Cancelar</button>
-<span className="ds-badge ds-badge--success">Disponible</span>
-```
-
-**3. Use utilities ONLY for layout** — arranging components in a container:
-```tsx
-<div className="ds-flex ds-gap-4">
-  <input className="ds-input" />
-  <button className="ds-btn">Buscar</button>
-</div>
-<div className="ds-grid ds-grid-cols-3 ds-gap-6">
-  {properties.map(p => <PropertyCard key={p.id} />)}
-</div>
-```
-
-**Anti-patterns — NEVER do this:**
-```tsx
-// WRONG: utility soup to style what a component already handles
-<input className="ds-bg-surface ds-border ds-rounded-xl ds-p-4 ds-text-sm" />
-// RIGHT:
-<input className="ds-input" />
-```
-
-**Use DS size tiers for alignment.** When mixing elements (icons, text, buttons, inputs, etc.) in a flex row, use the same size tier (`--ds-size-1` through `--ds-size-4`) to ensure consistent heights. Don't reinvent heights with padding math.
-
-### DS Sources of Truth
-
-| What you need | Where to look |
-|---------------|---------------|
-| Component classes (`ds-btn`, `ds-card`, etc.) | `node_modules/@digiko-npm/designsystem/src/components/` |
-| Token values (colors, spacing, radius) | `node_modules/@digiko-npm/designsystem/src/tokens/` |
-| Utility classes | `node_modules/@digiko-npm/designsystem/src/utilities/` |
-| Full compiled CSS | `node_modules/@digiko-npm/designsystem/dist/designsystem.css` |
-
-**Class composition with cn():**
-```tsx
-import { cn } from '@/lib/utils'
-
-className={cn(
-  'ds-badge',
-  status === 'available' && 'ds-badge--success',
-  status === 'sold' && 'ds-badge--error'
-)}
-```
+For all DS styling rules (component-first approach, anti-patterns, CSS variable vs utility class, responsive utilities, size tiers, cn() usage) → [DS_HEALTH.md](/Projects/DS_HEALTH.md)
 
 ---
 
@@ -171,40 +67,8 @@ Every literal value lives in `src/config/`. **A perfect file has zero magic valu
 | No table names | `from('properties')` | `from(TABLES.properties)` |
 | No Redis keys | `` `esys:session:${t}` `` | `REDIS_KEYS.session(t)` |
 | No HTTP status | `{ status: 401 }` | Use CMS `HTTP_STATUS` |
-| No `process.env` | `process.env.SUPABASE_URL` | Create typed env config |
 
-### 2. Absolute Prohibitions
-
-```tsx
-// ❌ FORBIDDEN — Hardcoded colors
-className="text-blue-500"
-style={{ color: '#0070F3' }}
-
-// ✅ REQUIRED — Use DS semantic tokens
-className="ds-text-primary"
-className="ds-bg-surface"
-
-// ❌ FORBIDDEN — Bare Tailwind classes (Tailwind is NOT installed)
-className="flex items-center gap-4 text-sm"
-
-// ✅ REQUIRED — Use ds-* prefixed utilities (only for layout)
-className="ds-flex ds-items-center ds-gap-4"
-
-// ❌ FORBIDDEN — Utility soup instead of DS components
-className="ds-bg-surface ds-border ds-rounded-xl ds-p-4 ds-text-sm"
-
-// ✅ REQUIRED — Use the self-contained component
-className="ds-input"
-
-// ❌ FORBIDDEN — Arbitrary pixel values
-className="ds-max-w-[1200px]"
-
-// ✅ REQUIRED — Use tokens or DS sizes
-className="ds-max-w-[var(--ds-container-max)]"
-className="ds-text-sm"
-```
-
-### 3. CMS Package Usage
+### 2. CMS Package Usage
 
 Use `@digiko-npm/cms` for all backend utilities — never roll your own:
 
@@ -225,24 +89,15 @@ import { uploadFile, createPresignedUploadUrl } from '@digiko-npm/cms/r2'
 import { createRateLimiter } from '@digiko-npm/cms/session'
 ```
 
-### 4. Light/Dark Mode
-
-Dark + light + system via `next-themes`. DS handles theme switching automatically via `[data-theme]` attribute:
-
-```tsx
-// Colors adapt automatically — never hardcode dark/light variants
-className="ds-bg-surface ds-text-primary ds-border"
-```
-
-### 5. Code Integrity
+### 3. Code Integrity
 
 Don't remove existing functionality without explicit confirmation.
 
-### 6. Hero Section
+### 4. Hero Section
 
 **Hero Section:** Uses `ds-hero` component from the DS (v0.9.1+). The overlay uses `color-mix()` for theme-aware darkening. Search bar styling (`.vip-hero-search`) remains project-specific in `components.css`.
 
-### 7. Admin Layout
+### 5. Admin Layout
 
 **Admin Layout:** Uses `ds-admin-layout` component from the DS. Sidebar, header, nav items, and main content area are all DS components (`ds-admin__sidebar`, `ds-admin__header`, `ds-admin__nav-item`, etc.).
 
@@ -365,42 +220,6 @@ import { cn } from '@/lib/utils'
 
 ---
 
-## Semantic Color Tokens
-
-```css
-/* Backgrounds */
-ds-bg-base         /* Page background */
-ds-bg-surface      /* Card/section background */
-ds-bg-elevated     /* Elevated elements, hover states */
-
-/* Text */
-ds-text-primary    /* Main content — highest contrast */
-ds-text-secondary  /* Supporting content */
-ds-text-tertiary   /* Hints, metadata */
-
-/* Borders */
-ds-border          /* Standard border */
-ds-border-b        /* Bottom border only */
-
-/* Interactive */
-ds-text-interactive  /* Links, clickable text */
-```
-
----
-
-## Commit Convention
-
-```
-feat: Add new feature
-fix: Bug fix
-style: Styling changes (no logic change)
-refactor: Code refactoring
-docs: Documentation changes
-chore: Build, deps, config changes
-```
-
----
-
 ## Quick Reference
 
 ```
@@ -408,48 +227,25 @@ Project folder: ~/Projects/esys/
 Dev server:     npm run dev (localhost:3000)
 Build:          npm run build
 Lint:           npm run lint
-Styling:        @digiko-npm/designsystem (CSS-only, --ds-* tokens)
 CMS utilities:  @digiko-npm/cms (auth, sessions, media, Supabase, R2)
-                No Tailwind. No PostCSS. Pure CSS.
 ```
 
 ---
 
 ## End-of-Session Checklist
 
-### Code Quality
-- [ ] No hardcoded colors, arbitrary values, magic strings — everything in `src/config/`
-- [ ] DS utilities only (`ds-*` prefix) — no bare Tailwind classes
-- [ ] No utility soup — if an element has 3+ `ds-*` classes, check if a DS component already covers it
-- [ ] Component CSS in `src/styles/components.css` — not inline hacks
-- [ ] Import aliases `@/` — no relative paths
+For DS checklist (QUARANTINE, compliance, build, git) → [DS_HEALTH.md](/Projects/DS_HEALTH.md)
+
+### Project-Specific
 - [ ] CMS package used for auth, sessions, media — no custom implementations
-
-### Build
-- [ ] `npm run build` — zero errors
-- [ ] No `console.log` left
-- [ ] DS lib synced — if modified, rebuild + publish + reinstall
-
-### Architecture
+- [ ] Spanish strings used throughout (locale `es-ES`)
 - [ ] New routes in `routes.ts`
-- [ ] New tables in `supabase-tables.ts`
 - [ ] New Redis keys in `redis-keys.ts`
 - [ ] Property config changes in `property.ts`
 - [ ] SEO metadata in `seo.ts`
-
-### Visual & Git
-- [ ] Dark/light mode verified
-- [ ] Responsive layouts checked (mobile first)
-- [ ] Spanish strings used throughout (locale `es-ES`)
-- [ ] Commit convention followed
-- [ ] No secrets committed (`.env.local` in `.gitignore`)
-- [ ] Design system repo (`~/Projects/designsystem`) committed separately if modified
 
 ### Security
 - [ ] RLS enabled on all new Supabase tables
 - [ ] Rate limiting on auth + contact endpoints
 - [ ] Input sanitization on user-facing forms
 - [ ] Admin routes protected with session verification
-
-### Meta
-- [ ] Evaluate if this session introduced patterns or rules worth adding to this checklist
