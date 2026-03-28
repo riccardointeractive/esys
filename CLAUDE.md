@@ -250,3 +250,4 @@ For DS checklist (QUARANTINE, compliance, build, git) → [DS_HEALTH.md](/Projec
 - [ ] Rate limiting on auth + contact endpoints
 - [ ] Input sanitization on user-facing forms
 - [ ] Admin routes protected with session verification
+- [ ] `DS_CUSTOM.md` updated if custom CSS files were modified
