@@ -2,38 +2,32 @@
   "$schema": "ds-manifest-v1",
   "project": "esys",
   "ds_version_declared": "^0.9.11",
-  "ds_version_resolved": "0.9.37",
+  "ds_version_resolved": "0.9.38",
+  "ds_version_installed": "0.9.38",
   "last_session": "2026-03-31",
   "last_session_summary": "Courier: bump DS v0.9.36 → v0.9.37 (WCAG contrast fix). Build clean.",
   "overrides": {
     "token_count": 0,
     "token_list": [],
-    "component_override_count": 3,
-    "component_override_list": [
-      "ds-btn",
-      "ds-dropdown",
-      "ds-input"
-    ],
-    "custom_class_count": 54,
-    "files_with_overrides": [
-      "src/styles/components.css"
-    ]
+    "component_override_count": 0,
+    "component_override_list": [],
+    "custom_class_count": 88,
+    "files_with_overrides": []
   },
   "css_architecture": {
     "layers": [
       "ds"
     ],
-    "override_isolation": "single-file",
-    "total_css_lines": 664
+    "override_isolation": "isolated",
+    "total_css_lines": 687
   },
   "metrics": {
-    "override_count": 3,
-    "custom_class_count": 54,
-    "delta": -1,
-    "last_updated": "2026-03-30"
+    "override_count": 0,
+    "custom_class_count": 88,
+    "delta": -3,
+    "last_updated": "2026-03-31"
   },
-  "notes": "All 3 component overrides are inside .vip-hero-search context (frosted glass on photo backdrop — documented in DS_CUSTOM.md as justified). Governance 2026-03-30: P0 opacity token, P2 spacing/positioning tokens fixed. Utility soup widespread (60+ instances) — post-QUARANTINE candidate ds-page-title.",
-  "ds_version_installed": "0.9.37",
   "compliance": "green",
-  "governance": "active"
+  "governance": "active",
+  "notes": "All 3 component overrides are inside .vip-hero-search context (frosted glass on photo backdrop — documented in DS_CUSTOM.md as justified). Governance 2026-03-30: P0 opacity token, P2 spacing/positioning tokens fixed. Utility soup widespread (60+ instances) — post-QUARANTINE candidate ds-page-title."
 }
