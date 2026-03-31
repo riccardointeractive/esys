@@ -414,10 +414,10 @@
 /* ─── Locale Pills ─── */
 .vip-locale-pills {
   display: flex;
-  gap: 2px;
+  gap: var(--ds-space-0-5);
   background: var(--ds-color-elevated);
   border-radius: var(--ds-radius-md);
-  padding: 2px;
+  padding: var(--ds-space-0-5);
 }
 
 .vip-locale-pill {
@@ -448,9 +448,9 @@
 /* ─── Favorite Button ─── */
 .vip-favorite-btn {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  z-index: 10;
+  top: var(--ds-space-2);
+  right: var(--ds-space-2);
+  z-index: 10; /* local stacking context — no DS token maps to 10, intentional */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -479,7 +479,7 @@
 }
 
 .vip-favorite-btn:disabled {
-  opacity: 0.5;
+  opacity: var(--ds-opacity-disabled);
   cursor: default;
   transform: none;
 }

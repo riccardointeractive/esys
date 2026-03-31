@@ -2,8 +2,8 @@
 
 Inventario delle customizzazioni CSS project-specific rispetto al Design System.
 
-**Ultimo aggiornamento:** 26 Mar 2026
-**DS Version:** ^0.9.8
+**Ultimo aggiornamento:** 30 Mar 2026
+**DS Version:** 0.9.36
 **File CSS custom:** `src/styles/components.css` (665 righe), `src/app/globals.css` (22 righe)
 
 ---
@@ -56,12 +56,12 @@ Tutti usano token DS. Ben strutturati.
 | Classe | Scopo |
 |--------|-------|
 | `.vip-settings-tabs` / `.vip-settings-tab` | Tab bar orizzontale con scroll |
-| `.vip-locale-pills` | Pill group per selezione lingua |
+| `.vip-locale-pills` | Pill group per selezione lingua — gap/padding via `var(--ds-space-0-5)` |
 | `.vip-lang-switcher` | Language dropdown |
 | `.vip-property-form__layout` | Form grid responsive |
 | `.vip-image-grid__item` | Image grid item |
 | `.vip-media-item` | Media library item (hover/selected) |
-| `.vip-favorite-btn` | Heart button su immagini (hardcoded per overlay) |
+| `.vip-favorite-btn` | Heart button su immagini — pos. via DS tokens, `z-index:10` locale giustificato, `opacity` via `var(--ds-opacity-disabled)` |
 
 ### Layout Base
 | Classe | Linee | Scopo |
