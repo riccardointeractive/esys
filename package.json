@@ -13,7 +13,7 @@
     "@aws-sdk/client-s3": "^3.1008.0",
     "@aws-sdk/s3-request-presigner": "^3.1008.0",
     "@digiko-npm/cms": "^0.5.0",
-    "@digiko-npm/designsystem": "^0.9.11",
+    "@digiko-npm/designsystem": "^0.9.40",
     "@digiko-npm/ds-admin": "^0.1.0",
     "@supabase/supabase-js": "^2.49.0",
     "@upstash/redis": "^1.34.0",
