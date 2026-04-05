@@ -1,11 +1,11 @@
 {
   "$schema": "ds-manifest-v1",
   "project": "esys",
-  "ds_version_declared": "^0.9.11",
-  "ds_version_resolved": "0.9.38",
-  "ds_version_installed": "0.9.38",
-  "last_session": "2026-03-31",
-  "last_session_summary": "Courier: bump DS v0.9.36 → v0.9.37 (WCAG contrast fix). Build clean.",
+  "ds_version_declared": "^0.9.40",
+  "ds_version_resolved": "0.9.40",
+  "ds_version_installed": "0.9.40",
+  "last_session": "2026-04-01",
+  "last_session_summary": "Courier: batch bump DS v0.9.38 → v0.9.40 (brand tokens + toggle redesign). Build clean.",
   "overrides": {
     "token_count": 0,
     "token_list": [],
@@ -24,8 +24,8 @@
   "metrics": {
     "override_count": 0,
     "custom_class_count": 88,
-    "delta": -3,
-    "last_updated": "2026-03-31"
+    "delta": 0,
+    "last_updated": "2026-04-01"
   },
   "compliance": "green",
   "governance": "active",
