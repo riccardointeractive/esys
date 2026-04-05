@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { TurnstileWidget, type TurnstileWidgetHandle } from '@digiko-npm/ds-react'
+import { Alert, TurnstileWidget, type TurnstileWidgetHandle } from '@digiko-npm/ds-react'
 import { HONEYPOT_FIELD_NAMES } from '@digiko-npm/cms/captcha'
 import { API_ROUTES } from '@/config/routes'
 import type { Dictionary } from '@/config/i18n'
@@ -176,15 +176,22 @@ export function ContactForm({ dict, turnstileSiteKey, locale }: ContactFormProps
       />
 
       {status.kind === 'error' && (
-        <p className="ds-help ds-help--error" role="alert">
-          {status.message}
-        </p>
+        <Alert variant="error">
+          <Alert.Content>
+            <Alert.Description>{status.message}</Alert.Description>
+          </Alert.Content>
+        </Alert>
       )}
 
       {isSuccess && (
-        <p className="ds-help" role="status">
-          {dict.contactPage.successMessage}
-        </p>
+        <Alert variant="success">
+          <Alert.Content>
+            <Alert.Title>{dict.contactPage.successTitle}</Alert.Title>
+            <Alert.Description>
+              {dict.contactPage.successMessage}
+            </Alert.Description>
+          </Alert.Content>
+        </Alert>
       )}
 
       <button
