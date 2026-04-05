@@ -33,3 +33,12 @@ export const REDIS_KEYS = {
   /* Rate Limiting — Reset Password */
   resetRateLimit: (ip: string) => `${PREFIX}:rate:reset:${ip}` as const,
 } as const
+
+/* ─── Key prefixes for CMS createRateLimiter ───
+   CMS's createRateLimiter appends its own `ratelimit:<key>` suffix to the
+   prefix, so these live separately from REDIS_KEYS (which holds full key
+   builders used for direct Redis access). */
+export const REDIS_KEY_PREFIXES = {
+  /** Used by /api/contact via @digiko-npm/cms createRateLimiter. */
+  contact: `${PREFIX}:contact:` as const,
+} as const

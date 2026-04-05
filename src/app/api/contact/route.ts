@@ -7,6 +7,7 @@ import {
   HONEYPOT_FIELD_NAMES,
 } from '@digiko-npm/cms/captcha'
 import { AUTH_CONFIG } from '@/config/auth'
+import { REDIS_KEY_PREFIXES } from '@/config/redis-keys'
 import { TABLES } from '@/config/supabase-tables'
 import { siteConfig } from '@/config/site'
 import { getAdminClient } from '@/lib/supabase/server'
@@ -28,7 +29,7 @@ interface ContactBody {
 const rateLimiter = createRateLimiter({
   redisUrl: process.env.UPSTASH_REDIS_REST_URL!,
   redisToken: process.env.UPSTASH_REDIS_REST_TOKEN!,
-  keyPrefix: 'esys:contact:',
+  keyPrefix: REDIS_KEY_PREFIXES.contact,
   maxAttempts: AUTH_CONFIG.contactMaxAttempts,
   windowMs: AUTH_CONFIG.contactWindowMs,
 })

@@ -4,8 +4,8 @@
   "ds_version_declared": "^0.9.40",
   "ds_version_resolved": "0.9.40",
   "ds_version_installed": "0.9.40",
-  "last_session": "2026-04-01",
-  "last_session_summary": "Courier: batch bump DS v0.9.38 → v0.9.40 (brand tokens + toggle redesign). Build clean.",
+  "last_session": "2026-04-05",
+  "last_session_summary": "Functional contact form: @digiko-npm/cms 0.6.0 (/captcha) + ds-react 0.5.0 (TurnstileWidget) consumed; ContactForm.tsx + /api/contact (honeypot→rate-limit→Turnstile→Supabase) + email notif; DS Alert swap for submit feedback. Vercel domains esysvip/esysvip2 attached. Soup 159→157.",
   "overrides": {
     "token_count": 0,
     "token_list": [],
