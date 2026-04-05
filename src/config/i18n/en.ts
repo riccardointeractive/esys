@@ -190,6 +190,8 @@ export const en = {
     phone: 'Phone',
     message: 'Message',
     send: 'Send',
+    sending: 'Sending…',
+    successMessage: 'Message sent. We will get back to you as soon as possible.',
     info: 'Contact information',
     map: 'Integrated map (coming soon)',
   },

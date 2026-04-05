@@ -1,6 +1,7 @@
 import { siteConfig } from '@/config/site'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
+import { ContactForm } from '@/components/forms/ContactForm'
 
 interface ContactPageProps {
   params: Promise<{ lang: string }>
@@ -18,6 +19,7 @@ export async function generateMetadata({ params }: ContactPageProps) {
 export default async function ContactPage({ params }: ContactPageProps) {
   const { lang } = await params
   const dict = getDictionary(lang as Locale)
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ''
 
   return (
     <div className="ds-container ds-py-8">
@@ -35,27 +37,11 @@ export default async function ContactPage({ params }: ContactPageProps) {
             <h2>{dict.contactPage.formTitle}</h2>
           </div>
           <div className="ds-card__body">
-            <form className="ds-space-y-4">
-              <div className="ds-form-group">
-                <label className="ds-label">{dict.auth.name}</label>
-                <input type="text" className="ds-input ds-w-full" />
-              </div>
-              <div className="ds-form-group">
-                <label className="ds-label">{dict.auth.email}</label>
-                <input type="email" className="ds-input ds-w-full" />
-              </div>
-              <div className="ds-form-group">
-                <label className="ds-label">{dict.contactPage.phone}</label>
-                <input type="tel" className="ds-input ds-w-full" />
-              </div>
-              <div className="ds-form-group">
-                <label className="ds-label">{dict.contactPage.message}</label>
-                <textarea className="ds-textarea ds-w-full" rows={4} />
-              </div>
-              <button type="submit" className="ds-btn ds-btn--full">
-                {dict.contactPage.send}
-              </button>
-            </form>
+            <ContactForm
+              dict={dict}
+              turnstileSiteKey={turnstileSiteKey}
+              locale={lang}
+            />
           </div>
         </div>
 
