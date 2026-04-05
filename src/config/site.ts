@@ -14,6 +14,8 @@ export const siteConfig = {
     address: '',
     city: '',
     country: 'España',
+    /** Internal recipient for contact-form submissions (not shown publicly). */
+    notificationEmail: 'riccardointeractive@gmail.com',
   },
 
   social: {

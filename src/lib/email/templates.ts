@@ -85,6 +85,71 @@ export function resetPasswordEmail(resetToken: string, locale: string = 'es'): {
   }
 }
 
+interface ContactNotificationData {
+  name: string
+  email: string
+  phone?: string | null
+  message: string
+  locale?: string | null
+  ip?: string | null
+  userAgent?: string | null
+}
+
+/**
+ * Internal notification sent to the ESYS team when someone submits the
+ * public contact form. Locale-agnostic (always written in the team's
+ * working language: ES).
+ */
+export function contactNotificationEmail(data: ContactNotificationData): {
+  subject: string
+  html: string
+} {
+  const escape = (v: string) =>
+    v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+  const row = (label: string, value: string | null | undefined) =>
+    value
+      ? `
+      <tr>
+        <td style="padding:8px 0;font-size:13px;color:#71717a;width:120px;vertical-align:top;">${label}</td>
+        <td style="padding:8px 0;font-size:14px;color:#09090b;vertical-align:top;">${escape(value)}</td>
+      </tr>`
+      : ''
+
+  const body = `
+    <p style="font-size:15px;color:#27272a;line-height:1.6;margin:0 0 16px;">
+      Nuevo mensaje recibido a través del formulario de contacto.
+    </p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 16px;">
+      ${row('Nombre', data.name)}
+      ${row('Email', data.email)}
+      ${row('Teléfono', data.phone)}
+      ${row('Idioma', data.locale)}
+    </table>
+    <div style="background:#f4f4f5;border-radius:8px;padding:16px;margin:0 0 16px;">
+      <p style="font-size:13px;color:#71717a;margin:0 0 8px;text-transform:uppercase;letter-spacing:0.5px;">Mensaje</p>
+      <p style="font-size:14px;color:#09090b;line-height:1.6;margin:0;white-space:pre-wrap;">${escape(data.message)}</p>
+    </div>
+    <p style="text-align:center;margin:24px 0;">
+      <a href="mailto:${escape(data.email)}" style="display:inline-block;padding:12px 32px;background:#09090b;color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:500;">
+        Responder
+      </a>
+    </p>
+    ${
+      data.ip || data.userAgent
+        ? `<p style="font-size:11px;color:#a1a1aa;line-height:1.5;margin:16px 0 0;border-top:1px solid #e4e4e7;padding-top:12px;">
+          ${data.ip ? `IP: ${escape(data.ip)}<br>` : ''}
+          ${data.userAgent ? `UA: ${escape(data.userAgent)}` : ''}
+        </p>`
+        : ''
+    }`
+
+  return {
+    subject: `Nuevo mensaje de contacto — ${data.name}`,
+    html: layout(body),
+  }
+}
+
 export function welcomeEmail(fullName: string, locale: string = 'es'): { subject: string; html: string } {
   const subjects: Record<string, string> = {
     es: `Bienvenido a ${BRAND}`,

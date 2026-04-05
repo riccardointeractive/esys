@@ -8,7 +8,10 @@ import {
 } from '@digiko-npm/cms/captcha'
 import { AUTH_CONFIG } from '@/config/auth'
 import { TABLES } from '@/config/supabase-tables'
+import { siteConfig } from '@/config/site'
 import { getAdminClient } from '@/lib/supabase/server'
+import { sendEmail } from '@/lib/email/client'
+import { contactNotificationEmail } from '@/lib/email/templates'
 
 /* ─── POST /api/contact ─── */
 
@@ -127,6 +130,7 @@ export async function POST(request: NextRequest) {
   }
 
   /* ─── Persist to Supabase ─── */
+  const userAgent = request.headers.get('user-agent') ?? null
   const supabase = getAdminClient()
   const { error: insertError } = await supabase
     .from(TABLES.contactMessages)
@@ -137,7 +141,7 @@ export async function POST(request: NextRequest) {
       message,
       locale,
       ip,
-      user_agent: request.headers.get('user-agent') ?? null,
+      user_agent: userAgent,
     })
 
   if (insertError) {
@@ -146,6 +150,25 @@ export async function POST(request: NextRequest) {
       { error: 'errorGeneric' },
       { status: HTTP_STATUS.INTERNAL_ERROR }
     )
+  }
+
+  /* ─── Notify the team (fire-and-forget — never block the response) ─── */
+  const notificationEmail = siteConfig.contact.notificationEmail
+  if (notificationEmail) {
+    const tpl = contactNotificationEmail({
+      name,
+      email,
+      phone: phone || null,
+      message,
+      locale,
+      ip,
+      userAgent,
+    })
+    sendEmail({
+      to: notificationEmail,
+      subject: tpl.subject,
+      html: tpl.html,
+    }).catch((err) => console.error('[contact] notification failed:', err))
   }
 
   return NextResponse.json({ success: true })
