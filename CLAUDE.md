@@ -1,7 +1,7 @@
-## Design System → [DS_HEALTH.md](/Projects/DS_HEALTH.md)
-For dev conventions (API shape, TanStack Query, Supabase, Redis, commit) → [DEV_CONVENTIONS.md](/Projects/DEV_CONVENTIONS.md)
+## Design System → [DS_HEALTH.md](/Projects/infra/DS_HEALTH.md)
+For dev conventions (API shape, TanStack Query, Supabase, Redis, commit) → [DEV_CONVENTIONS.md](/Projects/infra/DEV_CONVENTIONS.md)
 
-CONTROLLED MODE attivo. Regole DS, azioni aperte, metriche: tutto centralizzato in [DS_HEALTH.md](/Projects/DS_HEALTH.md).
+CONTROLLED MODE attivo. Regole DS, azioni aperte, metriche: tutto centralizzato in [DS_HEALTH.md](/Projects/infra/DS_HEALTH.md).
 Ops Triage: when the user describes a task, automatically call `ops_triage`. Details in DS_HEALTH.md section "Ops Triage".
 Customizzazioni CSS project-specific: [DS_CUSTOM.md](DS_CUSTOM.md) — consultare prima di aggiungere/modificare CSS custom.
 
@@ -35,7 +35,7 @@ Real estate platform for ESYS VIP. Public-facing property listings (new builds +
 
 Base styles (body, selection, overrides) live in `src/app/globals.css`.
 
-For all DS styling rules (component-first approach, anti-patterns, CSS variable vs utility class, responsive utilities, size tiers, cn() usage) → [DS_HEALTH.md](/Projects/DS_HEALTH.md)
+For all DS styling rules (component-first approach, anti-patterns, CSS variable vs utility class, responsive utilities, size tiers, cn() usage) → [DS_HEALTH.md](/Projects/infra/DS_HEALTH.md)
 
 ---
 
@@ -247,7 +247,7 @@ CMS utilities:  @digiko-npm/cms (auth, sessions, media, Supabase, R2)
 
 ## End-of-Session Checklist
 
-For DS checklist (CONTROLLED MODE, compliance, build, git) → [DS_HEALTH.md](/Projects/DS_HEALTH.md)
+For DS checklist (CONTROLLED MODE, compliance, build, git) → [DS_HEALTH.md](/Projects/infra/DS_HEALTH.md)
 
 ### Project-Specific
 - [ ] CMS package used for auth, sessions, media — no custom implementations
