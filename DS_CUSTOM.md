@@ -47,8 +47,8 @@ Componente completo per visualizzazione immagini. Necessario, non sostituibile c
 
 | Classe | Scopo |
 |--------|-------|
-| `.vip-gallery__*` | Gallery container, main image, thumbs, thumb states |
-| `.vip-lightbox__*` | Fullscreen modal, navigation, counter |
+| `.vip-gallery__*` | Gallery container, main image, thumbs, thumb states, caption overlay |
+| `.vip-lightbox__*` | Fullscreen modal, navigation, counter, caption overlay |
 
 ### Admin Components (lines 375-485)
 Tutti usano token DS. Ben strutturati.

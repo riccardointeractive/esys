@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { X, GripVertical, Image } from 'lucide-react'
-import { MediaUploader } from '@digiko-npm/cms/media'
+import { Image } from 'lucide-react'
+import { MediaUploader, SortableImageList } from '@digiko-npm/cms/media'
+import type { SortableItem } from '@digiko-npm/cms/media'
 import { ADMIN_API_ROUTES } from '@/config/routes'
 import { MEDIA_CONFIG } from '@/config/media'
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal'
@@ -18,6 +19,12 @@ const uploadConfig = {
   mediaEndpoint: ADMIN_API_ROUTES.media,
 }
 
+const CAPTION_FIELDS = [
+  { key: 'caption_es' as const, label: 'ES' },
+  { key: 'caption_en' as const, label: 'EN' },
+  { key: 'caption_ru' as const, label: 'RU' },
+]
+
 export function PropertyImageManager({ images, onChange }: PropertyImageManagerProps) {
   const [pickerOpen, setPickerOpen] = useState(false)
 
@@ -28,7 +35,7 @@ export function PropertyImageManager({ images, onChange }: PropertyImageManagerP
     if (atLimit) return
     onChange([
       ...images,
-      { url, alt_text: '', sort_order: images.length },
+      { url, alt_text: '', caption_es: '', caption_en: '', caption_ru: '', sort_order: images.length },
     ])
   }
 
@@ -36,38 +43,45 @@ export function PropertyImageManager({ images, onChange }: PropertyImageManagerP
     const newImages: PropertyImageInput[] = urls.map((url, i) => ({
       url,
       alt_text: '',
+      caption_es: '',
+      caption_en: '',
+      caption_ru: '',
       sort_order: images.length + i,
     }))
     onChange([...images, ...newImages])
   }
 
-  function handleRemove(index: number) {
+  function handleRemove(id: string) {
     const updated = images
-      .filter((_, i) => i !== index)
+      .filter((img) => img.url !== id)
       .map((img, i) => ({ ...img, sort_order: i }))
     onChange(updated)
   }
 
-  function handleAltChange(index: number, alt_text: string) {
+  function handleReorder(sortedItems: SortableItem[]) {
+    const urlToImage = new Map(images.map((img) => [img.url, img]))
+    const updated = sortedItems
+      .map((item, i) => {
+        const original = urlToImage.get(item.url)
+        if (!original) return null
+        return { ...original, sort_order: i }
+      })
+      .filter((img): img is PropertyImageInput => img !== null)
+    onChange(updated)
+  }
+
+  function handleFieldChange(index: number, field: keyof PropertyImageInput, value: string) {
     const updated = images.map((img, i) =>
-      i === index ? { ...img, alt_text } : img
+      i === index ? { ...img, [field]: value } : img
     )
     onChange(updated)
   }
 
-  function handleMoveUp(index: number) {
-    if (index === 0) return
-    const updated = [...images]
-    ;[updated[index - 1], updated[index]] = [updated[index], updated[index - 1]]
-    onChange(updated.map((img, i) => ({ ...img, sort_order: i })))
-  }
-
-  function handleMoveDown(index: number) {
-    if (index === images.length - 1) return
-    const updated = [...images]
-    ;[updated[index], updated[index + 1]] = [updated[index + 1], updated[index]]
-    onChange(updated.map((img, i) => ({ ...img, sort_order: i })))
-  }
+  const sortableItems: SortableItem[] = images.map((img) => ({
+    id: img.url,
+    url: img.url,
+    label: img.caption_es || img.alt_text || undefined,
+  }))
 
   return (
     <div>
@@ -77,70 +91,45 @@ export function PropertyImageManager({ images, onChange }: PropertyImageManagerP
         </span>
       </div>
 
-      {/* Image list */}
-      <div className="ds-flex ds-flex-col ds-gap-3 ds-mb-4">
-        {images.map((img, index) => (
-          <div
-            key={`${img.url}-${index}`}
-            className="ds-card ds-card--compact"
-          >
-          <div className="ds-card__body ds-flex ds-items-center ds-gap-3">
-            <div className="ds-flex ds-flex-col ds-gap-1">
-              <button
-                type="button"
-                onClick={() => handleMoveUp(index)}
-                className="ds-btn ds-btn--ghost ds-btn--xs"
-                disabled={index === 0}
-                aria-label="Mover arriba"
-              >
-                <GripVertical size={14} />
-              </button>
-              <button
-                type="button"
-                onClick={() => handleMoveDown(index)}
-                className="ds-btn ds-btn--ghost ds-btn--xs"
-                disabled={index === images.length - 1}
-                aria-label="Mover abajo"
-              >
-                <GripVertical size={14} />
-              </button>
-            </div>
-
-            {/* Thumbnail */}
-            <div className="vip-image-grid__item">
-              <img
-                src={img.url}
-                alt={img.alt_text || `Imagen ${index + 1}`}
-                className="ds-rounded-md"
-                style={{ width: 80, height: 60, objectFit: 'cover' }}
-              />
-            </div>
-
-            {/* Alt text */}
-            <input
-              type="text"
-              value={img.alt_text}
-              onChange={(e) => handleAltChange(index, e.target.value)}
-              placeholder="Texto alternativo"
-              className="ds-input ds-input--sm ds-flex-1"
-              autoComplete="off"
-              data-1p-ignore
-              data-lpignore="true"
-            />
-
-            {/* Remove */}
-            <button
-              type="button"
-              onClick={() => handleRemove(index)}
-              className="ds-btn ds-btn--ghost ds-btn--sm ds-text-error"
-              aria-label="Eliminar imagen"
-            >
-              <X size={16} />
-            </button>
-          </div>
-          </div>
-        ))}
-      </div>
+      {/* Sortable image list */}
+      {images.length > 0 && (
+        <div className="ds-mb-4">
+          <SortableImageList
+            items={sortableItems}
+            onReorder={handleReorder}
+            onRemove={handleRemove}
+            renderExtra={(_item, index) => (
+              <div className="ds-flex ds-flex-col ds-gap-2">
+                <input
+                  type="text"
+                  value={images[index]?.alt_text ?? ''}
+                  onChange={(e) => handleFieldChange(index, 'alt_text', e.target.value)}
+                  placeholder="Texto alternativo"
+                  className="ds-input ds-input--sm ds-w-full"
+                  autoComplete="off"
+                  data-1p-ignore
+                  data-lpignore="true"
+                />
+                {CAPTION_FIELDS.map(({ key, label }) => (
+                  <div key={key} className="ds-flex ds-items-center ds-gap-2">
+                    <span className="ds-text-xs ds-text-tertiary">{label}</span>
+                    <input
+                      type="text"
+                      value={images[index]?.[key] ?? ''}
+                      onChange={(e) => handleFieldChange(index, key, e.target.value)}
+                      placeholder="Descripción"
+                      className="ds-input ds-input--sm ds-w-full"
+                      autoComplete="off"
+                      data-1p-ignore
+                      data-lpignore="true"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          />
+        </div>
+      )}
 
       {/* Actions: Upload + Pick from library */}
       {!atLimit && (

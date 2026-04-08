@@ -123,6 +123,9 @@ export async function PUT(request: NextRequest, context: RouteContext) {
         property_id: id,
         url: img.url,
         alt_text: img.alt_text || '',
+        caption_es: img.caption_es || '',
+        caption_en: img.caption_en || '',
+        caption_ru: img.caption_ru || '',
         sort_order: img.sort_order ?? idx,
       }))
       await supabase.from(TABLES.propertyImages).insert(imageRows)

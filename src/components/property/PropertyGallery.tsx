@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { X, ChevronLeft, ChevronRight, Images } from 'lucide-react'
 import type { PropertyImage } from '@/types/property'
+import { useLocale } from '@/components/providers/LocaleProvider'
 import { cn } from '@/lib/utils'
 
 const MAX_VISIBLE_THUMBS = 8
@@ -12,7 +13,13 @@ interface PropertyGalleryProps {
   title: string
 }
 
+function getCaption(image: PropertyImage, locale: string): string {
+  const key = `caption_${locale}` as keyof PropertyImage
+  return (image[key] as string) || ''
+}
+
 export function PropertyGallery({ images, title }: PropertyGalleryProps) {
+  const locale = useLocale()
   const [activeIndex, setActiveIndex] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
@@ -20,6 +27,7 @@ export function PropertyGallery({ images, title }: PropertyGalleryProps) {
   if (!mainImage) return null
 
   const remaining = Math.max(0, images.length - MAX_VISIBLE_THUMBS)
+  const mainCaption = getCaption(mainImage, locale)
 
   const openLightbox = (index: number) => {
     setActiveIndex(index)
@@ -46,6 +54,9 @@ export function PropertyGallery({ images, title }: PropertyGalleryProps) {
     return () => document.removeEventListener('keydown', onKey)
   }, [lightboxOpen, goTo])
 
+  const activeImage = images[activeIndex]
+  const activeCaption = activeImage ? getCaption(activeImage, locale) : ''
+
   return (
     <>
       {/* Gallery grid */}
@@ -62,6 +73,9 @@ export function PropertyGallery({ images, title }: PropertyGalleryProps) {
             alt={mainImage.alt_text || title}
             className="vip-gallery__img"
           />
+          {mainCaption && (
+            <span className="vip-gallery__caption">{mainCaption}</span>
+          )}
         </button>
 
         {/* Thumbnails */}
@@ -101,7 +115,7 @@ export function PropertyGallery({ images, title }: PropertyGalleryProps) {
       </div>
 
       {/* Lightbox */}
-      {lightboxOpen && (
+      {lightboxOpen && activeImage && (
         <div className="vip-lightbox" onClick={closeLightbox}>
           <div className="vip-lightbox__content" onClick={(e) => e.stopPropagation()}>
             <button
@@ -125,8 +139,8 @@ export function PropertyGallery({ images, title }: PropertyGalleryProps) {
             )}
 
             <img
-              src={images[activeIndex].url}
-              alt={images[activeIndex].alt_text || `${title} ${activeIndex + 1}`}
+              src={activeImage.url}
+              alt={activeImage.alt_text || `${title} ${activeIndex + 1}`}
               className="vip-lightbox__img"
             />
 
@@ -144,6 +158,12 @@ export function PropertyGallery({ images, title }: PropertyGalleryProps) {
             <span className="vip-lightbox__counter">
               {activeIndex + 1} / {images.length}
             </span>
+
+            {activeCaption && (
+              <span className="vip-lightbox__caption">
+                {activeCaption}
+              </span>
+            )}
           </div>
         </div>
       )}

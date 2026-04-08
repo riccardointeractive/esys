@@ -37,6 +37,9 @@ export interface PropertyImage {
   property_id: string
   url: string
   alt_text: string
+  caption_es: string
+  caption_en: string
+  caption_ru: string
   sort_order: number
   created_at: string
 }
@@ -88,6 +91,9 @@ export interface PropertyFormData {
 export interface PropertyImageInput {
   url: string
   alt_text: string
+  caption_es: string
+  caption_en: string
+  caption_ru: string
   sort_order: number
 }
 

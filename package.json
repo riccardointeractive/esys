@@ -12,7 +12,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1008.0",
     "@aws-sdk/s3-request-presigner": "^3.1008.0",
-    "@digiko-npm/cms": "^0.6.0",
+    "@digiko-npm/cms": "^0.6.2",
     "@digiko-npm/designsystem": "^0.9.40",
     "@digiko-npm/ds-admin": "^0.1.0",
     "@digiko-npm/ds-react": "^0.5.0",
