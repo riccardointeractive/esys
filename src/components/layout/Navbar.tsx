@@ -35,11 +35,12 @@ export function Navbar() {
       <nav className="ds-nav">
         <div className="ds-nav__inner">
           <Link href={routes.home} className="ds-nav__brand">
-            <Logo height={18} />
+            <span className="ds-lg:hidden"><Logo height={14} /></span>
+            <span className="ds-hidden ds-lg:block"><Logo height={18} /></span>
           </Link>
 
           {/* Desktop menu */}
-          <div className="ds-nav__menu ds-hidden ds-md:flex">
+          <div className="ds-nav__menu ds-hidden ds-lg:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -54,13 +55,13 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Actions */}
+          {/* Actions — icons always visible, logout only on desktop */}
           <div className="ds-nav__actions">
             <LanguageSwitcher />
             <ThemeToggle />
             <Link
-              href={routes.favorites}
-              className="ds-nav__icon-btn ds-hidden ds-md:flex"
+              href={routes.accountFavorites}
+              className="ds-nav__icon-btn"
               aria-label={t.nav.favorites}
             >
               <Heart size={18} />
@@ -69,14 +70,14 @@ export function Navbar() {
               <>
                 <Link
                   href={routes.account}
-                  className="ds-nav__icon-btn ds-hidden ds-md:flex"
+                  className="ds-nav__icon-btn"
                   aria-label={t.nav.myAccount}
                 >
                   <User size={18} />
                 </Link>
                 <button
                   onClick={() => logout()}
-                  className="ds-nav__icon-btn ds-hidden ds-md:flex"
+                  className="ds-nav__icon-btn ds-hidden ds-lg:flex"
                   aria-label={t.auth.logout}
                 >
                   <LogOut size={18} />
@@ -85,7 +86,7 @@ export function Navbar() {
             ) : (
               <Link
                 href={routes.login}
-                className="ds-nav__icon-btn ds-hidden ds-md:flex"
+                className="ds-nav__icon-btn"
                 aria-label={t.nav.login}
               >
                 <User size={18} />
@@ -93,7 +94,7 @@ export function Navbar() {
             )}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="ds-nav__icon-btn ds-md:hidden"
+              className="ds-nav__icon-btn ds-lg:hidden"
               aria-label={t.nav.menu}
             >
               {mobileOpen ? <X size={18} /> : <Menu size={18} />}
@@ -118,37 +119,13 @@ export function Navbar() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href={routes.favorites}
-            onClick={() => setMobileOpen(false)}
-            className="ds-nav__link"
-          >
-            {t.nav.favorites}
-          </Link>
-          {isAuthenticated ? (
-            <>
-              <Link
-                href={routes.account}
-                onClick={() => setMobileOpen(false)}
-                className="ds-nav__link"
-              >
-                {t.nav.myAccount}
-              </Link>
-              <button
-                onClick={() => { logout(); setMobileOpen(false) }}
-                className="ds-nav__link"
-              >
-                {t.auth.logout}
-              </button>
-            </>
-          ) : (
-            <Link
-              href={routes.login}
-              onClick={() => setMobileOpen(false)}
+          {isAuthenticated && (
+            <button
+              onClick={() => { logout(); setMobileOpen(false) }}
               className="ds-nav__link"
             >
-              {t.nav.login}
-            </Link>
+              {t.auth.logout}
+            </button>
           )}
         </div>
       </div>

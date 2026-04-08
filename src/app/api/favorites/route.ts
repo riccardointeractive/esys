@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       property_id,
       created_at,
       ${TABLES.properties} (
-        id, title, slug, price, area, bedrooms, bathrooms,
+        id, title_es, title_en, title_ru, slug, price, area, bedrooms, bathrooms,
         status, category, city, province
       )
     `)

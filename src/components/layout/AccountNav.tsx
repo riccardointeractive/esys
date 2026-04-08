@@ -2,13 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { User, Heart, Search, Bell, Settings } from 'lucide-react'
+import { User, Heart, Settings } from 'lucide-react'
 import { useDictionary, useLocale } from '@/components/providers/LocaleProvider'
 import { localizedRoutes } from '@/config/i18n/routes'
 import { cn } from '@/lib/utils'
 
 const iconMap: Record<string, React.ElementType> = {
-  User, Heart, Search, Bell, Settings,
+  User, Heart, Settings,
 }
 
 export function AccountNav() {
@@ -20,8 +20,6 @@ export function AccountNav() {
   const items = [
     { label: t.account.myAccount, href: routes.account, icon: 'User' },
     { label: t.account.favorites, href: routes.accountFavorites, icon: 'Heart' },
-    { label: t.account.searches, href: routes.accountSearches, icon: 'Search' },
-    { label: t.account.alerts, href: routes.accountAlerts, icon: 'Bell' },
     { label: t.account.settings, href: routes.accountSettings, icon: 'Settings' },
   ]
 

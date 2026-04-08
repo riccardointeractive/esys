@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { Heart } from 'lucide-react'
 import { useDictionary, useLocale } from '@/components/providers/LocaleProvider'
 import { localizedRoutes } from '@/config/i18n/routes'
 import { PropertyCard } from '@/components/property/PropertyCard'
@@ -13,6 +14,8 @@ interface FavoriteProperty {
   esys_properties: {
     id: string
     title_es: string
+    title_en: string
+    title_ru: string
     slug: string
     price: number
     area: number
@@ -28,6 +31,7 @@ interface FavoriteProperty {
 export function FavoritesContent() {
   const t = useDictionary()
   const locale = useLocale()
+  const routes = localizedRoutes(locale)
   const [favorites, setFavorites] = useState<FavoriteProperty[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -55,11 +59,18 @@ export function FavoritesContent() {
       </h1>
 
       {loading ? (
-        <p className="ds-text-secondary">{t.common.loading}</p>
+        <div className="ds-flex ds-justify-center ds-py-12">
+          <div className="spinner spinner--md spinner--default" />
+        </div>
       ) : favorites.length === 0 ? (
-        <div className="ds-card">
-          <div className="ds-card__body ds-text-center ds-py-12">
-            <p className="ds-text-secondary">{t.account.noFavorites}</p>
+        <div className="ds-empty-state ds-empty-state--card">
+          <div className="ds-empty-state__icon">
+            <Heart size={32} />
+          </div>
+          <div className="ds-empty-state__title">{t.account.noFavorites}</div>
+          <div className="ds-empty-state__description">{t.account.noFavoritesHint}</div>
+          <div className="ds-empty-state__actions">
+            <a href={routes.properties} className="ds-btn ds-btn--sm">{t.account.browseProperties}</a>
           </div>
         </div>
       ) : (
@@ -71,7 +82,7 @@ export function FavoritesContent() {
                 key={fav.id}
                 id={prop.id}
                 slug={prop.slug}
-                title={prop.title_es}
+                title={prop[`title_${locale}` as keyof typeof prop] as string || prop.title_es}
                 location={`${prop.city}, ${prop.province}`}
                 price={prop.price}
                 image={fav.image || undefined}

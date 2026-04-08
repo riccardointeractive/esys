@@ -35,18 +35,10 @@ export function AccountDashboard() {
           {user.fullName} (@{user.username})
         </p>
       )}
-      <div className="ds-grid ds-grid-cols-1 ds-md:grid-cols-3 ds-gap-6">
+      <div className="ds-grid ds-grid-cols-1 ds-md:grid-cols-2 ds-gap-6">
         <div className="ds-stat-card">
           <p className="ds-stat-card__label">{t.account.savedFavorites}</p>
           <p className="ds-stat-card__value">{favCount}</p>
-        </div>
-        <div className="ds-stat-card">
-          <p className="ds-stat-card__label">{t.account.savedSearches}</p>
-          <p className="ds-stat-card__value">0</p>
-        </div>
-        <div className="ds-stat-card">
-          <p className="ds-stat-card__label">{t.account.activeAlerts}</p>
-          <p className="ds-stat-card__value">0</p>
         </div>
       </div>
     </div>

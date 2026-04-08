@@ -5,7 +5,7 @@
   "ds_version_resolved": "0.9.40",
   "ds_version_installed": "0.9.40",
   "last_session": "2026-04-08",
-  "last_session_summary": "feat(media): SortableImageList (drag+arrows) + multilingual captions (ES/EN/RU). CMS v0.6.2. PropertyImageManager refactored, PropertyGallery locale-aware captions. Form layout 3fr/2fr. DB migrated.",
+  "last_session_summary": "feat(media): SortableImageList (drag+arrows) + multilingual captions (ES/EN/RU). CMS v0.6.2. fix: favorites API (title→title_es/en/ru), navbar heart→accountFavorites, breakpoint md→lg. UI: login hierarchy, hero responsive sizing, DS empty-state on favorites, removed búsquedas/alertas stubs, mobile logo 14px, icons always visible.",
   "overrides": {
     "token_count": 0,
     "token_list": [],

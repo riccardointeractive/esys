@@ -47,7 +47,7 @@ export function LoginForm() {
   return (
     <div className="ds-card">
       <div className="ds-card__header">
-        <h1>{t.auth.login}</h1>
+        <h1 className="ds-card__title">{t.auth.login}</h1>
       </div>
       <div className="ds-card__body">
         <form className="ds-space-y-4" onSubmit={handleSubmit}>

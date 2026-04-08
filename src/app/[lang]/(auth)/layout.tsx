@@ -16,9 +16,9 @@ export default async function AuthLayout({ children, params }: AuthLayoutProps) 
     <div className="ds-min-h-screen ds-flex ds-flex-col ds-items-center ds-justify-center ds-bg-base ds-px-4">
       <Link
         href={routes.home}
-        className="ds-mb-8"
+        className="ds-mb-6"
       >
-        <Logo height={32} />
+        <Logo height={18} />
       </Link>
       <div className="ds-w-full" style={{ maxWidth: '24rem' }}>
         {children}
