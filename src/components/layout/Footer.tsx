@@ -77,6 +77,9 @@ export function Footer({ lang, dict }: FooterProps) {
           <p className="ds-text-xs ds-text-tertiary">
             &copy; {new Date().getFullYear()} {siteConfig.name}
           </p>
+          <Link href="/admin" className="ds-text-xs ds-text-tertiary ds-mt-2">
+            Admin
+          </Link>
         </div>
       </div>
     </footer>
