@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Clock, ChevronLeft, Calendar } from 'lucide-react'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
 import { localizedRoutes } from '@/config/i18n/routes'
@@ -25,14 +24,14 @@ export async function generateMetadata({ params }: BlogDetailProps) {
   const dict = getDictionary(locale)
   const post = await fetchPostBySlug(postSlug)
   if (!post) return { title: dict.blog.notFound }
-  const title = pickLocalized(post as unknown as Record<string, unknown>,'title', locale)
-  const description = pickLocalized(post as unknown as Record<string, unknown>,'excerpt', locale) || dict.seo.blog.description
+  const title = pickLocalized(post as unknown as Record<string, unknown>, 'title', locale)
+  const description =
+    pickLocalized(post as unknown as Record<string, unknown>, 'excerpt', locale) ||
+    dict.seo.blog.description
   return {
     title: `${title} — ${dict.blog.title}`,
     description,
-    openGraph: post.cover_image_url
-      ? { images: [{ url: post.cover_image_url }] }
-      : undefined,
+    openGraph: post.cover_image_url ? { images: [{ url: post.cover_image_url }] } : undefined,
   }
 }
 
@@ -45,64 +44,58 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
   const post = await fetchPostBySlug(postSlug)
   if (!post) notFound()
 
-  const title = pickLocalized(post as unknown as Record<string, unknown>,'title', locale)
-  const excerpt = pickLocalized(post as unknown as Record<string, unknown>,'excerpt', locale)
-  const content = pickLocalized(post as unknown as Record<string, unknown>,'content', locale) || post.content_es
+  const title = pickLocalized(post as unknown as Record<string, unknown>, 'title', locale)
+  const excerpt = pickLocalized(post as unknown as Record<string, unknown>, 'excerpt', locale)
+  const content =
+    pickLocalized(post as unknown as Record<string, unknown>, 'content', locale) || post.content_es
 
   const categoryLabel = post.category
     ? (post.category[`label_${locale}` as `label_${Locale}`] as string) || post.category.label_es
     : null
 
   const publishedDate = post.published_at
-    ? new Intl.DateTimeFormat(locale === 'ru' ? 'ru-RU' : locale === 'en' ? 'en-GB' : 'es-ES', {
-        dateStyle: 'long',
-      }).format(new Date(post.published_at))
+    ? new Intl.DateTimeFormat(
+        locale === 'ru' ? 'ru-RU' : locale === 'en' ? 'en-GB' : 'es-ES',
+        { day: 'numeric', month: 'long', year: 'numeric' }
+      ).format(new Date(post.published_at))
     : null
 
   const relatedRaw = await fetchRelatedPosts(post.category_id, post.id, 3)
 
   return (
-    <article className="ds-container ds-py-8">
-      <Link href={routes.blog} className="ds-text-interactive ds-flex ds-items-center ds-gap-1 ds-mb-4">
-        <ChevronLeft size={16} />
-        <span>{dict.blog.backToBlog}</span>
-      </Link>
-
+    <article className="ds-container">
+      {/* ─── Editorial header ─── */}
       <header className="vip-blog-detail__header">
-        {categoryLabel && post.category && (
+        {categoryLabel && post.category ? (
           <Link
             href={routes.blogCategory(post.category.slug)}
-            className="ds-badge ds-badge--outline"
+            className="vip-blog-eyebrow"
           >
             {categoryLabel}
           </Link>
-        )}
-        <h1 className="ds-font-display ds-text-3xl ds-font-bold ds-text-primary ds-mt-3">
-          {title}
-        </h1>
-        {excerpt && <p className="ds-text-lg ds-text-secondary ds-mt-3">{excerpt}</p>}
+        ) : null}
 
-        <div className="ds-flex ds-items-center ds-gap-4 ds-text-sm ds-text-tertiary ds-mt-4">
-          {publishedDate && (
-            <span className="ds-flex ds-items-center ds-gap-1">
-              <Calendar size={14} />
-              {publishedDate}
-            </span>
-          )}
-          <span className="ds-flex ds-items-center ds-gap-1">
-            <Clock size={14} />
+        <h1 className="vip-blog-hero-title">{title}</h1>
+
+        {excerpt && <p className="vip-blog-lede">{excerpt}</p>}
+
+        <div className="vip-blog-meta">
+          {publishedDate && <span>{publishedDate}</span>}
+          {publishedDate && <span className="vip-blog-meta__sep" aria-hidden="true" />}
+          <span>
             {dict.blog.readingTime.replace('{n}', String(post.reading_minutes))}
           </span>
         </div>
       </header>
 
+      {/* ─── Cinematic cover ─── */}
       {post.cover_image_url && (
         <div className="vip-blog-detail__cover">
           <Image
             src={post.cover_image_url}
             alt={post.cover_alt || title}
             fill
-            sizes="(max-width: 1024px) 100vw, 1024px"
+            sizes="(max-width: 1024px) 100vw, 1080px"
             className="vip-blog-detail__cover-img"
             priority
             unoptimized
@@ -110,36 +103,38 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
         </div>
       )}
 
-      <BlogPostContent html={content} />
+      {/* ─── Body ─── */}
+      <div className="vip-blog-detail__body">
+        <BlogPostContent html={content} />
 
-      {post.cover_photographer_name && (
-        <p className="ds-text-xs ds-text-tertiary ds-mt-4">
-          {dict.blog.photoBy}{' '}
-          <a
-            href={post.cover_photographer_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ds-text-interactive"
-          >
-            {post.cover_photographer_name}
-          </a>{' '}
-          {dict.blog.onUnsplash}{' '}
-          <a
-            href={post.cover_photo_page_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ds-text-interactive"
-          >
-            ↗
-          </a>
-        </p>
-      )}
+        {post.cover_photographer_name && (
+          <p className="vip-blog-detail__credit">
+            {dict.blog.photoBy}{' '}
+            <a
+              href={post.cover_photographer_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ds-text-interactive"
+            >
+              {post.cover_photographer_name}
+            </a>{' '}
+            {dict.blog.onUnsplash}{' '}
+            <a
+              href={post.cover_photo_page_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ds-text-interactive"
+            >
+              ↗
+            </a>
+          </p>
+        )}
+      </div>
 
+      {/* ─── Related ─── */}
       {relatedRaw.length > 0 && (
-        <section className="ds-mt-12">
-          <h2 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-4">
-            {dict.blog.relatedPosts}
-          </h2>
+        <section className="vip-blog-detail__related">
+          <h2 className="vip-blog-detail__related-title">{dict.blog.relatedPosts}</h2>
           <BlogPostGrid
             posts={relatedRaw}
             locale={locale}

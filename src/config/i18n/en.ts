@@ -180,6 +180,7 @@ export const en = {
   },
   blog: {
     title: 'Blog',
+    journalEyebrow: 'ESYS Journal',
     subtitle: 'News, guides and insights from the real estate world.',
     empty: 'No articles published yet.',
     emptyCategory: 'No articles in this category yet.',

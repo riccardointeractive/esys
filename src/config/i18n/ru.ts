@@ -180,6 +180,7 @@ export const ru = {
   },
   blog: {
     title: 'Блог',
+    journalEyebrow: 'ESYS Journal',
     subtitle: 'Новости, гиды и советы из мира недвижимости.',
     empty: 'Пока нет опубликованных статей.',
     emptyCategory: 'В этой рубрике пока нет статей.',

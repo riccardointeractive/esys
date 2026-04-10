@@ -1,9 +1,6 @@
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import { ChevronLeft } from 'lucide-react'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
-import { localizedRoutes } from '@/config/i18n/routes'
 import { BlogPostGrid } from '@/components/blog/BlogPostGrid'
 import { BlogSidebar } from '@/components/blog/BlogSidebar'
 import {
@@ -40,7 +37,6 @@ export default async function BlogCategoryPage({ params }: CategoryPageProps) {
   const { lang, categorySlug } = await params
   const locale = lang as Locale
   const dict = getDictionary(locale)
-  const routes = localizedRoutes(locale)
 
   const category = await fetchCategoryBySlug(categorySlug)
   if (!category) notFound()
@@ -57,18 +53,11 @@ export default async function BlogCategoryPage({ params }: CategoryPageProps) {
     category.description_es
 
   return (
-    <div className="ds-container ds-py-8">
-      <Link href={routes.blog} className="ds-text-interactive ds-flex ds-items-center ds-gap-1 ds-mb-4">
-        <ChevronLeft size={16} />
-        <span>{dict.blog.backToBlog}</span>
-      </Link>
-
-      <header className="ds-mb-8">
-        <p className="ds-text-tertiary ds-text-sm">{dict.blog.category}</p>
-        <h1 className="ds-font-display ds-text-3xl ds-font-bold ds-text-primary ds-mt-1">
-          {label}
-        </h1>
-        {description && <p className="ds-text-secondary ds-mt-2">{description}</p>}
+    <div className="ds-container vip-blog-section">
+      <header className="vip-blog-detail__header">
+        <span className="vip-blog-eyebrow">{dict.blog.title}</span>
+        <h1 className="vip-blog-hero-title">{label}</h1>
+        {description && <p className="vip-blog-lede">{description}</p>}
       </header>
 
       <div className="vip-blog-layout">

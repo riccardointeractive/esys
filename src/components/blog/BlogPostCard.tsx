@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Clock } from 'lucide-react'
 import type { BlogPostWithCategory } from '@/types/blog'
 import type { Locale } from '@/config/i18n'
 import { localizedRoutes } from '@/config/i18n/routes'
@@ -15,14 +14,27 @@ function pickLocalized(post: BlogPostWithCategory, key: 'title' | 'excerpt', loc
   return (post[`${key}_${locale}` as `${typeof key}_${Locale}`] as string) || post[`${key}_es`]
 }
 
+function formatDate(value: string | null, locale: Locale): string | null {
+  if (!value) return null
+  try {
+    return new Intl.DateTimeFormat(
+      locale === 'ru' ? 'ru-RU' : locale === 'en' ? 'en-GB' : 'es-ES',
+      { day: 'numeric', month: 'short', year: 'numeric' }
+    ).format(new Date(value))
+  } catch {
+    return null
+  }
+}
+
 export function BlogPostCard({ post, locale, readingTimeTemplate }: BlogPostCardProps) {
-  const readingLabel = readingTimeTemplate.replace('{n}', String(post.reading_minutes))
   const routes = localizedRoutes(locale)
   const title = pickLocalized(post, 'title', locale)
   const excerpt = pickLocalized(post, 'excerpt', locale)
   const categoryLabel = post.category
     ? (post.category[`label_${locale}` as `label_${Locale}`] as string) || post.category.label_es
     : null
+  const readingLabel = readingTimeTemplate.replace('{n}', String(post.reading_minutes))
+  const dateLabel = formatDate(post.published_at, locale)
 
   return (
     <article className="vip-blog-card">
@@ -44,21 +56,18 @@ export function BlogPostCard({ post, locale, readingTimeTemplate }: BlogPostCard
         {categoryLabel && post.category && (
           <Link
             href={routes.blogCategory(post.category.slug)}
-            className="ds-badge ds-badge--outline vip-blog-card__category"
+            className="vip-blog-card__category"
           >
             {categoryLabel}
           </Link>
         )}
-        <h3 className="ds-font-display ds-text-lg ds-font-semibold ds-text-primary ds-mt-2">
-          <Link href={routes.blogPost(post.slug)} className="ds-text-primary">
-            {title}
-          </Link>
+        <h3 className="vip-blog-card__title">
+          <Link href={routes.blogPost(post.slug)}>{title}</Link>
         </h3>
-        {excerpt && (
-          <p className="ds-text-sm ds-text-secondary ds-mt-2 vip-blog-card__excerpt">{excerpt}</p>
-        )}
-        <div className="ds-flex ds-items-center ds-gap-2 ds-mt-3 ds-text-xs ds-text-tertiary">
-          <Clock size={14} />
+        {excerpt && <p className="vip-blog-card__excerpt">{excerpt}</p>}
+        <div className="vip-blog-card__meta">
+          {dateLabel && <span>{dateLabel}</span>}
+          {dateLabel && <span aria-hidden="true">·</span>}
           <span>{readingLabel}</span>
         </div>
       </div>

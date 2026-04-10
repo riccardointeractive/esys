@@ -38,12 +38,11 @@ export default async function BlogIndexPage({ params, searchParams }: BlogIndexP
   ])
 
   return (
-    <div className="ds-container ds-py-8">
-      <header className="ds-mb-8">
-        <h1 className="ds-font-display ds-text-3xl ds-font-bold ds-text-primary">
-          {dict.blog.title}
-        </h1>
-        <p className="ds-text-secondary ds-mt-2">{dict.blog.subtitle}</p>
+    <div className="ds-container vip-blog-section">
+      <header className="vip-blog-detail__header">
+        <span className="vip-blog-eyebrow">{dict.blog.journalEyebrow}</span>
+        <h1 className="vip-blog-hero-title">{dict.blog.title}</h1>
+        <p className="vip-blog-lede">{dict.blog.subtitle}</p>
       </header>
 
       <div className="vip-blog-layout">

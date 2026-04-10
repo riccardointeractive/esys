@@ -180,6 +180,7 @@ export const es = {
   },
   blog: {
     title: 'Blog',
+    journalEyebrow: 'ESYS Journal',
     subtitle: 'Noticias, guías y consejos del sector inmobiliario.',
     empty: 'Todavía no hay artículos publicados.',
     emptyCategory: 'Esta categoría todavía no tiene artículos.',
