@@ -17,24 +17,43 @@ export async function GET(request: NextRequest, context: RouteContext) {
   const auth = await verifyAdminRequest(request)
   if (!auth.authorized) return auth.response
 
-  const { id } = await context.params
-  const supabase = getAdminClient()
+  try {
+    const { id } = await context.params
+    const supabase = getAdminClient()
 
-  const { data, error } = await supabase
-    .from(TABLES.blogPosts)
-    .select(`*, category:${TABLES.blogCategories}(*)`)
-    .eq('id', id)
-    .is('deleted_at', null)
-    .single()
+    const { data: post, error } = await supabase
+      .from(TABLES.blogPosts)
+      .select('*')
+      .eq('id', id)
+      .is('deleted_at', null)
+      .single()
 
-  if (error || !data) {
+    if (error || !post) {
+      return NextResponse.json(
+        { error: 'Artículo no encontrado', details: error },
+        { status: HTTP_STATUS.NOT_FOUND }
+      )
+    }
+
+    let category: unknown = null
+    if (post.category_id) {
+      const { data: cat } = await supabase
+        .from(TABLES.blogCategories)
+        .select('*')
+        .eq('id', post.category_id)
+        .maybeSingle()
+      category = cat
+    }
+
+    return NextResponse.json({ ...post, category })
+  } catch (err) {
+    console.error('[blog/posts/[id] GET] unhandled:', err)
+    const message = err instanceof Error ? err.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Artículo no encontrado' },
-      { status: HTTP_STATUS.NOT_FOUND }
+      { error: `unhandled: ${message}` },
+      { status: HTTP_STATUS.INTERNAL_ERROR }
     )
   }
-
-  return NextResponse.json(data)
 }
 
 /* ─── PUT /api/admin/blog/posts/[id] ─── */
@@ -43,80 +62,85 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   const auth = await verifyAdminRequest(request)
   if (!auth.authorized) return auth.response
 
-  const { id } = await context.params
-  let body: Partial<BlogPostFormData>
   try {
-    body = await request.json()
-  } catch {
+    const { id } = await context.params
+    let body: Partial<BlogPostFormData>
+    try {
+      body = await request.json()
+    } catch {
+      return NextResponse.json(
+        { error: 'Cuerpo de la petición inválido' },
+        { status: HTTP_STATUS.BAD_REQUEST }
+      )
+    }
+
+    const supabase = getAdminClient()
+
+    const { data: current, error: loadError } = await supabase
+      .from(TABLES.blogPosts)
+      .select('status, published_at')
+      .eq('id', id)
+      .is('deleted_at', null)
+      .single()
+
+    if (loadError || !current) {
+      return NextResponse.json(
+        { error: 'Artículo no encontrado', details: loadError },
+        { status: HTTP_STATUS.NOT_FOUND }
+      )
+    }
+
+    const updateData: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(body)) {
+      if (value === undefined) continue
+      if (CONTENT_FIELDS.includes(key)) {
+        updateData[key] = sanitizeBlogHtml(String(value ?? ''))
+      } else if (typeof value === 'string') {
+        updateData[key] = value.trim()
+      } else {
+        updateData[key] = value
+      }
+    }
+
+    if ('content_es' in updateData) {
+      updateData.reading_minutes = calcReadingMinutes(updateData.content_es as string)
+    }
+
+    if (body.status !== undefined && body.status !== current.status) {
+      if (body.status === 'published' && !current.published_at) {
+        updateData.published_at = new Date().toISOString()
+      }
+    }
+
+    const { error } = await supabase
+      .from(TABLES.blogPosts)
+      .update(updateData)
+      .eq('id', id)
+      .is('deleted_at', null)
+
+    if (error) {
+      console.error('[blog/posts/[id] PUT] update failed:', error)
+      return NextResponse.json(
+        { error: `update: ${error.message}`, details: error },
+        { status: HTTP_STATUS.INTERNAL_ERROR }
+      )
+    }
+
+    const { data: updated } = await supabase
+      .from(TABLES.blogPosts)
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    return NextResponse.json(updated)
+  } catch (err) {
+    console.error('[blog/posts/[id] PUT] unhandled:', err)
+    const message = err instanceof Error ? err.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Cuerpo de la petición inválido' },
-      { status: HTTP_STATUS.BAD_REQUEST }
+      { error: `unhandled: ${message}` },
+      { status: HTTP_STATUS.INTERNAL_ERROR }
     )
   }
-
-  const supabase = getAdminClient()
-
-  // Load current row to know previous status (for published_at transition)
-  const { data: current, error: loadError } = await supabase
-    .from(TABLES.blogPosts)
-    .select('status, published_at')
-    .eq('id', id)
-    .is('deleted_at', null)
-    .single()
-
-  if (loadError || !current) {
-    return NextResponse.json(
-      { error: 'Artículo no encontrado' },
-      { status: HTTP_STATUS.NOT_FOUND }
-    )
-  }
-
-  // Build update payload
-  const updateData: Record<string, unknown> = {}
-
-  for (const [key, value] of Object.entries(body)) {
-    if (value === undefined) continue
-    if (CONTENT_FIELDS.includes(key)) {
-      updateData[key] = sanitizeBlogHtml(String(value ?? ''))
-    } else if (typeof value === 'string') {
-      updateData[key] = value.trim()
-    } else {
-      updateData[key] = value
-    }
-  }
-
-  // Recalc reading_minutes if content_es changed
-  if ('content_es' in updateData) {
-    updateData.reading_minutes = calcReadingMinutes(updateData.content_es as string)
-  }
-
-  // Handle published_at transition
-  if (body.status !== undefined && body.status !== current.status) {
-    if (body.status === 'published' && !current.published_at) {
-      updateData.published_at = new Date().toISOString()
-    }
-    if (body.status === 'draft' || body.status === 'archived') {
-      // keep published_at intact (history); only set on first publish
-    }
-  }
-
-  const { error } = await supabase
-    .from(TABLES.blogPosts)
-    .update(updateData)
-    .eq('id', id)
-    .is('deleted_at', null)
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: HTTP_STATUS.INTERNAL_ERROR })
-  }
-
-  const { data: updated } = await supabase
-    .from(TABLES.blogPosts)
-    .select(`*, category:${TABLES.blogCategories}(*)`)
-    .eq('id', id)
-    .single()
-
-  return NextResponse.json(updated)
 }
 
 /* ─── DELETE /api/admin/blog/posts/[id] ─── */
@@ -125,18 +149,31 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
   const auth = await verifyAdminRequest(request)
   if (!auth.authorized) return auth.response
 
-  const { id } = await context.params
-  const supabase = getAdminClient()
+  try {
+    const { id } = await context.params
+    const supabase = getAdminClient()
 
-  const { error } = await supabase
-    .from(TABLES.blogPosts)
-    .update({ deleted_at: new Date().toISOString() })
-    .eq('id', id)
-    .is('deleted_at', null)
+    const { error } = await supabase
+      .from(TABLES.blogPosts)
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', id)
+      .is('deleted_at', null)
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: HTTP_STATUS.INTERNAL_ERROR })
+    if (error) {
+      console.error('[blog/posts/[id] DELETE] failed:', error)
+      return NextResponse.json(
+        { error: error.message, details: error },
+        { status: HTTP_STATUS.INTERNAL_ERROR }
+      )
+    }
+
+    return new NextResponse(null, { status: HTTP_STATUS.NO_CONTENT })
+  } catch (err) {
+    console.error('[blog/posts/[id] DELETE] unhandled:', err)
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    return NextResponse.json(
+      { error: `unhandled: ${message}` },
+      { status: HTTP_STATUS.INTERNAL_ERROR }
+    )
   }
-
-  return new NextResponse(null, { status: HTTP_STATUS.NO_CONTENT })
 }

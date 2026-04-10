@@ -10,26 +10,54 @@ interface Props {
 }
 
 async function fetchPost(id: string): Promise<BlogPostWithCategory | null> {
-  const supabase = getAdminClient()
-  const { data, error } = await supabase
-    .from(TABLES.blogPosts)
-    .select(`*, category:${TABLES.blogCategories}(*)`)
-    .eq('id', id)
-    .is('deleted_at', null)
-    .single()
-  if (error || !data) return null
-  return data as BlogPostWithCategory
+  try {
+    const supabase = getAdminClient()
+    const { data: post, error } = await supabase
+      .from(TABLES.blogPosts)
+      .select('*')
+      .eq('id', id)
+      .is('deleted_at', null)
+      .single()
+    if (error || !post) {
+      if (error) console.error('[admin/blog/[id]] fetchPost error:', error)
+      return null
+    }
+
+    let category: BlogCategory | null = null
+    if (post.category_id) {
+      const { data: cat } = await supabase
+        .from(TABLES.blogCategories)
+        .select('*')
+        .eq('id', post.category_id)
+        .maybeSingle()
+      category = (cat as BlogCategory | null) ?? null
+    }
+
+    return { ...(post as BlogPostWithCategory), category }
+  } catch (err) {
+    console.error('[admin/blog/[id]] fetchPost threw:', err)
+    return null
+  }
 }
 
 async function fetchCategories(): Promise<BlogCategory[]> {
-  const supabase = getAdminClient()
-  const { data } = await supabase
-    .from(TABLES.blogCategories)
-    .select('*')
-    .is('deleted_at', null)
-    .order('sort_order', { ascending: true })
-    .order('label_es', { ascending: true })
-  return (data ?? []) as BlogCategory[]
+  try {
+    const supabase = getAdminClient()
+    const { data, error } = await supabase
+      .from(TABLES.blogCategories)
+      .select('*')
+      .is('deleted_at', null)
+      .order('sort_order', { ascending: true })
+      .order('label_es', { ascending: true })
+    if (error) {
+      console.error('[admin/blog/[id]] fetchCategories error:', error)
+      return []
+    }
+    return (data ?? []) as BlogCategory[]
+  } catch (err) {
+    console.error('[admin/blog/[id]] fetchCategories threw:', err)
+    return []
+  }
 }
 
 export default async function AdminBlogEditPage({ params }: Props) {
