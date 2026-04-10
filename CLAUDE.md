@@ -245,6 +245,69 @@ CMS utilities:  @digiko-npm/cms (auth, sessions, media, Supabase, R2)
 
 ---
 
+## Blog Article Workflow
+
+When the user asks for a new blog article ("scrivi un articolo su X", "fammi un post su Y", "articolo blog Z"), deliver it ready-to-paste into the admin at `/admin/blog/nueva`.
+
+### Process
+
+1. **Research** with `WebSearch` if the topic needs facts (history, numbers, dates, names). Cite sources at the bottom with markdown links (per the search tool requirement).
+2. **Write in three languages** — Spanish, English, Russian. Spanish is the canonical source; the slug is derived from `title_es`.
+3. **Tone** — creative, lively, dreamlike. "Living here is a waking dream" energy. Short paragraphs, vivid images, occasional second person, no corporate fluff. This is ESYS VIP — premium real estate, but human.
+4. **Structure** per language:
+   - **Title** (plain text, max ~70 chars)
+   - **Excerpt** (plain text, 1–2 sentences, ~150 chars)
+   - **Content** as a **single-line compact HTML block** — NO newlines between tags, NO indentation. TipTap inserts empty paragraphs on every whitespace-only text node between tags, so `<p>...</p>\n<h2>...</h2>` becomes a blank line in the editor. Always deliver `<p>...</p><h2>...</h2>` on one line.
+5. **Allowed tags** (matches server-side sanitize-html allow-list): `p, h2, h3, h4, strong, em, u, s, code, pre, blockquote, ul, ol, li, a, img, br, hr`. Anything else gets stripped on save.
+6. **Category suggestion** — propose one category label in the three languages (e.g. "Descubre Alicante" / "Discover Alicante" / "Откройте Аликанте") plus a 1-line description per language. The admin creates it once at `/admin/blog/categorias`, then reuses it.
+7. **Unsplash query hints** — end the response with 2–4 search queries the admin can type into the integrated picker to find a cover image (e.g. `alicante old town`, `mediterranean street sunset`).
+
+### Delivery format (template)
+
+```
+## Categoria
+- ES: <label> — <desc>
+- EN: <label> — <desc>
+- RU: <label> — <desc>
+
+## 🇪🇸 Español
+**Título:** <title>
+**Extracto:** <excerpt>
+**Contenido:**
+<single-line HTML block>
+
+## 🇬🇧 English
+**Title:** ...
+**Excerpt:** ...
+**Content:**
+<single-line HTML block>
+
+## 🇷🇺 Русский
+**Заголовок:** ...
+**Краткое описание:** ...
+**Содержание:**
+<single-line HTML block>
+
+## Unsplash
+- `query one`
+- `query two`
+
+## Sources (if web search used)
+- [Title](url)
+```
+
+The admin pastes each HTML block via the **`</>` (Pegar HTML)** button in the TipTap toolbar — NOT by copy-pasting into the editor body, which drops the tags as literal text.
+
+### Do NOT
+
+- Do not use `<h1>` (the page renders the title as h1 already)
+- Do not add inline `style=""` attributes (stripped by sanitizer)
+- Do not include `<script>`, `<iframe>`, raw SVG, or any interactive/embedded content
+- Do not generate images locally — cover comes from Unsplash picker only
+- Do not break the HTML block across multiple lines — whitespace between tags becomes empty paragraphs in TipTap
+
+---
+
 ## End-of-Session Checklist
 
 For DS checklist (CONTROLLED MODE, compliance, build, git) → [DS_HEALTH.md](/Projects/infra/DS_HEALTH.md)
