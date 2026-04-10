@@ -1,6 +1,7 @@
 -- ═══════════════════════════════════════════════════════
 -- ESYS VIP — Blog Schema
 -- Reuses esys_update_updated_at() helper from 001_properties.sql
+-- Idempotent: safe to re-run.
 -- ═══════════════════════════════════════════════════════
 
 -- ─── Blog Categories ───
@@ -27,11 +28,12 @@ CREATE TABLE IF NOT EXISTS esys_blog_categories (
   updated_at  timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_esys_blog_categories_slug
+CREATE INDEX IF NOT EXISTS idx_esys_blog_categories_slug
   ON esys_blog_categories (slug) WHERE deleted_at IS NULL;
-CREATE INDEX idx_esys_blog_categories_active
+CREATE INDEX IF NOT EXISTS idx_esys_blog_categories_active
   ON esys_blog_categories (active, sort_order) WHERE deleted_at IS NULL;
 
+DROP TRIGGER IF EXISTS trg_esys_blog_categories_updated_at ON esys_blog_categories;
 CREATE TRIGGER trg_esys_blog_categories_updated_at
   BEFORE UPDATE ON esys_blog_categories
   FOR EACH ROW EXECUTE FUNCTION esys_update_updated_at();
@@ -92,19 +94,20 @@ CREATE TABLE IF NOT EXISTS esys_blog_posts (
 );
 
 -- Indices
-CREATE INDEX idx_esys_blog_posts_slug
+CREATE INDEX IF NOT EXISTS idx_esys_blog_posts_slug
   ON esys_blog_posts (slug) WHERE deleted_at IS NULL;
-CREATE INDEX idx_esys_blog_posts_category
+CREATE INDEX IF NOT EXISTS idx_esys_blog_posts_category
   ON esys_blog_posts (category_id) WHERE deleted_at IS NULL;
-CREATE INDEX idx_esys_blog_posts_status
+CREATE INDEX IF NOT EXISTS idx_esys_blog_posts_status
   ON esys_blog_posts (status) WHERE deleted_at IS NULL;
-CREATE INDEX idx_esys_blog_posts_published
+CREATE INDEX IF NOT EXISTS idx_esys_blog_posts_published
   ON esys_blog_posts (published_at DESC)
   WHERE deleted_at IS NULL AND status = 'published';
-CREATE INDEX idx_esys_blog_posts_featured
+CREATE INDEX IF NOT EXISTS idx_esys_blog_posts_featured
   ON esys_blog_posts (featured)
   WHERE deleted_at IS NULL AND status = 'published';
 
+DROP TRIGGER IF EXISTS trg_esys_blog_posts_updated_at ON esys_blog_posts;
 CREATE TRIGGER trg_esys_blog_posts_updated_at
   BEFORE UPDATE ON esys_blog_posts
   FOR EACH ROW EXECUTE FUNCTION esys_update_updated_at();
@@ -116,11 +119,11 @@ CREATE TRIGGER trg_esys_blog_posts_updated_at
 ALTER TABLE esys_blog_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE esys_blog_posts      ENABLE ROW LEVEL SECURITY;
 
--- Public read: only active categories
+DROP POLICY IF EXISTS esys_blog_categories_public_read ON esys_blog_categories;
 CREATE POLICY esys_blog_categories_public_read ON esys_blog_categories
   FOR SELECT USING (active = true AND deleted_at IS NULL);
 
--- Public read: only published, non-deleted posts
+DROP POLICY IF EXISTS esys_blog_posts_public_read ON esys_blog_posts;
 CREATE POLICY esys_blog_posts_public_read ON esys_blog_posts
   FOR SELECT USING (status = 'published' AND deleted_at IS NULL);
 
