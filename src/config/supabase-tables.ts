@@ -15,6 +15,8 @@ export const TABLES = {
   mediaFolders: 'esys_media_folders',
   analytics: 'esys_analytics_events',
   definitions: 'esys_definitions',
+  blogPosts: 'esys_blog_posts',
+  blogCategories: 'esys_blog_categories',
 } as const
 
 /* ─── Supabase Storage Buckets ─── */
