@@ -19,6 +19,7 @@ import {
   Image as ImageIcon,
   Undo2,
   Redo2,
+  FileCode2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -74,6 +75,12 @@ function Toolbar({ editor }: { editor: Editor }) {
     const url = window.prompt('URL imagen', 'https://')
     if (!url) return
     editor.chain().focus().setImage({ src: url }).run()
+  }
+
+  const pasteHtml = () => {
+    const html = window.prompt('Pegar HTML (se insertará parseado, no como texto)', '')
+    if (!html) return
+    editor.chain().focus().insertContent(html).run()
   }
 
   return (
@@ -149,6 +156,9 @@ function Toolbar({ editor }: { editor: Editor }) {
       </ToolbarButton>
       <ToolbarButton title="Imagen" onClick={promptImage}>
         <ImageIcon size={16} />
+      </ToolbarButton>
+      <ToolbarButton title="Pegar HTML" onClick={pasteHtml}>
+        <FileCode2 size={16} />
       </ToolbarButton>
       <span className="vip-rte__sep" />
       <ToolbarButton
