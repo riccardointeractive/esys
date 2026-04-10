@@ -2,16 +2,16 @@
   "$schema": "ds-manifest-v1",
   "project": "esys",
   "ds_version_declared": "^0.9.40",
-  "ds_version_resolved": "0.9.40",
-  "ds_version_installed": "0.9.40",
-  "last_session": "2026-04-08",
-  "last_session_summary": "feat(media): SortableImageList (drag+arrows) + multilingual captions (ES/EN/RU). CMS v0.6.2. fix: favorites API (title→title_es/en/ru), navbar heart→accountFavorites, breakpoint md→lg. UI: login hierarchy, hero responsive sizing, DS empty-state on favorites, removed búsquedas/alertas stubs, mobile logo 14px, icons always visible.",
+  "ds_version_resolved": "0.9.42",
+  "ds_version_installed": "0.9.42",
+  "last_session": "2026-04-10",
+  "last_session_summary": "ds-ops governance cycle: added prefers-reduced-motion block to components.css. Inspector found 154 P0 soup + 9 hardcoded-color findings — the hero frosted-glass shadows/colors are JUSTIFIED (photo backdrop, documented in DS_CUSTOM.md). Build green.",
   "overrides": {
     "token_count": 0,
     "token_list": [],
     "component_override_count": 0,
     "component_override_list": [],
-    "custom_class_count": 88,
+    "custom_class_count": 90,
     "files_with_overrides": []
   },
   "css_architecture": {
@@ -19,13 +19,13 @@
       "ds"
     ],
     "override_isolation": "isolated",
-    "total_css_lines": 687
+    "total_css_lines": 735
   },
   "metrics": {
     "override_count": 0,
-    "custom_class_count": 88,
+    "custom_class_count": 90,
     "delta": 0,
-    "last_updated": "2026-04-01"
+    "last_updated": "2026-04-10"
   },
   "compliance": "green",
   "governance": "active",
