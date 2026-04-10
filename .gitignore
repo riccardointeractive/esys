@@ -42,4 +42,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Claude Code (keep launch.json tracked, ignore user-local state)
+.claude/settings.local.json
 .claude/worktrees/
+.claude/plans/
