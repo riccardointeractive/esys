@@ -1,6 +1,7 @@
 @import "@digiko-npm/designsystem" layer(ds);
 @import "@digiko-npm/cms/styles/media";
 @import "../styles/components.css";
+@import "../styles/blog.css";
 
 /* ============================================
    BASE OVERRIDES

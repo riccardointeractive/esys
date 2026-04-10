@@ -2,9 +2,36 @@
 
 Inventario delle customizzazioni CSS project-specific rispetto al Design System.
 
-**Ultimo aggiornamento:** 30 Mar 2026
+**Ultimo aggiornamento:** 10 Apr 2026
 **DS Version:** 0.9.36
-**File CSS custom:** `src/styles/components.css` (665 righe), `src/app/globals.css` (22 righe)
+**File CSS custom:** `src/styles/components.css` (712 righe), `src/styles/blog.css` (475 righe), `src/app/globals.css` (23 righe)
+
+---
+
+## Blog (src/styles/blog.css — approvato 10 Apr 2026)
+
+File separato per tutti i pattern project-specific del nuovo modulo blog (lato pubblico + admin). Aggiunto come import in `globals.css`.
+
+### Public
+| Classe | Scopo |
+|--------|-------|
+| `.vip-blog-layout` / `__main` | Grid lista + sidebar responsive (1col mobile, 1fr+280px desktop) |
+| `.vip-blog-grid` | Grid post cards (1/2/3 colonne) |
+| `.vip-blog-card` + `__media/__img/__placeholder/__body/__category/__excerpt` | Card con cover, categoria badge, line-clamp excerpt |
+| `.vip-blog-sidebar` + `__list/__link/__link--active` | Sidebar sticky con lista categorie |
+| `.vip-blog-detail__header/__cover/__cover-img` | Layout pagina articolo |
+| `.vip-blog-content` + selettori `h2/h3/h4/a/ul/ol/blockquote/pre/code/img/hr` | Rendering HTML sanitizzato (TipTap output) con typography scale |
+
+### Admin (form)
+| Classe | Scopo |
+|--------|-------|
+| `.vip-blog-form` / `__layout` / `__main` / `__sidebar` | Grid form + sidebar responsive |
+| `.vip-rte` + `__toolbar/__btn/__btn--active/__sep/__content/__img/--hidden/--loading` | Wrapper TipTap v3 con toolbar custom |
+| `.vip-blog-content-editor__pane[data-active]` | Toggle 3 editor TipTap via attribute senza unmount (preserva history) |
+| `.vip-unsplash-picker` + `__grid/__thumb/__selected/__preview/__credit/__loading/__empty` | Picker inline con ricerca + griglia thumbs + credit |
+| `.vip-blog-table__search/__actions-col` | Tweaks per la tabella admin blog |
+
+Tutti i token usati sono surface-* / text-* / border-* / space-* / radius-* del DS. Zero hardcoded. Active states usano `surface-active` / `bg-elevated`; hover states usano `surface-hover`.
 
 ---
 
