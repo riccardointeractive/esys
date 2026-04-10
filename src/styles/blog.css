@@ -26,7 +26,7 @@
   display: inline-block;
   font-family: var(--ds-font-sans);
   font-size: var(--vip-blog-eyebrow-size);
-  font-weight: 600;
+  font-weight: var(--ds-weight-semibold);
   letter-spacing: var(--vip-blog-eyebrow-tracking);
   text-transform: uppercase;
   color: var(--ds-color-text-tertiary);
@@ -71,7 +71,7 @@ a.vip-blog-eyebrow:hover {
   align-items: center;
   gap: var(--ds-space-3);
   font-size: var(--vip-blog-eyebrow-size);
-  font-weight: 500;
+  font-weight: var(--ds-weight-medium);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ds-color-text-tertiary);
@@ -164,7 +164,7 @@ a.vip-blog-eyebrow:hover {
 .vip-blog-card__category {
   display: inline-block;
   font-size: var(--vip-blog-eyebrow-size);
-  font-weight: 600;
+  font-weight: var(--ds-weight-semibold);
   letter-spacing: var(--vip-blog-eyebrow-tracking);
   text-transform: uppercase;
   color: var(--ds-color-text-interactive);
@@ -203,7 +203,7 @@ a.vip-blog-eyebrow:hover {
   align-items: center;
   gap: var(--ds-space-2);
   font-size: 0.6875rem;
-  font-weight: 500;
+  font-weight: var(--ds-weight-medium);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ds-color-text-tertiary);
@@ -233,7 +233,7 @@ a.vip-blog-eyebrow:hover {
 .vip-blog-sidebar__link--active {
   background: var(--ds-color-surface-active);
   color: var(--ds-color-text-primary);
-  font-weight: 600;
+  font-weight: var(--ds-weight-semibold);
 }
 
 /* Sidebar link — base */
