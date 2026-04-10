@@ -40,11 +40,15 @@ a.vip-blog-eyebrow:hover {
   color: var(--ds-color-text-primary);
 }
 
-/* --- Hero title --- */
+/* --- Hero title ---
+   Weight 400 to match the DS global heading default
+   (--ds-font-display-weight). Clash Display is designed to work
+   light and keeps a strong silhouette even at 72px.
+*/
 .vip-blog-hero-title {
   font-family: var(--ds-font-display, inherit);
   font-size: var(--vip-blog-title-xl);
-  font-weight: 700;
+  font-weight: var(--ds-font-display-weight, 400);
   line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--ds-color-text-primary);
@@ -173,7 +177,7 @@ a.vip-blog-eyebrow:hover {
 .vip-blog-card__title {
   font-family: var(--ds-font-display, inherit);
   font-size: var(--vip-blog-title-card);
-  font-weight: 700;
+  font-weight: var(--ds-font-display-weight, 400);
   line-height: 1.15;
   letter-spacing: -0.01em;
   color: var(--ds-color-text-primary);
@@ -288,7 +292,7 @@ a.vip-blog-eyebrow:hover {
 .vip-blog-detail__related-title {
   font-family: var(--ds-font-display, inherit);
   font-size: var(--vip-blog-title-lg);
-  font-weight: 700;
+  font-weight: var(--ds-font-display-weight, 400);
   letter-spacing: -0.01em;
   color: var(--ds-color-text-primary);
   margin: 0 0 var(--ds-space-6);
@@ -307,20 +311,20 @@ a.vip-blog-eyebrow:hover {
 .vip-blog-content h2 {
   font-family: var(--ds-font-display, inherit);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: var(--ds-font-display-weight, 400);
   line-height: 1.25;
   margin-top: var(--ds-space-8);
 }
 .vip-blog-content h3 {
   font-family: var(--ds-font-display, inherit);
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: var(--ds-font-display-weight, 400);
   line-height: 1.3;
   margin-top: var(--ds-space-6);
 }
 .vip-blog-content h4 {
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: var(--ds-font-display-weight, 400);
   margin-top: var(--ds-space-5);
 }
 .vip-blog-content a {
@@ -467,12 +471,12 @@ a.vip-blog-eyebrow:hover {
 }
 .vip-rte__content h2 {
   font-size: 1.375rem;
-  font-weight: 700;
+  font-weight: var(--ds-font-display-weight, 400);
   margin-top: var(--ds-space-6);
 }
 .vip-rte__content h3 {
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: var(--ds-font-display-weight, 400);
   margin-top: var(--ds-space-5);
 }
 .vip-rte__content ul,
