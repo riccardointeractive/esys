@@ -4,14 +4,14 @@
   "ds_version_declared": "^0.9.40",
   "ds_version_resolved": "0.9.42",
   "ds_version_installed": "0.9.42",
-  "last_session": "2026-04-10",
-  "last_session_summary": "ds-ops governance cycle: added prefers-reduced-motion block to components.css. Inspector found 154 P0 soup + 9 hardcoded-color findings — the hero frosted-glass shadows/colors are JUSTIFIED (photo backdrop, documented in DS_CUSTOM.md). Build green.",
+  "last_session": "2026-04-11",
+  "last_session_summary": "Blog module: schema + admin CRUD + public pages + TipTap editor + Unsplash picker. Editorial redesign with fluid clamp typography (40-72px hero), eyebrow kicker pattern, 21:9 cinematic cover, quiet-luxury card restyle. +89 custom classes in new src/styles/blog.css (approved). Overrides still 0. Swapped isomorphic-dompurify → sanitize-html to fix jsdom ESM issue under Next 16 Turbopack. Build green, 79/79 pages.",
   "overrides": {
     "token_count": 0,
     "token_list": [],
     "component_override_count": 0,
     "component_override_list": [],
-    "custom_class_count": 90,
+    "custom_class_count": 179,
     "files_with_overrides": []
   },
   "css_architecture": {
@@ -19,15 +19,15 @@
       "ds"
     ],
     "override_isolation": "isolated",
-    "total_css_lines": 735
+    "total_css_lines": 1322
   },
   "metrics": {
     "override_count": 0,
-    "custom_class_count": 90,
-    "delta": 0,
-    "last_updated": "2026-04-10"
+    "custom_class_count": 179,
+    "delta": 89,
+    "last_updated": "2026-04-11"
   },
   "compliance": "green",
   "governance": "active",
-  "notes": "All 3 component overrides are inside .vip-hero-search context (frosted glass on photo backdrop — documented in DS_CUSTOM.md as justified). Governance 2026-03-30: P0 opacity token, P2 spacing/positioning tokens fixed. Utility soup widespread (60+ instances) — post-QUARANTINE candidate ds-page-title."
+  "notes": "Blog module added 2026-04-11 (src/styles/blog.css, +89 classes, approved: no DS equivalent for blog layout, TipTap editor chrome, Unsplash picker). Hero frosted-glass overrides still in .vip-hero-search (photo backdrop, documented). Utility soup widespread (60+ instances) — post-QUARANTINE candidate ds-page-title. Blog pages use fluid clamp() typography scale and editorial layout patterns; if pattern recurs in other consumers, candidate ds-hero-title + ds-eyebrow tokens for DS core."
 }

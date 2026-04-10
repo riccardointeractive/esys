@@ -245,6 +245,38 @@ CMS utilities:  @digiko-npm/cms (auth, sessions, media, Supabase, R2)
 
 ---
 
+## Known Pitfalls (Next 16 + React 19 runtime)
+
+Lessons extracted from the blog module work (Apr 2026). If you hit one of these again, the fix is below — don't re-research.
+
+### 1. `isomorphic-dompurify` crashes on Vercel Node runtime
+
+Its transitive chain pulls `jsdom` → `html-encoding-sniffer` → `@exodus/bytes/encoding-lite.js` which is ESM-only. Next 16 Turbopack's Node-runtime bundler `require()`s it → `ERR_REQUIRE_ESM` at module-load time. The crash happens BEFORE any handler code runs, so no `try/catch` or JSON error body helps — you get a naked Next 500 HTML page.
+
+**Fix:** use `sanitize-html` (pure JS, `htmlparser2`, no DOM). Server-only is fine for input sanitization. See `src/lib/sanitize-html.ts` for the allow-list pattern.
+
+### 2. TipTap v3 required for React 19; StarterKit bundles Link
+
+- **TipTap v2 peer-locks at React 17/18.** Use `@tiptap/react@^3` + `@tiptap/pm@^3`.
+- **StarterKit v3 bundles the Link extension** by default. Importing `@tiptap/extension-link` separately produces `Duplicate extension names found: ['link']`. Fix: `StarterKit.configure({ link: false })`, then register your own Link with custom `rel` / `target`.
+- **Always set `immediatelyRender: false`** on `useEditor()` in Next App Router to avoid SSR hydration mismatch.
+
+### 3. i18n dictionary values cannot be functions across the RSC boundary
+
+Anything in a dictionary object that is serialized to a Client Component must be JSON-serializable. A function value (e.g. `readingTime: (n) => \`${n} min read\``) throws a build-time error: *Functions cannot be passed directly to Client Components*.
+
+**Pattern:** store as a template string (`readingTime: '{n} min read'`), interpolate at the call site with `.replace('{n}', String(n))`. Keep all locales consistent.
+
+### 4. PostgREST nested joins are brittle against stale schema cache
+
+Syntax like `.select('*, category:esys_blog_categories(*)')` works most of the time but fails silently when the PostgREST schema cache hasn't picked up a newly-added FK, and the error isn't always surfaced through the Supabase client. Under Next 16's serverless runtime the failure can propagate as an unhandled promise and produce a 500 without a JSON body.
+
+**Pattern for new modules:** fetch parent rows, collect FK ids, fetch joined rows separately, merge in JS. One extra round-trip, zero cache-sensitivity. See `src/app/api/admin/blog/posts/route.ts` for the shape.
+
+**Always wrap API handlers in a top-level `try/catch`** that logs with a route tag (`console.error('[route/path GET] ...', err)`) and returns `NextResponse.json({ error, details }, { status: 500 })`. This guarantees you get a JSON error body even if Supabase throws instead of returning `{ error }`.
+
+---
+
 ## Blog Article Workflow
 
 When the user asks for a new blog article ("scrivi un articolo su X", "fammi un post su Y", "articolo blog Z"), deliver it ready-to-paste into the admin at `/admin/blog/nueva`.
