@@ -18,6 +18,8 @@ export const ROUTE_SLUGS = {
     searches: 'busquedas',
     alerts: 'alertas',
     settings: 'ajustes',
+    blog: 'blog',
+    blogCategory: 'categoria',
   },
   en: {
     properties: 'properties',
@@ -33,6 +35,8 @@ export const ROUTE_SLUGS = {
     searches: 'searches',
     alerts: 'alerts',
     settings: 'settings',
+    blog: 'blog',
+    blogCategory: 'category',
   },
   ru: {
     properties: 'nedvizhimost',
@@ -48,6 +52,8 @@ export const ROUTE_SLUGS = {
     searches: 'poiski',
     alerts: 'uvedomleniya',
     settings: 'nastrojki',
+    blog: 'blog',
+    blogCategory: 'rubrika',
   },
 } as const
 
@@ -113,6 +119,9 @@ export function localizedRoutes(lang: Locale) {
     accountSearches: `/${lang}/${s.account}/${s.searches}`,
     accountAlerts: `/${lang}/${s.account}/${s.alerts}`,
     accountSettings: `/${lang}/${s.account}/${s.settings}`,
+    blog: `/${lang}/${s.blog}`,
+    blogPost: (slug: string) => `/${lang}/${s.blog}/${slug}`,
+    blogCategory: (catSlug: string) => `/${lang}/${s.blog}/${s.blogCategory}/${catSlug}`,
   } as const
 }
 

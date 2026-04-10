@@ -12,6 +12,9 @@ export const ROUTES = {
   resetPassword: '/reset-password',
   favorites: '/favoritos',
   search: '/buscar',
+  blog: '/blog',
+  blogPost: '/blog/[slug]',
+  blogCategory: '/blog/categoria/[slug]',
 } as const
 
 /* ─── Dashboard (registered users) ─── */
@@ -30,6 +33,10 @@ export const ADMIN_ROUTES = {
   properties: '/admin/propiedades',
   propertyNew: '/admin/propiedades/nueva',
   propertyEdit: '/admin/propiedades/[id]',
+  blog: '/admin/blog',
+  blogNew: '/admin/blog/nueva',
+  blogEdit: '/admin/blog/[id]',
+  blogCategories: '/admin/blog/categorias',
   leads: '/admin/leads',
   users: '/admin/usuarios',
   media: '/admin/media',
@@ -72,4 +79,9 @@ export const ADMIN_API_ROUTES = {
   mediaPresign: '/api/admin/media/presign',
   definitions: '/api/admin/definitions',
   definitionById: (id: string) => `/api/admin/definitions/${id}`,
+  blogPosts: '/api/admin/blog/posts',
+  blogPostById: (id: string) => `/api/admin/blog/posts/${id}`,
+  blogCategories: '/api/admin/blog/categories',
+  blogCategoryById: (id: string) => `/api/admin/blog/categories/${id}`,
+  unsplashSearch: '/api/admin/unsplash/search',
 } as const

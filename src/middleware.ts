@@ -97,11 +97,31 @@ export function middleware(request: NextRequest) {
       return NextResponse.rewrite(rewriteUrl)
     }
 
-    /* Standard route rewrite */
+    /* Standard route rewrite (also rewrites third segment if present in slugMap) */
     if (secondSegment && secondSegment in slugMap) {
-      const internalSlug = slugMap[secondSegment]
-      const rest = segments.slice(3).join('/')
-      const rewritePath = `/${maybeLocale}/${internalSlug}${rest ? `/${rest}` : ''}`
+      const internalSecond = slugMap[secondSegment]
+      const thirdSegment = segments[3]
+      const internalThird =
+        thirdSegment && thirdSegment in slugMap ? slugMap[thirdSegment] : thirdSegment
+      const restAfterThird = segments.slice(4).join('/')
+      const rewritePath = `/${maybeLocale}/${internalSecond}${
+        internalThird ? `/${internalThird}` : ''
+      }${restAfterThird ? `/${restAfterThird}` : ''}`
+      const rewriteUrl = new URL(rewritePath, request.url)
+      rewriteUrl.search = request.nextUrl.search
+      return NextResponse.rewrite(rewriteUrl)
+    }
+
+    /* Third-segment-only rewrite: e.g. /en/blog/category/x → /en/blog/categoria/x
+       Triggered when secondSegment is identical across locales (not in slugMap)
+       but the third segment needs translation. */
+    const thirdSegment = segments[3]
+    if (secondSegment && thirdSegment && thirdSegment in slugMap) {
+      const internalThird = slugMap[thirdSegment]
+      const restAfterThird = segments.slice(4).join('/')
+      const rewritePath = `/${maybeLocale}/${secondSegment}/${internalThird}${
+        restAfterThird ? `/${restAfterThird}` : ''
+      }`
       const rewriteUrl = new URL(rewritePath, request.url)
       rewriteUrl.search = request.nextUrl.search
       return NextResponse.rewrite(rewriteUrl)

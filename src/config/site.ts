@@ -30,6 +30,7 @@ export const siteConfig = {
     { label: 'Propiedades', href: ROUTES.properties, icon: 'Building2' },
     { label: 'Obra Nueva', href: ROUTES.newBuilds, icon: 'Hammer' },
     { label: 'Segunda Mano', href: ROUTES.resale, icon: 'KeyRound' },
+    { label: 'Blog', href: ROUTES.blog, icon: 'BookOpen' },
     { label: 'Nosotros', href: ROUTES.about, icon: 'Users' },
     { label: 'Contacto', href: ROUTES.contact, icon: 'Mail' },
   ],
@@ -37,6 +38,7 @@ export const siteConfig = {
   adminNav: [
     { label: 'Dashboard', href: ADMIN_ROUTES.dashboard, icon: 'LayoutDashboard' },
     { label: 'Propiedades', href: ADMIN_ROUTES.properties, icon: 'Building2' },
+    { label: 'Blog', href: ADMIN_ROUTES.blog, icon: 'BookOpen' },
     { label: 'Leads', href: ADMIN_ROUTES.leads, icon: 'UserPlus', disabled: true },
     { label: 'Usuarios', href: ADMIN_ROUTES.users, icon: 'Users' },
     { label: 'Media', href: ADMIN_ROUTES.media, icon: 'Image' },
@@ -48,6 +50,7 @@ export const siteConfig = {
     itemsPerPage: {
       properties: 20,
       media: 24,
+      blog: 20,
     },
   },
 

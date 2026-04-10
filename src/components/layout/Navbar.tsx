@@ -26,6 +26,7 @@ export function Navbar() {
     { label: t.nav.properties, href: routes.properties },
     { label: t.nav.newBuilds, href: routes.newBuilds },
     { label: t.nav.resale, href: routes.resale },
+    { label: t.nav.blog, href: routes.blog },
     { label: t.nav.about, href: routes.about },
     { label: t.nav.contact, href: routes.contact },
   ]
