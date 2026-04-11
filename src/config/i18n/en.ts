@@ -195,6 +195,12 @@ export const en = {
     onUnsplash: 'on Unsplash',
     backToBlog: 'Back to blog',
     notFound: 'Article not found',
+    cta: {
+      eyebrow: 'ESYS VIP',
+      title: 'Ready for your next home?',
+      text: 'We walk beside you at every step — whether you are finding the home of your dreams or selling the one you have today. See how we do it.',
+      action: 'Discover ESYS VIP',
+    },
   },
   seo: {
     home: { title: 'Home', description: 'ESYS VIP — Your trusted real estate agency for new builds and resale.' },

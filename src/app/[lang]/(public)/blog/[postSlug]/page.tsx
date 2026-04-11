@@ -131,6 +131,20 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
         )}
       </div>
 
+      {/* ─── Article-end CTA (link to homepage) ─── */}
+      <section className="vip-blog-cta" aria-labelledby="vip-blog-cta-title">
+        <div className="vip-blog-cta__inner">
+          <p className="vip-blog-cta__eyebrow">{dict.blog.cta.eyebrow}</p>
+          <h2 id="vip-blog-cta-title" className="vip-blog-cta__title">
+            {dict.blog.cta.title}
+          </h2>
+          <p className="vip-blog-cta__text">{dict.blog.cta.text}</p>
+          <Link href={routes.home} className="ds-btn ds-btn--lg vip-blog-cta__action">
+            {dict.blog.cta.action}
+          </Link>
+        </div>
+      </section>
+
       {/* ─── Related ─── */}
       {relatedRaw.length > 0 && (
         <section className="vip-blog-detail__related">

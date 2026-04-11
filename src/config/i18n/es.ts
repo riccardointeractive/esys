@@ -195,6 +195,12 @@ export const es = {
     onUnsplash: 'en Unsplash',
     backToBlog: 'Volver al blog',
     notFound: 'Artículo no encontrado',
+    cta: {
+      eyebrow: 'ESYS VIP',
+      title: '¿Listo para tu próxima casa?',
+      text: 'Te acompañamos en cada paso, ya sea para encontrar el hogar de tus sueños o vender el que tienes hoy. Descubre cómo lo hacemos.',
+      action: 'Descubre ESYS VIP',
+    },
   },
   seo: {
     home: { title: 'Inicio', description: 'ESYS VIP — Tu inmobiliaria de confianza para obra nueva y segunda mano.' },

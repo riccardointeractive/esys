@@ -21,6 +21,7 @@ File separato per tutti i pattern project-specific del nuovo modulo blog (lato p
 | `.vip-blog-sidebar` + `__list/__link/__link--active` | Sidebar sticky con lista categorie |
 | `.vip-blog-detail__header/__cover/__cover-img` | Layout pagina articolo |
 | `.vip-blog-content` + selettori `h2/h3/h4/a/ul/ol/blockquote/pre/code/img/hr` | Rendering HTML sanitizzato (TipTap output) con typography scale |
+| `.vip-blog-cta` + `__inner/__eyebrow/__title/__text/__action` | CTA editoriale fine articolo → link homepage (3 lingue) |
 
 ### Admin (form)
 | Classe | Scopo |
