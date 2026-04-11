@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 
 import { GeistMono } from 'geist/font/mono'
+import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/layout/ThemeProvider'
 import { AuthProvider } from '@/components/providers/AuthProvider'
 import { siteConfig } from '@/config/site'
@@ -47,6 +48,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
