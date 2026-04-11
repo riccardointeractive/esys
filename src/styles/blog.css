@@ -229,7 +229,7 @@
   margin: var(--ds-space-6) auto 0;
 }
 
-/* --- Article-end CTA (link to homepage) — layout only --- */
+/* --- Article-end CTA (generic: browse properties + contact) — layout only --- */
 .vip-blog-cta {
   max-width: 720px;
   margin: clamp(4rem, 6vw, 6rem) auto 0;
@@ -245,7 +245,11 @@
   border: 1px solid var(--ds-color-border);
   border-radius: var(--ds-radius-lg);
 }
-.vip-blog-cta__action {
+.vip-blog-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-3);
+  justify-content: center;
   margin-top: var(--ds-space-2);
 }
 

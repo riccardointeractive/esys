@@ -197,9 +197,10 @@ export const en = {
     notFound: 'Article not found',
     cta: {
       eyebrow: 'ESYS VIP',
-      title: 'Ready for your next home?',
-      text: 'We walk beside you at every step — whether you are finding the home of your dreams or selling the one you have today. See how we do it.',
-      action: 'Discover ESYS VIP',
+      title: 'Your next home on the Costa Blanca',
+      text: 'Real estate agency specialised in new builds and resale across Alicante and the Costa Blanca. Browse the available listings or get in touch to start your search.',
+      actionPrimary: 'Browse listings',
+      actionSecondary: 'Contact us',
     },
   },
   seo: {

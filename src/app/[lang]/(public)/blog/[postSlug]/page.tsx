@@ -160,7 +160,7 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
         )}
       </div>
 
-      {/* ─── Article-end CTA (link to homepage) ─── */}
+      {/* ─── Article-end CTA (generic: browse + contact) ─── */}
       <section className="vip-blog-cta" aria-labelledby="vip-blog-cta-title">
         <div className="vip-blog-cta__inner">
           <p className="ds-overline">{dict.blog.cta.eyebrow}</p>
@@ -168,9 +168,14 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
             {dict.blog.cta.title}
           </h2>
           <p className="ds-text-base ds-text-secondary">{dict.blog.cta.text}</p>
-          <Link href={routes.home} className="ds-btn ds-btn--lg vip-blog-cta__action">
-            {dict.blog.cta.action}
-          </Link>
+          <div className="vip-blog-cta__actions">
+            <Link href={routes.properties} className="ds-btn ds-btn--xl">
+              {dict.blog.cta.actionPrimary}
+            </Link>
+            <Link href={routes.contact} className="ds-btn ds-btn--xl ds-btn--secondary">
+              {dict.blog.cta.actionSecondary}
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -197,9 +197,10 @@ export const es = {
     notFound: 'Artículo no encontrado',
     cta: {
       eyebrow: 'ESYS VIP',
-      title: '¿Listo para tu próxima casa?',
-      text: 'Te acompañamos en cada paso, ya sea para encontrar el hogar de tus sueños o vender el que tienes hoy. Descubre cómo lo hacemos.',
-      action: 'Descubre ESYS VIP',
+      title: 'Tu próxima vivienda en la Costa Blanca',
+      text: 'Inmobiliaria especializada en obra nueva y segunda mano en Alicante y la Costa Blanca. Explora las propiedades disponibles o ponte en contacto para iniciar tu búsqueda.',
+      actionPrimary: 'Ver propiedades',
+      actionSecondary: 'Contactar',
     },
   },
   seo: {
