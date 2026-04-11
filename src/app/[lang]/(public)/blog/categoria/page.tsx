@@ -1,9 +1,11 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
 import { localizedRoutes } from '@/config/i18n/routes'
 import { fetchActiveCategories, fetchCategoryCounts } from '@/lib/blog'
+import { hreflang } from '@/lib/seo/alternates'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,12 +13,14 @@ interface CategoryIndexProps {
   params: Promise<{ lang: string }>
 }
 
-export async function generateMetadata({ params }: CategoryIndexProps) {
+export async function generateMetadata({ params }: CategoryIndexProps): Promise<Metadata> {
   const { lang } = await params
-  const dict = getDictionary(lang as Locale)
+  const locale = lang as Locale
+  const dict = getDictionary(locale)
   return {
     title: `${dict.blog.categories} — ${dict.blog.title}`,
     description: dict.seo.blog.description,
+    alternates: hreflang.blogCategoryIndex(locale),
   }
 }
 

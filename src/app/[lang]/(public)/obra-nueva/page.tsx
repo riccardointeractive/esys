@@ -1,7 +1,9 @@
+import type { Metadata } from 'next'
 import { PropertyCard } from '@/components/property/PropertyCard'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
 import { fetchProperties } from '@/lib/properties'
+import { hreflang } from '@/lib/seo/alternates'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,12 +11,14 @@ interface NewBuildsPageProps {
   params: Promise<{ lang: string }>
 }
 
-export async function generateMetadata({ params }: NewBuildsPageProps) {
+export async function generateMetadata({ params }: NewBuildsPageProps): Promise<Metadata> {
   const { lang } = await params
-  const dict = getDictionary(lang as Locale)
+  const locale = lang as Locale
+  const dict = getDictionary(locale)
   return {
     title: dict.seo.newBuilds.title,
     description: dict.seo.newBuilds.description,
+    alternates: hreflang.newBuilds(locale),
   }
 }
 

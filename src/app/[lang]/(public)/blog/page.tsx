@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
 import { BlogPostGrid } from '@/components/blog/BlogPostGrid'
@@ -7,6 +8,7 @@ import {
   fetchCategoryCounts,
   fetchPublishedPosts,
 } from '@/lib/blog'
+import { hreflang } from '@/lib/seo/alternates'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,12 +17,14 @@ interface BlogIndexProps {
   searchParams: Promise<{ page?: string }>
 }
 
-export async function generateMetadata({ params }: BlogIndexProps) {
+export async function generateMetadata({ params }: BlogIndexProps): Promise<Metadata> {
   const { lang } = await params
-  const dict = getDictionary(lang as Locale)
+  const locale = lang as Locale
+  const dict = getDictionary(locale)
   return {
     title: dict.seo.blog.title,
     description: dict.seo.blog.description,
+    alternates: hreflang.blog(locale),
   }
 }
 

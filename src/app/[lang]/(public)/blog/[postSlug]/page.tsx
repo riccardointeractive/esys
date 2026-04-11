@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -7,6 +8,7 @@ import { localizedRoutes } from '@/config/i18n/routes'
 import { BlogPostContent } from '@/components/blog/BlogPostContent'
 import { BlogPostGrid } from '@/components/blog/BlogPostGrid'
 import { fetchPostBySlug, fetchRelatedPosts } from '@/lib/blog'
+import { hreflang } from '@/lib/seo/alternates'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,12 +20,17 @@ function pickLocalized(obj: Record<string, unknown>, key: string, locale: Locale
   return (obj[`${key}_${locale}`] as string) || (obj[`${key}_es`] as string) || ''
 }
 
-export async function generateMetadata({ params }: BlogDetailProps) {
+export async function generateMetadata({ params }: BlogDetailProps): Promise<Metadata> {
   const { lang, postSlug } = await params
   const locale = lang as Locale
   const dict = getDictionary(locale)
   const post = await fetchPostBySlug(postSlug)
-  if (!post) return { title: dict.blog.notFound }
+  if (!post) {
+    return {
+      title: dict.blog.notFound,
+      alternates: hreflang.blog(locale),
+    }
+  }
   const title = pickLocalized(post as unknown as Record<string, unknown>, 'title', locale)
   const description =
     pickLocalized(post as unknown as Record<string, unknown>, 'excerpt', locale) ||
@@ -31,6 +38,7 @@ export async function generateMetadata({ params }: BlogDetailProps) {
   return {
     title: `${title} — ${dict.blog.title}`,
     description,
+    alternates: hreflang.blogPost(locale, postSlug),
     openGraph: post.cover_image_url ? { images: [{ url: post.cover_image_url }] } : undefined,
   }
 }

@@ -1,17 +1,21 @@
+import type { Metadata } from 'next'
 import { siteConfig } from '@/config/site'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
+import { hreflang } from '@/lib/seo/alternates'
 
 interface AboutPageProps {
   params: Promise<{ lang: string }>
 }
 
-export async function generateMetadata({ params }: AboutPageProps) {
+export async function generateMetadata({ params }: AboutPageProps): Promise<Metadata> {
   const { lang } = await params
-  const dict = getDictionary(lang as Locale)
+  const locale = lang as Locale
+  const dict = getDictionary(locale)
   return {
     title: dict.seo.about.title,
     description: dict.seo.about.description,
+    alternates: hreflang.about(locale),
   }
 }
 

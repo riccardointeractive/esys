@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next'
-import { siteConfig } from '@/config/site'
-import { locales, defaultLocale } from '@/config/i18n'
+import { locales, defaultLocale, type Locale } from '@/config/i18n'
+import { localizedRoutes, ROUTE_SLUGS } from '@/config/i18n/routes'
 import { getAdminClient } from '@/lib/supabase/server'
 import { TABLES } from '@/config/supabase-tables'
+import { absoluteUrl, type LocalePathFn } from '@/lib/seo/alternates'
 
 /**
  * Dynamic sitemap for ESYS VIP.
@@ -10,63 +11,66 @@ import { TABLES } from '@/config/supabase-tables'
  * Emits every public URL across all locales with full hreflang alternates so
  * Google and Yandex can serve the right language variant per market.
  *
+ * ESYS uses per-locale URL slugs (e.g. /es/propiedades, /en/properties,
+ * /ru/nedvizhimost). Paths are resolved via `localizedRoutes(lang)` so the
+ * sitemap matches the URLs that middleware serves — never the internal
+ * filesystem paths.
+ *
  * Sources:
- *   - Static routes from siteConfig / ROUTES
+ *   - Static routes (home, properties, new-builds, resale, blog, about, contact)
  *   - Published properties (esys_properties)
  *   - Published blog posts (esys_blog_posts)
  *   - Active blog categories (esys_blog_categories)
  */
 
 export const dynamic = 'force-dynamic'
-export const revalidate = 3600 // 1h — sitemap is cheap but not free
+export const revalidate = 3600 // 1h
 
 type ChangeFreq = NonNullable<MetadataRoute.Sitemap[number]['changeFrequency']>
 
 interface StaticRoute {
-  path: string
+  pathFor: LocalePathFn
   changeFrequency: ChangeFreq
   priority: number
 }
 
 const STATIC_ROUTES: StaticRoute[] = [
-  { path: '',               changeFrequency: 'daily',   priority: 1.0 },
-  { path: '/propiedades',   changeFrequency: 'daily',   priority: 0.9 },
-  { path: '/obra-nueva',    changeFrequency: 'daily',   priority: 0.9 },
-  { path: '/segunda-mano',  changeFrequency: 'daily',   priority: 0.9 },
-  { path: '/blog',          changeFrequency: 'daily',   priority: 0.8 },
-  { path: '/nosotros',      changeFrequency: 'monthly', priority: 0.5 },
-  { path: '/contacto',      changeFrequency: 'monthly', priority: 0.5 },
+  { pathFor: (l) => `/${l}`,                        changeFrequency: 'daily',   priority: 1.0 },
+  { pathFor: (l) => localizedRoutes(l).properties,  changeFrequency: 'daily',   priority: 0.9 },
+  { pathFor: (l) => localizedRoutes(l).newBuilds,   changeFrequency: 'daily',   priority: 0.9 },
+  { pathFor: (l) => localizedRoutes(l).resale,      changeFrequency: 'daily',   priority: 0.9 },
+  { pathFor: (l) => localizedRoutes(l).blog,        changeFrequency: 'daily',   priority: 0.8 },
+  { pathFor: (l) => localizedRoutes(l).about,       changeFrequency: 'monthly', priority: 0.5 },
+  { pathFor: (l) => localizedRoutes(l).contact,     changeFrequency: 'monthly', priority: 0.5 },
+  {
+    pathFor: (l) => `/${l}/${ROUTE_SLUGS[l].blog}/${ROUTE_SLUGS[l].blogCategory}`,
+    changeFrequency: 'weekly',
+    priority: 0.5,
+  },
 ]
 
-const BASE_URL = siteConfig.url.replace(/\/$/, '')
-
-function urlFor(lang: string, path: string): string {
-  return `${BASE_URL}/${lang}${path}`
-}
-
-function buildAlternates(path: string): MetadataRoute.Sitemap[number]['alternates'] {
+function alternatesFor(pathFor: LocalePathFn): MetadataRoute.Sitemap[number]['alternates'] {
   const languages: Record<string, string> = {}
   for (const lang of locales) {
-    languages[lang] = urlFor(lang, path)
+    languages[lang] = absoluteUrl(pathFor(lang))
   }
-  // x-default points to the canonical locale so search engines serve ES when
-  // no user-language match exists.
-  languages['x-default'] = urlFor(defaultLocale, path)
+  languages['x-default'] = absoluteUrl(pathFor(defaultLocale))
   return { languages }
 }
 
-function entryFor(
-  path: string,
+function entriesFor(
+  pathFor: LocalePathFn,
   lastModified: Date,
   changeFrequency: ChangeFreq,
   priority: number,
 ): MetadataRoute.Sitemap {
+  const alternates = alternatesFor(pathFor)
   return locales.map((lang) => ({
-    url: urlFor(lang, path),
+    url: absoluteUrl(pathFor(lang)),
     lastModified,
     changeFrequency,
     priority,
-    alternates: buildAlternates(path),
+    alternates,
   }))
 }
 
@@ -76,7 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   /* ─── Static routes ─── */
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.flatMap((route) =>
-    entryFor(route.path, now, route.changeFrequency, route.priority),
+    entriesFor(route.pathFor, now, route.changeFrequency, route.priority),
   )
 
   /* ─── Published properties ─── */
@@ -89,8 +93,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const propertyEntries: MetadataRoute.Sitemap = (properties ?? [])
     .filter((p): p is { slug: string; updated_at: string | null } => Boolean(p.slug))
     .flatMap((p) =>
-      entryFor(
-        `/propiedades/${p.slug}`,
+      entriesFor(
+        (l: Locale) => localizedRoutes(l).propertyDetail(p.slug),
         p.updated_at ? new Date(p.updated_at) : now,
         'weekly',
         0.7,
@@ -111,8 +115,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     )
     .flatMap((p) => {
       const lastMod = p.updated_at ?? p.published_at
-      return entryFor(
-        `/blog/${p.slug}`,
+      return entriesFor(
+        (l: Locale) => localizedRoutes(l).blogPost(p.slug),
         lastMod ? new Date(lastMod) : now,
         'weekly',
         0.6,
@@ -129,8 +133,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categoryEntries: MetadataRoute.Sitemap = (categories ?? [])
     .filter((c): c is { slug: string; updated_at: string | null } => Boolean(c.slug))
     .flatMap((c) =>
-      entryFor(
-        `/blog/categoria/${c.slug}`,
+      entriesFor(
+        (l: Locale) => localizedRoutes(l).blogCategory(c.slug),
         c.updated_at ? new Date(c.updated_at) : now,
         'weekly',
         0.5,

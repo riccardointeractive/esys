@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
@@ -9,6 +10,7 @@ import {
   fetchCategoryCounts,
   fetchPublishedPosts,
 } from '@/lib/blog'
+import { hreflang } from '@/lib/seo/alternates'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,13 +18,17 @@ interface CategoryPageProps {
   params: Promise<{ lang: string; categorySlug: string }>
 }
 
-export async function generateMetadata({ params }: CategoryPageProps) {
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { lang, categorySlug } = await params
   const locale = lang as Locale
   const dict = getDictionary(locale)
   const category = await fetchCategoryBySlug(categorySlug)
   if (!category) {
-    return { title: dict.seo.blog.title, description: dict.seo.blog.description }
+    return {
+      title: dict.seo.blog.title,
+      description: dict.seo.blog.description,
+      alternates: hreflang.blog(locale),
+    }
   }
   const label =
     (category[`label_${locale}` as `label_${Locale}`] as string) || category.label_es
@@ -30,7 +36,11 @@ export async function generateMetadata({ params }: CategoryPageProps) {
     (category[`description_${locale}` as `description_${Locale}`] as string) ||
     category.description_es ||
     dict.seo.blog.description
-  return { title: `${label} — ${dict.blog.title}`, description: desc }
+  return {
+    title: `${label} — ${dict.blog.title}`,
+    description: desc,
+    alternates: hreflang.blogCategory(locale, categorySlug),
+  }
 }
 
 export default async function BlogCategoryPage({ params }: CategoryPageProps) {

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Bed, Bath, Maximize, MapPin, Building2, Calendar, Layers, Zap } from 'lucide-react'
 import { getDictionary } from '@/config/i18n'
@@ -6,9 +7,33 @@ import { localizedRoutes } from '@/config/i18n/routes'
 import { fetchPropertyBySlug } from '@/lib/properties'
 import { cn } from '@/lib/utils'
 import { PropertyGallery } from '@/components/property/PropertyGallery'
+import { hreflang } from '@/lib/seo/alternates'
 
 interface PropertyDetailPageProps {
   params: Promise<{ lang: string; slug: string }>
+}
+
+export async function generateMetadata({ params }: PropertyDetailPageProps): Promise<Metadata> {
+  const { lang, slug } = await params
+  const locale = lang as Locale
+  const dict = getDictionary(locale)
+  const property = await fetchPropertyBySlug(slug)
+  if (!property) {
+    return {
+      title: dict.seo.properties.title,
+      description: dict.seo.properties.description,
+      alternates: hreflang.properties(locale),
+    }
+  }
+  const title = property[`title_${locale}`] || property.title_es
+  const rawDescription =
+    property[`description_${locale}`] || property.description_es || dict.seo.properties.description
+  return {
+    title,
+    description:
+      typeof rawDescription === 'string' ? rawDescription.slice(0, 160) : undefined,
+    alternates: hreflang.propertyDetail(locale, slug),
+  }
 }
 
 export default async function PropertyDetailPage({ params }: PropertyDetailPageProps) {

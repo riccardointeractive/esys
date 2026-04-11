@@ -1,9 +1,11 @@
+import type { Metadata } from 'next'
 import { PropertySearchBar } from '@/components/forms/PropertySearchBar'
 import { PropertyCard } from '@/components/property/PropertyCard'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
 import { getDefinitions } from '@/lib/definitions'
 import { fetchProperties } from '@/lib/properties'
+import { hreflang } from '@/lib/seo/alternates'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,12 +14,14 @@ interface PropertiesPageProps {
   searchParams: Promise<{ location?: string; type?: string; bedrooms?: string }>
 }
 
-export async function generateMetadata({ params }: PropertiesPageProps) {
+export async function generateMetadata({ params }: PropertiesPageProps): Promise<Metadata> {
   const { lang } = await params
-  const dict = getDictionary(lang as Locale)
+  const locale = lang as Locale
+  const dict = getDictionary(locale)
   return {
     title: dict.seo.properties.title,
     description: dict.seo.properties.description,
+    alternates: hreflang.properties(locale),
   }
 }
 
