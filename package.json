@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "again": "next build && pm2 restart esys",
-    "lint": "eslint"
+    "lint": "eslint",
+    "blog:seed-categories": "node --env-file=.env.local scripts/seed-blog-categories.mjs",
+    "blog:publish": "node --env-file=.env.local scripts/publish-blog-post.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1008.0",
@@ -33,6 +35,7 @@
     "otpauth": "^9.5.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "recharts": "^3.8.1",
     "resend": "^6.9.3",
     "sanitize-html": "^2.17.2"
   },
