@@ -4,6 +4,17 @@ Strategia SEO del blog e azioni tecniche per portare `esysvip.com` a ranking org
 
 Ultimo aggiornamento: 2026-04-11.
 
+## Stato di avanzamento
+
+| Fase | Stato | Note |
+|------|-------|------|
+| 0 — Dati cliente contatto | ⏳ in attesa | email/telefono/indirizzo necessari per `RealEstateAgent` schema |
+| 1 — Infrastruttura SEO | 🟡 quasi completa | manca solo `RealEstateAgent` (dipende da Fase 0) |
+| 2 — Guía de Compra (18) | 🔲 da iniziare | |
+| 3 — Zonas y Barrios (20) | 🔲 da iniziare | |
+| 4 — Inversión + Expats (25) | 🔲 da iniziare | |
+| 5 — Lifestyle + Obra Nueva + Segunda Mano (37) | 🔲 da iniziare | |
+
 ---
 
 ## Contesto
@@ -24,23 +35,26 @@ Ultimo aggiornamento: 2026-04-11.
 
 ### Fase 1 — Infrastruttura SEO (una volta, non ripetibile)
 
-1. **`src/app/sitemap.ts`** — sitemap dinamica Next 16 che include:
-   - Tutte le route statiche × 3 lingue
+1. ✅ **`src/app/sitemap.ts`** — sitemap dinamica Next 16 che include:
+   - Tutte le route statiche × 3 lingue (ES/EN/RU)
    - Ogni proprietà pubblicata × 3 lingue (`lastModified = updated_at`)
    - Ogni post del blog pubblicato × 3 lingue
    - Ogni categoria blog attiva × 3 lingue
    - Field `alternates.languages` con hreflang + `x-default` su ES
+   - **Slug localizzati per-lingua** via `localizedRoutes(lang)` (es. `/es/propiedades`, `/en/properties`, `/ru/nedvizhimost`)
+   - `revalidate = 3600`
 
-2. **`src/app/robots.ts`** — permettere tutto il public, bloccare `/admin/*`, `/cuenta/*`, `/api/*`, paginated `/blog?page=*`, `/buscar`. Dichiarare il sitemap.
+2. ✅ **`src/app/robots.ts`** — public aperto, bloccati `/admin`, `/cuenta`, `/api`, `/login`, `/registro`, `/favoritos`, `/buscar`, varianti `?page=*`, `?utm_*`, `?ref=*`. Sitemap + host dichiarati.
 
-3. **Hreflang nelle metadata.** Ogni `generateMetadata` nelle route `[lang]/...` deve emettere `alternates.languages` con i tre URL fratelli. Senza hreflang Google colassa su una sola versione.
+3. ✅ **Hreflang nelle metadata.** Helper `src/lib/seo/alternates.ts` con `hreflang.*` per ogni tipo di route (home, properties, propertyDetail, newBuilds, resale, about, contact, blog, blogPost, blogCategory, blogCategoryIndex). Wirato su 11 pagine pubbliche. Home e property detail avevano metadata assenti — ora emettono title/description/canonical/hreflang completi. `metadataBase` impostato nel root layout.
 
-4. **JSON-LD base:**
-   - `RealEstateAgent` (LocalBusiness) su `/`, `/nosotros`, `/contacto`
-   - `BreadcrumbList` su tutte le pagine non-root
-   - `Article` su ogni blog post (author, datePublished, dateModified, image, wordCount, inLanguage)
-   - `Product` / `Residence` su property detail
-   - `FAQPage` sui post con Q&A strutturata
+4. 🟡 **JSON-LD base:**
+   - ⏳ `RealEstateAgent` (LocalBusiness) — in attesa di Fase 0 (dati contatto cliente)
+   - ✅ `BreadcrumbList` su blog post, blog category, property detail
+   - ✅ `Article` su ogni blog post (headline, description, image, datePublished, dateModified, inLanguage, wordCount, author/publisher `ESYS VIP` come Organization, mainEntityOfPage)
+   - ✅ `Residence` / `Apartment` / `SingleFamilyResidence` su property detail, con `Offer` (price/currency/availability), `PostalAddress`, `GeoCoordinates`, `floorSize` MTK, `numberOfBedrooms`, `numberOfBathroomsTotal`, `yearBuilt`
+   - 🔲 `FAQPage` sui post con Q&A strutturata (da aggiungere quando i primi articoli guida escono con sezione FAQ in coda)
+   - Helper: `src/lib/seo/jsonld.ts` + component `src/components/seo/JsonLd.tsx` (escape `</` safe)
 
 ### Fase 2 — Alto impatto (misurabile in 4-8 settimane)
 

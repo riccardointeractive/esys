@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getDictionary } from '@/config/i18n'
 import type { Locale } from '@/config/i18n'
+import { localizedRoutes } from '@/config/i18n/routes'
 import { BlogPostGrid } from '@/components/blog/BlogPostGrid'
 import { BlogSidebar } from '@/components/blog/BlogSidebar'
 import {
@@ -10,7 +11,9 @@ import {
   fetchCategoryCounts,
   fetchPublishedPosts,
 } from '@/lib/blog'
-import { hreflang } from '@/lib/seo/alternates'
+import { hreflang, absoluteUrl } from '@/lib/seo/alternates'
+import { breadcrumbListJsonLd } from '@/lib/seo/jsonld'
+import { JsonLd } from '@/components/seo/JsonLd'
 
 export const dynamic = 'force-dynamic'
 
@@ -47,6 +50,7 @@ export default async function BlogCategoryPage({ params }: CategoryPageProps) {
   const { lang, categorySlug } = await params
   const locale = lang as Locale
   const dict = getDictionary(locale)
+  const routes = localizedRoutes(locale)
 
   const category = await fetchCategoryBySlug(categorySlug)
   if (!category) notFound()
@@ -62,8 +66,15 @@ export default async function BlogCategoryPage({ params }: CategoryPageProps) {
     (category[`description_${locale}` as `description_${Locale}`] as string) ||
     category.description_es
 
+  const breadcrumbs = breadcrumbListJsonLd([
+    { name: dict.nav.home, url: absoluteUrl(routes.home) },
+    { name: dict.blog.title, url: absoluteUrl(routes.blog) },
+    { name: label, url: absoluteUrl(routes.blogCategory(category.slug)) },
+  ])
+
   return (
     <div className="ds-container vip-blog-section">
+      <JsonLd data={breadcrumbs} />
       <header className="vip-blog-detail__header">
         <span className="ds-overline">{dict.blog.title}</span>
         <h1 className="ds-hero-title">{label}</h1>

@@ -7,7 +7,9 @@ import { localizedRoutes } from '@/config/i18n/routes'
 import { fetchPropertyBySlug } from '@/lib/properties'
 import { cn } from '@/lib/utils'
 import { PropertyGallery } from '@/components/property/PropertyGallery'
-import { hreflang } from '@/lib/seo/alternates'
+import { hreflang, absoluteUrl } from '@/lib/seo/alternates'
+import { breadcrumbListJsonLd, residenceJsonLd } from '@/lib/seo/jsonld'
+import { JsonLd } from '@/components/seo/JsonLd'
 
 interface PropertyDetailPageProps {
   params: Promise<{ lang: string; slug: string }>
@@ -62,8 +64,16 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
   const statusLabel = dict.property.status[property.status as keyof typeof dict.property.status] ?? property.status
   const categoryLabel = dict.property.category[property.category as keyof typeof dict.property.category] ?? property.category
 
+  const breadcrumbs = breadcrumbListJsonLd([
+    { name: dict.nav.home, url: absoluteUrl(routes.home) },
+    { name: dict.nav.properties, url: absoluteUrl(routes.properties) },
+    { name: title, url: absoluteUrl(routes.propertyDetail(property.slug)) },
+  ])
+  const residence = residenceJsonLd(property, locale)
+
   return (
     <div className="ds-container ds-py-8">
+      <JsonLd data={[breadcrumbs, residence]} />
       <nav className="ds-breadcrumb ds-mb-6">
         <span className="ds-breadcrumb__item">
           <a href={routes.properties} className="ds-breadcrumb__link">{dict.nav.properties}</a>

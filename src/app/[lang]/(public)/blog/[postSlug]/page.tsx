@@ -8,7 +8,9 @@ import { localizedRoutes } from '@/config/i18n/routes'
 import { BlogPostContent } from '@/components/blog/BlogPostContent'
 import { BlogPostGrid } from '@/components/blog/BlogPostGrid'
 import { fetchPostBySlug, fetchRelatedPosts } from '@/lib/blog'
-import { hreflang } from '@/lib/seo/alternates'
+import { hreflang, absoluteUrl } from '@/lib/seo/alternates'
+import { articleJsonLd, breadcrumbListJsonLd } from '@/lib/seo/jsonld'
+import { JsonLd } from '@/components/seo/JsonLd'
 
 export const dynamic = 'force-dynamic'
 
@@ -70,8 +72,27 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
 
   const relatedRaw = await fetchRelatedPosts(post.category_id, post.id, 3)
 
+  const breadcrumbs = breadcrumbListJsonLd([
+    { name: dict.nav.home, url: absoluteUrl(routes.home) },
+    { name: dict.blog.title, url: absoluteUrl(routes.blog) },
+    ...(post.category
+      ? [
+          {
+            name:
+              (post.category[`label_${locale}` as `label_${Locale}`] as string) ||
+              post.category.label_es,
+            url: absoluteUrl(routes.blogCategory(post.category.slug)),
+          },
+        ]
+      : []),
+    { name: title, url: absoluteUrl(routes.blogPost(post.slug)) },
+  ])
+  const article = articleJsonLd(post, locale)
+
   return (
     <article className="ds-container">
+      <JsonLd data={[breadcrumbs, article]} />
+
       {/* ─── Editorial header ─── */}
       <header className="vip-blog-detail__header">
         {categoryLabel && post.category ? (
