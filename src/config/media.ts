@@ -25,5 +25,12 @@ export const MEDIA_CONFIG = {
     properties: 'properties',
     avatars: 'avatars',
     general: 'media',
+    blog: 'blog',
+  },
+
+  /* Media scopes — db-level isolation between admin sections */
+  scopes: {
+    main: 'main',
+    blog: 'blog',
   },
 } as const

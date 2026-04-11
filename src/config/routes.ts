@@ -84,4 +84,6 @@ export const ADMIN_API_ROUTES = {
   blogCategories: '/api/admin/blog/categories',
   blogCategoryById: (id: string) => `/api/admin/blog/categories/${id}`,
   unsplashSearch: '/api/admin/unsplash/search',
+  blogMedia: '/api/admin/blog/media',
+  blogMediaPresign: '/api/admin/blog/media/presign',
 } as const

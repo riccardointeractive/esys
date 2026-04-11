@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminRequest } from '@/lib/admin-auth'
 import { getAdminClient } from '@/lib/supabase/server'
-import { listMedia, insertMedia, updateMedia, deleteMedia } from '@digiko-npm/cms/r2'
+import { updateMedia, deleteMedia } from '@digiko-npm/cms/r2'
 import { HTTP_STATUS } from '@digiko-npm/cms/http'
 import { TABLES } from '@/config/supabase-tables'
+import { listMediaScoped, insertMediaScoped } from '@/lib/media-scoped'
 
-/* ─── GET /api/admin/media ─── */
+/* ─── GET /api/admin/media ───
+ * Always filtered to scope='main' (client property pool).
+ * Blog uploads live at scope='blog' under /api/admin/blog/media
+ * and never appear here.
+ */
 
 export async function GET(request: NextRequest) {
   const auth = await verifyAdminRequest(request)
@@ -19,13 +24,13 @@ export async function GET(request: NextRequest) {
   const rawFolderId = searchParams.get('folder_id')
   const folderId = rawFolderId === 'null' ? null : rawFolderId === null ? undefined : rawFolderId
 
-  const supabase = getAdminClient()
-  const result = await listMedia(supabase, TABLES.media, {
+  const result = await listMediaScoped({
     page,
     limit,
     type,
     folderId,
     search,
+    scope: 'main',
   })
 
   return NextResponse.json(result)
@@ -66,8 +71,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const supabase = getAdminClient()
-    const media = await insertMedia(supabase, TABLES.media, {
+    const media = await insertMediaScoped({
       filename: body.filename,
       original_name: body.original_name || body.filename,
       mime_type: body.mime_type,
@@ -77,6 +81,7 @@ export async function POST(request: NextRequest) {
       height: body.height,
       alt_text: body.alt_text || '',
       folder_id: body.folder_id,
+      scope: 'main',
     })
 
     return NextResponse.json(media, { status: HTTP_STATUS.CREATED })
@@ -127,6 +132,19 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const supabase = getAdminClient()
+    // Scope guard: refuse cross-scope updates
+    const { data: existing } = await supabase
+      .from(TABLES.media)
+      .select('id')
+      .eq('id', body.id)
+      .eq('scope', 'main')
+      .maybeSingle()
+    if (!existing) {
+      return NextResponse.json(
+        { error: 'Media no encontrada' },
+        { status: HTTP_STATUS.NOT_FOUND }
+      )
+    }
     const media = await updateMedia(supabase, TABLES.media, body.id, updates)
     return NextResponse.json(media)
   } catch (err) {
@@ -155,6 +173,20 @@ export async function DELETE(request: NextRequest) {
   }
 
   const supabase = getAdminClient()
+  // Scope guard: refuse cross-scope deletes
+  const { data: existing } = await supabase
+    .from(TABLES.media)
+    .select('id')
+    .eq('id', id)
+    .eq('scope', 'main')
+    .maybeSingle()
+  if (!existing) {
+    return NextResponse.json(
+      { error: 'Media no encontrada' },
+      { status: HTTP_STATUS.NOT_FOUND }
+    )
+  }
+
   const r2Config = {
     accountId: process.env.R2_ACCOUNT_ID!,
     accessKeyId: process.env.R2_ACCESS_KEY_ID!,
