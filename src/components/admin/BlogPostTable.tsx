@@ -118,7 +118,7 @@ export function BlogPostTable({ categories }: BlogPostTableProps) {
 
   return (
     <div>
-      <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-4">Blog</h1>
+      <h1 className="ds-section-title ds-mb-4">Blog</h1>
 
       <div className="ds-flex ds-flex-wrap ds-gap-3 ds-items-center ds-mb-4">
         <div className="ds-input-group ds-flex-1 vip-blog-table__search">

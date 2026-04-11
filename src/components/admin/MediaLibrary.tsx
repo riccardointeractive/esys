@@ -291,7 +291,7 @@ export function MediaLibrary() {
   return (
     <div>
       {/* Header */}
-      <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-4">
+      <h1 className="ds-section-title ds-mb-4">
         Media
       </h1>
 
@@ -451,7 +451,7 @@ export function MediaLibrary() {
                 </div>
               ) : (
             <>
-              <div className="ds-grid ds-grid-cols-2 ds-md:grid-cols-4 ds-lg:grid-cols-6 ds-gap-3">
+              <div className="ds-grid ds-grid-cols-2 ds-md:grid-cols-4 ds-lg:grid-cols-5 ds-gap-3">
                 {items.map((item) => (
                   <button
                     key={item.id}
@@ -577,7 +577,7 @@ export function MediaLibrary() {
                     {saving ? (
                       'Guardando...'
                     ) : saveStatus === 'saved' ? (
-                      <><Check size={14} /> <span className="ds-ml-1">Guardado</span></>
+                      <><Check size={14} /> <span className="ds-ml-2">Guardado</span></>
                     ) : saveStatus === 'error' ? (
                       'Error — Reintentar'
                     ) : (

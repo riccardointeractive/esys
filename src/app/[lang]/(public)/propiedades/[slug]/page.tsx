@@ -61,7 +61,7 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
             <div className="ds-card__body">
               <div className="ds-flex ds-justify-between ds-items-start ds-gap-4">
                 <div>
-                  <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary">
+                  <h1 className="ds-section-title">
                     {title}
                   </h1>
                   {location && (
@@ -105,7 +105,7 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
           {description && (
             <div className="ds-card">
               <div className="ds-card__body">
-                <p className="ds-text-secondary ds-whitespace-pre-line">
+                <p className="ds-text-secondary ds-whitespace-pre-wrap">
                   {description}
                 </p>
               </div>
@@ -118,7 +118,7 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
               <h2 className="ds-text-lg ds-font-semibold ds-text-primary ds-mb-4">
                 {dict.property.detail.detailsTitle}
               </h2>
-              <dl className="ds-grid ds-grid-cols-2 ds-gap-y-3 ds-gap-x-6 ds-text-sm">
+              <dl className="ds-grid ds-grid-cols-2 ds-gap-4 ds-text-sm">
                 {fullAddress && (
                   <>
                     <dt className="ds-text-tertiary ds-flex ds-items-center ds-gap-1">
@@ -185,7 +185,7 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
         <div>
           <div className="ds-card" style={{ position: 'sticky', top: 'var(--ds-space-6, 1.5rem)' }}>
             <div className="ds-card__body">
-              <p className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-2">
+              <p className="ds-stat-number ds-mb-2">
                 {formattedPrice}
               </p>
               <p className="ds-text-xs ds-text-tertiary ds-mb-4">

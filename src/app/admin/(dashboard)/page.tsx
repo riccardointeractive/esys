@@ -3,7 +3,7 @@ import { Building2, Users, UserPlus, BarChart3 } from 'lucide-react'
 export default function AdminDashboardPage() {
   return (
     <div>
-      <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-6">
+      <h1 className="ds-section-title ds-mb-6">
         Dashboard
       </h1>
 

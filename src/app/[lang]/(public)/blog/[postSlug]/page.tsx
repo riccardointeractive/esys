@@ -69,17 +69,17 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
         {categoryLabel && post.category ? (
           <Link
             href={routes.blogCategory(post.category.slug)}
-            className="vip-blog-eyebrow"
+            className="ds-overline"
           >
             {categoryLabel}
           </Link>
         ) : null}
 
-        <h1 className="vip-blog-hero-title">{title}</h1>
+        <h1 className="ds-hero-title">{title}</h1>
 
-        {excerpt && <p className="vip-blog-lede">{excerpt}</p>}
+        {excerpt && <p className="ds-text-lg ds-text-secondary">{excerpt}</p>}
 
-        <div className="vip-blog-meta">
+        <div className="vip-blog-meta ds-overline">
           {publishedDate && <span>{publishedDate}</span>}
           {publishedDate && <span className="vip-blog-meta__sep" aria-hidden="true" />}
           <span>
@@ -108,7 +108,7 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
         <BlogPostContent html={content} />
 
         {post.cover_photographer_name && (
-          <p className="vip-blog-detail__credit">
+          <p className="vip-blog-detail__credit ds-text-xs ds-text-tertiary">
             {dict.blog.photoBy}{' '}
             <a
               href={post.cover_photographer_url}
@@ -134,11 +134,11 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
       {/* ─── Article-end CTA (link to homepage) ─── */}
       <section className="vip-blog-cta" aria-labelledby="vip-blog-cta-title">
         <div className="vip-blog-cta__inner">
-          <p className="vip-blog-cta__eyebrow">{dict.blog.cta.eyebrow}</p>
-          <h2 id="vip-blog-cta-title" className="vip-blog-cta__title">
+          <p className="ds-overline">{dict.blog.cta.eyebrow}</p>
+          <h2 id="vip-blog-cta-title" className="ds-section-title">
             {dict.blog.cta.title}
           </h2>
-          <p className="vip-blog-cta__text">{dict.blog.cta.text}</p>
+          <p className="ds-text-base ds-text-secondary">{dict.blog.cta.text}</p>
           <Link href={routes.home} className="ds-btn ds-btn--lg vip-blog-cta__action">
             {dict.blog.cta.action}
           </Link>
@@ -148,7 +148,7 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
       {/* ─── Related ─── */}
       {relatedRaw.length > 0 && (
         <section className="vip-blog-detail__related">
-          <h2 className="vip-blog-detail__related-title">{dict.blog.relatedPosts}</h2>
+          <h2 className="ds-section-title ds-mb-6">{dict.blog.relatedPosts}</h2>
           <BlogPostGrid
             posts={relatedRaw}
             locale={locale}

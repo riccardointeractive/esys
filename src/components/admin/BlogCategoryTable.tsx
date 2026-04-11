@@ -138,7 +138,7 @@ export function BlogCategoryTable() {
           <Link href={ADMIN_ROUTES.blog} className="ds-btn ds-btn--ghost ds-btn--sm">
             <ArrowLeft size={18} />
           </Link>
-          <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary">
+          <h1 className="ds-section-title">
             Categorías del blog
           </h1>
         </div>

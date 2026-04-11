@@ -1,7 +1,7 @@
 export default function AdminSettingsPage() {
   return (
     <div>
-      <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-6">
+      <h1 className="ds-section-title ds-mb-6">
         Ajustes
       </h1>
       <div className="ds-card">

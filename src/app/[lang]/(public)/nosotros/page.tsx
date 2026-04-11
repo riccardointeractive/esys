@@ -21,7 +21,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
 
   return (
     <div className="ds-container ds-py-8">
-      <h1 className="ds-font-display ds-text-3xl ds-font-bold ds-text-primary ds-mb-4">
+      <h1 className="ds-section-title ds-mb-4">
         {dict.aboutPage.title}
       </h1>
       <p className="ds-text-secondary ds-mb-8">

@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
             <div className="ds-flex ds-items-center ds-justify-center ds-rounded-full ds-bg-elevated ds-mb-4" style={{ width: 48, height: 48 }}>
               <Lock size={24} className="ds-text-secondary" />
             </div>
-            <h1 className="ds-font-display ds-text-xl ds-font-bold ds-text-primary">
+            <h1 className="ds-heading-ui ds-text-xl">
               Admin
             </h1>
           </div>

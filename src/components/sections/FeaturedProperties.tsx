@@ -18,7 +18,7 @@ export function FeaturedProperties({ dict, locale, properties }: FeaturedPropert
       <div className="ds-container">
         <div className="ds-flex ds-justify-between ds-items-end ds-mb-8">
           <div>
-            <h2 className="ds-font-display ds-text-2xl ds-md:text-3xl ds-font-bold ds-text-primary">
+            <h2 className="ds-section-title">
               {dict.featured.title}
             </h2>
             <p className="ds-text-secondary ds-mt-2">

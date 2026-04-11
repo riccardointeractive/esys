@@ -24,7 +24,7 @@ export function BlogSidebar({
 
   return (
     <aside className="vip-blog-sidebar">
-      <h2 className="ds-font-display ds-text-lg ds-font-semibold ds-text-primary ds-mb-4">
+      <h2 className="ds-heading-ui ds-text-lg ds-mb-4">
         {title}
       </h2>
       <ul className="vip-blog-sidebar__list">

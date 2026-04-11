@@ -37,7 +37,7 @@ export default async function BlogCategoryIndexPage({ params }: CategoryIndexPro
         <span>{dict.blog.backToBlog}</span>
       </Link>
 
-      <h1 className="ds-font-display ds-text-3xl ds-font-bold ds-text-primary ds-mb-6">
+      <h1 className="ds-section-title ds-mb-6">
         {dict.blog.categories}
       </h1>
 
@@ -56,7 +56,7 @@ export default async function BlogCategoryIndexPage({ params }: CategoryIndexPro
                 href={routes.blogCategory(c.slug)}
                 className="vip-blog-card vip-blog-card__body"
               >
-                <h2 className="ds-font-display ds-text-lg ds-font-semibold ds-text-primary">
+                <h2 className="ds-heading-ui ds-text-lg">
                   {label}
                 </h2>
                 {description && (

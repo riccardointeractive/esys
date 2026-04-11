@@ -160,7 +160,7 @@ export function MediaPickerModal({
               <span className="ds-text-secondary">No se encontraron imágenes</span>
             </div>
           ) : (
-            <div className="ds-grid ds-grid-cols-2 ds-md:grid-cols-3 ds-lg:grid-cols-6 ds-gap-3">
+            <div className="ds-grid ds-grid-cols-2 ds-md:grid-cols-3 ds-lg:grid-cols-5 ds-gap-3">
               {items.map((item) => {
                 const isExcluded = excludeSet.has(item.url)
                 const isSelected = selected.has(item.url)

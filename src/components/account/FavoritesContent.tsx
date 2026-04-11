@@ -54,7 +54,7 @@ export function FavoritesContent() {
 
   return (
     <div>
-      <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-6">
+      <h1 className="ds-section-title ds-mb-6">
         {t.account.favorites}
       </h1>
 

@@ -56,7 +56,7 @@ export function BlogPostCard({ post, locale, readingTimeTemplate }: BlogPostCard
         {categoryLabel && post.category && (
           <Link
             href={routes.blogCategory(post.category.slug)}
-            className="vip-blog-card__category"
+            className="vip-blog-card__category ds-overline"
           >
             {categoryLabel}
           </Link>
@@ -64,8 +64,10 @@ export function BlogPostCard({ post, locale, readingTimeTemplate }: BlogPostCard
         <h3 className="vip-blog-card__title">
           <Link href={routes.blogPost(post.slug)}>{title}</Link>
         </h3>
-        {excerpt && <p className="vip-blog-card__excerpt">{excerpt}</p>}
-        <div className="vip-blog-card__meta">
+        {excerpt && (
+          <p className="ds-text-sm ds-text-secondary ds-line-clamp-2">{excerpt}</p>
+        )}
+        <div className="vip-blog-card__meta ds-overline">
           {dateLabel && <span>{dateLabel}</span>}
           {dateLabel && <span aria-hidden="true">·</span>}
           <span>{readingLabel}</span>

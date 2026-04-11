@@ -19,9 +19,9 @@ export function Hero({ dict, typeDefinitions, bedroomDefinitions }: HeroProps) {
         backgroundImage: `url(${HERO_IMAGE})`,
       }}
     >
-      <div className="ds-hero__content ds-container ds-py-16 ds-md:py-24">
+      <div className="ds-hero__content ds-container ds-py-16">
         <div className="ds-hero__backdrop">
-          <h1 className="ds-font-display ds-text-4xl ds-lg:text-5xl ds-font-bold ds-mb-4 ds-hero__title ds-text-always-white">
+          <h1 className="ds-hero__title ds-hero-title ds-text-always-white ds-mb-4">
             {dict.hero.title}
           </h1>
           <p className="ds-text-lg ds-md:text-xl ds-mb-8 ds-hero__subtitle ds-text-always-white ds-opacity-75" style={{ maxWidth: '36rem', marginInline: 'auto' }}>

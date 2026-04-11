@@ -36,7 +36,7 @@ export default async function HomePage({ params }: HomePageProps) {
         <div className="ds-container">
           <div className="ds-grid ds-grid-cols-1 ds-md:grid-cols-2 ds-gap-6">
             <Link href={routes.newBuilds} className="ds-card ds-card--interactive ds-p-8">
-              <h3 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-2">
+              <h3 className="ds-heading-ui ds-text-2xl ds-mb-2">
                 {dict.categories.newBuild}
               </h3>
               <p className="ds-text-secondary">
@@ -44,7 +44,7 @@ export default async function HomePage({ params }: HomePageProps) {
               </p>
             </Link>
             <Link href={routes.resale} className="ds-card ds-card--interactive ds-p-8">
-              <h3 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-2">
+              <h3 className="ds-heading-ui ds-text-2xl ds-mb-2">
                 {dict.categories.resale}
               </h3>
               <p className="ds-text-secondary">

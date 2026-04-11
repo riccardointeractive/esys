@@ -113,7 +113,7 @@ export function SearchBar({ typeDefinitions, bedroomDefinitions }: SearchBarProp
 
   return (
     <form onSubmit={handleSubmit} className="vip-hero-search">
-      <div className="ds-flex ds-flex-col ds-md:flex-row ds-md:items-stretch ds-gap-3">
+      <div className="ds-flex ds-flex-col ds-md:flex-row ds-items-stretch ds-gap-3">
         <div className="ds-flex-1">
           <input
             name="location"

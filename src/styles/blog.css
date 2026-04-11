@@ -1,90 +1,14 @@
 /* ==========================================================================
    Blog — Public
-   Documented in DS_CUSTOM.md (approved: 2026-04-10, redesigned 2026-04-11).
-   Editorial style: type-first hero, fluid clamp sizing, quiet luxury spacing.
+   Documented in DS_CUSTOM.md (approved: 2026-04-10, redesigned 2026-04-11,
+   typography unified to DS 2026-04-11).
+
+   Typography policy: ZERO custom font-size / font-weight / line-height /
+   letter-spacing / text-transform / font-family in this file. Every text
+   element uses a DS class (ds-hero-title, ds-section-title, ds-overline,
+   ds-text-*, ds-prose) or inherits from DS base. Only layout, grid,
+   spacing, background, and border remain project-specific.
    ========================================================================== */
-
-/* --- Fluid typographic scale (clamp-based) --- */
-:root {
-  /* Hero titles: 40px mobile → 72px desktop */
-  --vip-blog-title-xl: clamp(2.5rem, 4vw + 1.5rem, 4.5rem);
-  /* Section titles: 24px → 32px */
-  --vip-blog-title-lg: clamp(1.5rem, 1.5vw + 1rem, 2rem);
-  /* Card titles: 20px → 24px */
-  --vip-blog-title-card: clamp(1.25rem, 0.75vw + 1rem, 1.5rem);
-  /* Lede / lead paragraph: 18px → 22px */
-  --vip-blog-lede: clamp(1.125rem, 0.5vw + 1rem, 1.375rem);
-  /* Editorial eyebrow (kicker) */
-  --vip-blog-eyebrow-size: 0.75rem;
-  --vip-blog-eyebrow-tracking: 0.14em;
-  /* Reading column max width */
-  --vip-blog-read-width: 720px;
-}
-
-/* --- Editorial eyebrow (kicker) --- */
-.vip-blog-eyebrow {
-  display: inline-block;
-  font-family: var(--ds-font-sans);
-  font-size: var(--vip-blog-eyebrow-size);
-  font-weight: var(--ds-weight-semibold);
-  letter-spacing: var(--vip-blog-eyebrow-tracking);
-  text-transform: uppercase;
-  color: var(--ds-color-text-tertiary);
-  text-decoration: none;
-  margin-bottom: var(--ds-space-4);
-}
-a.vip-blog-eyebrow {
-  color: var(--ds-color-text-interactive);
-}
-a.vip-blog-eyebrow:hover {
-  color: var(--ds-color-text-primary);
-}
-
-/* --- Hero title ---
-   Weight 400 to match the DS global heading default
-   (--ds-font-display-weight). Clash Display is designed to work
-   light and keeps a strong silhouette even at 72px.
-*/
-.vip-blog-hero-title {
-  font-family: var(--ds-font-display, inherit);
-  font-size: var(--vip-blog-title-xl);
-  font-weight: var(--ds-font-display-weight, 400);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: var(--ds-color-text-primary);
-  margin: 0;
-  max-width: var(--vip-blog-read-width);
-}
-
-/* --- Lede (lead paragraph) --- */
-.vip-blog-lede {
-  font-size: var(--vip-blog-lede);
-  line-height: 1.5;
-  color: var(--ds-color-text-secondary);
-  margin: var(--ds-space-6) 0 0;
-  max-width: 600px;
-}
-
-/* --- Editorial meta (date · reading time) --- */
-.vip-blog-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--ds-space-3);
-  font-size: var(--vip-blog-eyebrow-size);
-  font-weight: var(--ds-weight-medium);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ds-color-text-tertiary);
-  margin-top: var(--ds-space-8);
-}
-.vip-blog-meta__sep {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--ds-color-text-tertiary);
-  display: inline-block;
-  opacity: 0.6;
-}
 
 /* --- Generous page section respiro --- */
 .vip-blog-section {
@@ -123,7 +47,7 @@ a.vip-blog-eyebrow:hover {
   }
 }
 
-/* --- Post card — editorial, type-forward --- */
+/* --- Post card — layout only (typography via DS classes in JSX) --- */
 .vip-blog-card {
   display: flex;
   flex-direction: column;
@@ -161,53 +85,40 @@ a.vip-blog-eyebrow:hover {
   flex: 1;
   gap: var(--ds-space-2);
 }
+.vip-blog-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
 .vip-blog-card__category {
   display: inline-block;
-  font-size: var(--vip-blog-eyebrow-size);
-  font-weight: var(--ds-weight-semibold);
-  letter-spacing: var(--vip-blog-eyebrow-tracking);
-  text-transform: uppercase;
-  color: var(--ds-color-text-interactive);
   text-decoration: none;
+  color: var(--ds-color-text-interactive);
   margin-bottom: var(--ds-space-1);
 }
 .vip-blog-card__category:hover {
   color: var(--ds-color-text-primary);
 }
-.vip-blog-card__title {
-  font-family: var(--ds-font-display, inherit);
-  font-size: var(--vip-blog-title-card);
-  font-weight: var(--ds-font-display-weight, 400);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  color: var(--ds-color-text-primary);
-  margin: 0;
-}
-.vip-blog-card__title a {
-  color: inherit;
-  text-decoration: none;
-}
-.vip-blog-card__excerpt {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  color: var(--ds-color-text-secondary);
-  font-size: 0.9375rem;
-  line-height: 1.55;
-  margin-top: var(--ds-space-1);
-}
 .vip-blog-card__meta {
   display: flex;
   align-items: center;
   gap: var(--ds-space-2);
-  font-size: 0.6875rem;
-  font-weight: var(--ds-weight-medium);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ds-color-text-tertiary);
   margin-top: var(--ds-space-3);
+}
+
+/* --- Editorial meta row (date · reading time) — layout only --- */
+.vip-blog-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  margin-top: var(--ds-space-8);
+}
+.vip-blog-meta__sep {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ds-color-text-tertiary);
+  display: inline-block;
+  opacity: 0.6;
 }
 
 /* --- Sidebar --- */
@@ -229,7 +140,8 @@ a.vip-blog-eyebrow:hover {
   gap: var(--ds-space-1);
 }
 
-/* Sidebar link — active state (persistent selection) */
+/* Sidebar link — active state (persistent selection).
+   font-weight semibold kept as JUSTIFIED BEM state modifier. */
 .vip-blog-sidebar__link--active {
   background: var(--ds-color-surface-active);
   color: var(--ds-color-text-primary);
@@ -256,9 +168,9 @@ a.vip-blog-eyebrow:hover {
   color: var(--ds-color-text-primary);
 }
 
-/* --- Detail page — editorial hero --- */
+/* --- Detail page — editorial hero (layout only) --- */
 .vip-blog-detail__header {
-  max-width: var(--vip-blog-read-width);
+  max-width: 720px;
   margin: 0 auto clamp(2rem, 4vw, 4rem);
   padding-top: clamp(2.5rem, 4vw + 1rem, 5rem);
 }
@@ -276,18 +188,17 @@ a.vip-blog-eyebrow:hover {
   object-fit: cover;
 }
 .vip-blog-detail__body {
-  max-width: var(--vip-blog-read-width);
+  max-width: 720px;
   margin: 0 auto;
 }
 .vip-blog-detail__credit {
-  max-width: var(--vip-blog-read-width);
+  max-width: 720px;
   margin: var(--ds-space-6) auto 0;
-  font-size: 0.75rem;
-  color: var(--ds-color-text-tertiary);
 }
-/* --- Article-end CTA (link to homepage) --- */
+
+/* --- Article-end CTA (link to homepage) — layout only --- */
 .vip-blog-cta {
-  max-width: var(--vip-blog-read-width);
+  max-width: 720px;
   margin: clamp(4rem, 6vw, 6rem) auto 0;
 }
 .vip-blog-cta__inner {
@@ -301,32 +212,6 @@ a.vip-blog-eyebrow:hover {
   border: 1px solid var(--ds-color-border);
   border-radius: var(--ds-radius-lg);
 }
-.vip-blog-cta__eyebrow {
-  font-family: var(--ds-font-sans);
-  font-size: var(--vip-blog-eyebrow-size);
-  font-weight: var(--ds-weight-semibold);
-  letter-spacing: var(--vip-blog-eyebrow-tracking);
-  text-transform: uppercase;
-  color: var(--ds-color-text-tertiary);
-  margin: 0;
-}
-.vip-blog-cta__title {
-  font-family: var(--ds-font-display, inherit);
-  font-size: var(--vip-blog-title-lg);
-  font-weight: var(--ds-font-display-weight, 400);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  color: var(--ds-color-text-primary);
-  margin: 0;
-  max-width: 520px;
-}
-.vip-blog-cta__text {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--ds-color-text-secondary);
-  margin: 0;
-  max-width: 560px;
-}
 .vip-blog-cta__action {
   margin-top: var(--ds-space-2);
 }
@@ -335,89 +220,17 @@ a.vip-blog-eyebrow:hover {
   max-width: 1080px;
   margin: clamp(4rem, 6vw, 6rem) auto 0;
 }
-.vip-blog-detail__related-title {
-  font-family: var(--ds-font-display, inherit);
-  font-size: var(--vip-blog-title-lg);
-  font-weight: var(--ds-font-display-weight, 400);
-  letter-spacing: -0.01em;
-  color: var(--ds-color-text-primary);
-  margin: 0 0 var(--ds-space-6);
-}
 
-/* --- Sanitized HTML content (TipTap output) --- */
+/* --- Sanitized HTML content (TipTap output) ---
+   Wrapper only. Typography comes from DS base (h2/h3/h4/blockquote/pre/code)
+   and ds-prose utility applied in JSX. */
 .vip-blog-content {
   max-width: 760px;
-  color: var(--ds-color-text-primary);
-  font-size: 1.0625rem;
-  line-height: 1.75;
-}
-.vip-blog-content > * + * {
-  margin-top: var(--ds-space-4);
-}
-.vip-blog-content h2 {
-  font-family: var(--ds-font-display, inherit);
-  font-size: 1.5rem;
-  font-weight: var(--ds-font-display-weight, 400);
-  line-height: 1.25;
-  margin-top: var(--ds-space-8);
-}
-.vip-blog-content h3 {
-  font-family: var(--ds-font-display, inherit);
-  font-size: 1.25rem;
-  font-weight: var(--ds-font-display-weight, 400);
-  line-height: 1.3;
-  margin-top: var(--ds-space-6);
-}
-.vip-blog-content h4 {
-  font-size: 1.125rem;
-  font-weight: var(--ds-font-display-weight, 400);
-  margin-top: var(--ds-space-5);
-}
-.vip-blog-content a {
-  color: var(--ds-color-text-interactive);
-  text-decoration: underline;
-}
-.vip-blog-content ul,
-.vip-blog-content ol {
-  padding-left: 1.5rem;
-}
-.vip-blog-content li + li {
-  margin-top: var(--ds-space-2);
-}
-.vip-blog-content blockquote {
-  border-left: 3px solid var(--ds-color-border-strong);
-  padding-left: var(--ds-space-4);
-  color: var(--ds-color-text-secondary);
-  font-style: italic;
-}
-.vip-blog-content pre {
-  background: var(--ds-color-surface-muted);
-  padding: var(--ds-space-4);
-  border-radius: var(--ds-radius-md);
-  overflow-x: auto;
-  font-family: var(--ds-font-mono, monospace);
-  font-size: 0.875rem;
-}
-.vip-blog-content code {
-  font-family: var(--ds-font-mono, monospace);
-  font-size: 0.875em;
-  background: var(--ds-color-surface-muted);
-  padding: 0.125em 0.375em;
-  border-radius: 4px;
-}
-.vip-blog-content pre code {
-  background: transparent;
-  padding: 0;
 }
 .vip-blog-content img {
   max-width: 100%;
   height: auto;
   border-radius: var(--ds-radius-md);
-}
-.vip-blog-content hr {
-  border: 0;
-  border-top: 1px solid var(--ds-color-border);
-  margin: var(--ds-space-6) 0;
 }
 
 /* ==========================================================================
@@ -496,7 +309,7 @@ a.vip-blog-eyebrow:hover {
   color: var(--ds-color-text-primary);
 }
 .vip-rte__btn:disabled {
-  opacity: 0.4;
+  opacity: var(--ds-opacity-disabled);
   cursor: not-allowed;
 }
 .vip-rte__sep {
@@ -504,43 +317,12 @@ a.vip-blog-eyebrow:hover {
   background: var(--ds-color-border);
   margin: 0 var(--ds-space-1);
 }
+
+/* RTE content area — layout only. Typography from DS base (h2/h3/blockquote/pre). */
 .vip-rte__content {
   padding: var(--ds-space-4);
   min-height: 280px;
   outline: none;
-  color: var(--ds-color-text-primary);
-  font-size: 1rem;
-  line-height: 1.7;
-}
-.vip-rte__content > * + * {
-  margin-top: var(--ds-space-3);
-}
-.vip-rte__content h2 {
-  font-size: 1.375rem;
-  font-weight: var(--ds-font-display-weight, 400);
-  margin-top: var(--ds-space-6);
-}
-.vip-rte__content h3 {
-  font-size: 1.125rem;
-  font-weight: var(--ds-font-display-weight, 400);
-  margin-top: var(--ds-space-5);
-}
-.vip-rte__content ul,
-.vip-rte__content ol {
-  padding-left: 1.5rem;
-}
-.vip-rte__content blockquote {
-  border-left: 3px solid var(--ds-color-border-strong);
-  padding-left: var(--ds-space-3);
-  color: var(--ds-color-text-secondary);
-}
-.vip-rte__content pre {
-  background: var(--ds-color-surface-muted);
-  padding: var(--ds-space-3);
-  border-radius: var(--ds-radius-sm);
-  font-family: var(--ds-font-mono, monospace);
-  font-size: 0.875rem;
-  overflow-x: auto;
 }
 .vip-rte__img {
   max-width: 100%;
@@ -642,7 +424,7 @@ a.vip-blog-eyebrow:hover {
   display: block;
 }
 
-/* --- Tabs --- */
+/* --- Tabs (layout only; typography via ds-text-sm ds-font-medium in JSX) --- */
 .vip-blog-tabs {
   display: flex;
   gap: var(--ds-space-1);
@@ -668,8 +450,6 @@ a.vip-blog-eyebrow:hover {
   padding: var(--ds-space-2) var(--ds-space-3);
   background: transparent;
   color: var(--ds-color-text-secondary);
-  font-size: 0.8125rem;
-  font-weight: var(--ds-weight-medium);
   border: 0;
   border-radius: var(--ds-radius-sm);
   cursor: pointer;
@@ -713,7 +493,7 @@ a.vip-blog-eyebrow:hover {
   background: var(--ds-color-surface-hover);
 }
 .vip-blog-upload__dropzone:disabled {
-  opacity: 0.6;
+  opacity: var(--ds-opacity-disabled);
   cursor: not-allowed;
 }
 
@@ -784,4 +564,27 @@ a.vip-blog-eyebrow:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* ==========================================================================
+   Reduced motion (WCAG 2.3.3)
+   Disable non-essential transitions/transforms for users that request
+   reduced motion. Covers card hover zoom, thumb scale, and dropzone feedback.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .vip-blog-card:hover .vip-blog-card__img,
+  .vip-unsplash-picker__thumb:hover,
+  .vip-blog-picker-modal__thumb:hover {
+    transform: none;
+  }
+  .vip-blog-card__img,
+  .vip-unsplash-picker__thumb,
+  .vip-blog-picker-modal__thumb,
+  .vip-blog-sidebar__link,
+  .vip-rte__btn,
+  .vip-blog-tab,
+  .vip-blog-upload__dropzone {
+    transition: none;
+  }
 }

@@ -8,7 +8,7 @@ export default async function AdminOptionsPage() {
 
   return (
     <div>
-      <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary ds-mb-6">
+      <h1 className="ds-section-title ds-mb-6">
         Opciones
       </h1>
       <SettingsContent initialDefinitions={definitions} />

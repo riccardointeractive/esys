@@ -180,7 +180,7 @@ export function SettingsContent() {
 
   return (
     <div className="ds-space-y-8">
-      <h1 className="ds-font-display ds-text-2xl ds-font-bold ds-text-primary">
+      <h1 className="ds-section-title">
         {t.account.settings}
       </h1>
 

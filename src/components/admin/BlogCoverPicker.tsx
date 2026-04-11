@@ -127,7 +127,7 @@ export function BlogCoverPicker({ value, onChange }: BlogCoverPickerProps) {
           role="tab"
           aria-selected={tab === 'unsplash'}
           onClick={() => setTab('unsplash')}
-          className={cn('vip-blog-tab', tab === 'unsplash' && 'vip-blog-tab--active')}
+          className={cn('vip-blog-tab ds-text-sm ds-font-medium', tab === 'unsplash' && 'vip-blog-tab--active')}
         >
           <Sparkles size={14} />
           <span className="ds-ml-2">Unsplash</span>
@@ -137,7 +137,7 @@ export function BlogCoverPicker({ value, onChange }: BlogCoverPickerProps) {
           role="tab"
           aria-selected={tab === 'upload'}
           onClick={() => setTab('upload')}
-          className={cn('vip-blog-tab', tab === 'upload' && 'vip-blog-tab--active')}
+          className={cn('vip-blog-tab ds-text-sm ds-font-medium', tab === 'upload' && 'vip-blog-tab--active')}
         >
           <ImagePlus size={14} />
           <span className="ds-ml-2">Subir</span>
@@ -147,7 +147,7 @@ export function BlogCoverPicker({ value, onChange }: BlogCoverPickerProps) {
           role="tab"
           aria-selected={tab === 'library'}
           onClick={() => setTab('library')}
-          className={cn('vip-blog-tab', tab === 'library' && 'vip-blog-tab--active')}
+          className={cn('vip-blog-tab ds-text-sm ds-font-medium', tab === 'library' && 'vip-blog-tab--active')}
         >
           <Library size={14} />
           <span className="ds-ml-2">Biblioteca</span>

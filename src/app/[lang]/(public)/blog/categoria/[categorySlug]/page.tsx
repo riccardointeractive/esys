@@ -55,9 +55,9 @@ export default async function BlogCategoryPage({ params }: CategoryPageProps) {
   return (
     <div className="ds-container vip-blog-section">
       <header className="vip-blog-detail__header">
-        <span className="vip-blog-eyebrow">{dict.blog.title}</span>
-        <h1 className="vip-blog-hero-title">{label}</h1>
-        {description && <p className="vip-blog-lede">{description}</p>}
+        <span className="ds-overline">{dict.blog.title}</span>
+        <h1 className="ds-hero-title">{label}</h1>
+        {description && <p className="ds-text-lg ds-text-secondary">{description}</p>}
       </header>
 
       <div className="vip-blog-layout">
