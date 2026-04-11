@@ -18,6 +18,7 @@ import {
   Link2,
   Image as ImageIcon,
   ImageUp,
+  Library,
   Undo2,
   Redo2,
   FileCode2,
@@ -25,6 +26,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { uploadBlogImage } from '@/lib/blog-upload'
+import { BlogMediaPickerModal, type BlogMediaSelection } from '@/components/admin/BlogMediaPickerModal'
 
 interface RichTextEditorProps {
   value: string
@@ -65,6 +67,18 @@ function ToolbarButton({
 function Toolbar({ editor }: { editor: Editor }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
+  const [pickerOpen, setPickerOpen] = useState(false)
+
+  const insertFromLibrary = (item: BlogMediaSelection) => {
+    editor
+      .chain()
+      .focus()
+      .setImage({
+        src: item.url,
+        alt: item.alt,
+      })
+      .run()
+  }
 
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -199,6 +213,12 @@ function Toolbar({ editor }: { editor: Editor }) {
         onChange={onFileChange}
         className="vip-rte__file-input"
       />
+      <ToolbarButton
+        title="Imagen desde la biblioteca del blog"
+        onClick={() => setPickerOpen(true)}
+      >
+        <Library size={16} />
+      </ToolbarButton>
       <ToolbarButton title="Pegar HTML" onClick={pasteHtml}>
         <FileCode2 size={16} />
       </ToolbarButton>
@@ -217,6 +237,12 @@ function Toolbar({ editor }: { editor: Editor }) {
       >
         <Redo2 size={16} />
       </ToolbarButton>
+
+      <BlogMediaPickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={insertFromLibrary}
+      />
     </div>
   )
 }
