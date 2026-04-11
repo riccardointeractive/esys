@@ -38,7 +38,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
         {/* Contact form */}
         <div className="ds-card">
           <div className="ds-card__header">
-            <h2>{dict.contactPage.formTitle}</h2>
+            <h3>{dict.contactPage.formTitle}</h3>
           </div>
           <div className="ds-card__body">
             <ContactForm
@@ -52,10 +52,10 @@ export default async function ContactPage({ params }: ContactPageProps) {
         {/* Contact info */}
         <div>
           <div className="ds-card ds-mb-6">
+            <div className="ds-card__header">
+              <h3>{dict.contactPage.info}</h3>
+            </div>
             <div className="ds-card__body">
-              <h3 className="ds-font-semibold ds-text-primary ds-mb-4">
-                {dict.contactPage.info}
-              </h3>
               <ul className="ds-space-y-3 ds-text-secondary">
                 {siteConfig.contact.email && (
                   <li>Email: {siteConfig.contact.email}</li>
