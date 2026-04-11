@@ -12,7 +12,7 @@ export function BlogPostContent({ html }: BlogPostContentProps) {
   const safe = sanitizeBlogHtml(html)
   return (
     <div
-      className="vip-blog-content ds-prose"
+      className="vip-blog-content ds-prose-block"
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{ __html: safe }}
     />
