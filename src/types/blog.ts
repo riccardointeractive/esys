@@ -20,7 +20,12 @@ export interface BlogCategory {
 
 export interface BlogPost {
   id: string
+  /** Canonical Spanish slug (also used as the ES-variant URL slug). */
   slug: string
+  /** English URL slug — empty string until backfilled. */
+  slug_en: string
+  /** Russian URL slug (Latin-transliterated) — empty string until backfilled. */
+  slug_ru: string
   category_id: string | null
   author_id: string | null
 

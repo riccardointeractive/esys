@@ -3,7 +3,7 @@ import { locales, defaultLocale, type Locale } from '@/config/i18n'
 import { localizedRoutes, ROUTE_SLUGS } from '@/config/i18n/routes'
 import { getAdminClient } from '@/lib/supabase/server'
 import { TABLES } from '@/config/supabase-tables'
-import { absoluteUrl, type LocalePathFn } from '@/lib/seo/alternates'
+import { absoluteUrl, slugForLocale, type LocalePathFn } from '@/lib/seo/alternates'
 
 /**
  * Dynamic sitemap for ESYS VIP.
@@ -101,22 +101,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ),
     )
 
-  /* ─── Published blog posts ─── */
+  /* ─── Published blog posts (per-locale slugs) ─── */
   const { data: posts } = await supabase
     .from(TABLES.blogPosts)
-    .select('slug, updated_at, published_at')
+    .select('slug, slug_en, slug_ru, updated_at, published_at')
     .is('deleted_at', null)
     .eq('status', 'published')
 
+  type PostRow = {
+    slug: string
+    slug_en: string
+    slug_ru: string
+    updated_at: string | null
+    published_at: string | null
+  }
+
   const postEntries: MetadataRoute.Sitemap = (posts ?? [])
-    .filter(
-      (p): p is { slug: string; updated_at: string | null; published_at: string | null } =>
-        Boolean(p.slug),
-    )
+    .filter((p): p is PostRow => Boolean(p.slug))
     .flatMap((p) => {
       const lastMod = p.updated_at ?? p.published_at
       return entriesFor(
-        (l: Locale) => localizedRoutes(l).blogPost(p.slug),
+        (l: Locale) => localizedRoutes(l).blogPost(slugForLocale(p, l)),
         lastMod ? new Date(lastMod) : now,
         'weekly',
         0.6,

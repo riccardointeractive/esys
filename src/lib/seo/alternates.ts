@@ -2,6 +2,21 @@ import type { Metadata } from 'next'
 import { locales, defaultLocale, type Locale } from '@/config/i18n'
 import { localizedRoutes, ROUTE_SLUGS } from '@/config/i18n/routes'
 import { siteConfig } from '@/config/site'
+import type { BlogPost } from '@/types/blog'
+
+/**
+ * Map a blog post to its per-locale slug. ES falls back to `slug`, EN/RU
+ * use their own columns and fall back to the ES slug if the localised one
+ * is still empty.
+ */
+export function slugForLocale(
+  post: Pick<BlogPost, 'slug' | 'slug_en' | 'slug_ru'>,
+  locale: Locale,
+): string {
+  if (locale === 'en') return post.slug_en || post.slug
+  if (locale === 'ru') return post.slug_ru || post.slug
+  return post.slug
+}
 
 /**
  * SEO alternates / hreflang helpers.
@@ -80,8 +95,15 @@ export const hreflang = {
   blog: (lang: Locale) =>
     buildAlternates(lang, (l) => localizedRoutes(l).blog),
 
-  blogPost: (lang: Locale, slug: string) =>
-    buildAlternates(lang, (l) => localizedRoutes(l).blogPost(slug)),
+  /**
+   * Per-locale blog post URL. `post` must carry all three slug columns so
+   * each hreflang entry points to its own localised URL.
+   */
+  blogPost: (
+    lang: Locale,
+    post: Pick<BlogPost, 'slug' | 'slug_en' | 'slug_ru'>,
+  ) =>
+    buildAlternates(lang, (l) => localizedRoutes(l).blogPost(slugForLocale(post, l))),
 
   blogCategory: (lang: Locale, slug: string) =>
     buildAlternates(lang, (l) => localizedRoutes(l).blogCategory(slug)),

@@ -1,6 +1,17 @@
 import { getAdminClient } from '@/lib/supabase/server'
 import { TABLES } from '@/config/supabase-tables'
 import type { BlogPost, BlogPostWithCategory, BlogCategory } from '@/types/blog'
+import type { Locale } from '@/config/i18n'
+
+/**
+ * Map a locale to the DB column that stores the post slug for that language.
+ * ES uses the canonical `slug` column; EN/RU use their own columns.
+ */
+function slugColumn(locale: Locale): 'slug' | 'slug_en' | 'slug_ru' {
+  if (locale === 'en') return 'slug_en'
+  if (locale === 'ru') return 'slug_ru'
+  return 'slug'
+}
 
 /* ─── Public blog queries (published only) ─── */
 
@@ -45,19 +56,46 @@ export async function fetchPublishedPosts(
   return { data: data as BlogPostWithCategory[], total: count ?? 0 }
 }
 
-/** Fetch a single published post by slug. */
-export async function fetchPostBySlug(slug: string): Promise<BlogPostWithCategory | null> {
+/**
+ * Fetch a single published post by the slug that corresponds to the given
+ * locale. For `es` it looks up `slug`, for `en` → `slug_en`, `ru` → `slug_ru`.
+ *
+ * Fallback: if the post isn't found on the locale column, try the canonical
+ * `slug` column too. This handles the case where someone lands on
+ * `/en/blog/<es_slug>` (old URL) — the page component uses the return value
+ * to decide whether to redirect to the correct localised URL.
+ */
+export async function fetchPostBySlug(
+  slug: string,
+  locale: Locale = 'es',
+): Promise<BlogPostWithCategory | null> {
   const supabase = getAdminClient()
-  const { data, error } = await supabase
+  const col = slugColumn(locale)
+
+  const { data } = await supabase
     .from(TABLES.blogPosts)
     .select(`*, category:${TABLES.blogCategories}(*)`)
-    .eq('slug', slug)
+    .eq(col, slug)
     .is('deleted_at', null)
     .eq('status', 'published')
     .maybeSingle()
 
-  if (error || !data) return null
-  return data as BlogPostWithCategory
+  if (data) return data as BlogPostWithCategory
+
+  // Fallback: try canonical ES slug, so old-style URLs still resolve (and
+  // the page can issue a 301 to the localised slug).
+  if (col !== 'slug') {
+    const { data: fallback } = await supabase
+      .from(TABLES.blogPosts)
+      .select(`*, category:${TABLES.blogCategories}(*)`)
+      .eq('slug', slug)
+      .is('deleted_at', null)
+      .eq('status', 'published')
+      .maybeSingle()
+    if (fallback) return fallback as BlogPostWithCategory
+  }
+
+  return null
 }
 
 /** Fetch all active categories. */

@@ -53,7 +53,7 @@ const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY)
 
 /* ─── Helpers mirrored from src/lib ─── */
 
-/** Mirrors src/lib/slug.ts */
+/** Mirrors src/lib/slug.ts — generateSlug */
 function generateSlug(title) {
   return title
     .normalize('NFD')
@@ -63,6 +63,26 @@ function generateSlug(title) {
     .trim()
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
+}
+
+/** Mirrors src/lib/slug.ts — Cyrillic → Latin transliteration + slug */
+const RU_MAP = {
+  а: 'a',  б: 'b',  в: 'v',  г: 'g',  д: 'd',  е: 'e',  ё: 'yo',
+  ж: 'zh', з: 'z',  и: 'i',  й: 'y',  к: 'k',  л: 'l',  м: 'm',
+  н: 'n',  о: 'o',  п: 'p',  р: 'r',  с: 's',  т: 't',  у: 'u',
+  ф: 'f',  х: 'kh', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'shch',
+  ъ: '',   ы: 'y',  ь: '',   э: 'e',  ю: 'yu', я: 'ya',
+}
+function transliterateCyrillic(input) {
+  let out = ''
+  for (const ch of input) {
+    const lower = ch.toLowerCase()
+    out += lower in RU_MAP ? RU_MAP[lower] : ch
+  }
+  return out
+}
+function generateSlugRu(title) {
+  return generateSlug(transliterateCyrillic(title))
 }
 
 /** Mirrors src/lib/reading-time.ts */
@@ -203,15 +223,26 @@ async function main() {
   const sanitizedRu = sanitizeBlogHtml(draft.content_ru)
   const readingMinutes = calcReadingMinutes(sanitizedEs)
 
-  /* ─── Unique slug ─── */
-  const baseSlug = generateSlug(draft.title_es)
-  const { data: existing } = await supabase
-    .from(POSTS_TABLE)
-    .select('id')
-    .eq('slug', baseSlug)
-    .is('deleted_at', null)
-    .maybeSingle()
-  const finalSlug = existing ? `${baseSlug}-${Date.now()}` : baseSlug
+  /* ─── Generate slugs per locale and ensure uniqueness ─── */
+  async function uniqueSlug(column, base) {
+    if (!base) return ''
+    let candidate = base
+    let n = 1
+    while (true) {
+      const { data: existing } = await supabase
+        .from(POSTS_TABLE)
+        .select('id')
+        .eq(column, candidate)
+        .is('deleted_at', null)
+        .maybeSingle()
+      if (!existing) return candidate
+      candidate = `${base}-${n++}`
+    }
+  }
+
+  const finalSlug = await uniqueSlug('slug', generateSlug(draft.title_es))
+  const finalSlugEn = await uniqueSlug('slug_en', generateSlug(draft.title_en))
+  const finalSlugRu = await uniqueSlug('slug_ru', generateSlugRu(draft.title_ru))
 
   /* ─── Insert ─── */
   const now = new Date().toISOString()
@@ -219,6 +250,8 @@ async function main() {
     .from(POSTS_TABLE)
     .insert({
       slug: finalSlug,
+      slug_en: finalSlugEn,
+      slug_ru: finalSlugRu,
       category_id: category.id,
       title_es: draft.title_es.trim(),
       title_en: draft.title_en.trim(),
@@ -247,8 +280,8 @@ async function main() {
   console.log(`\n✅ Published: ${post.slug}`)
   console.log(`   reading_minutes: ${readingMinutes}`)
   console.log(`\n🇪🇸 ${SITE_URL}/es/blog/${post.slug}`)
-  console.log(`🇬🇧 ${SITE_URL}/en/blog/${post.slug}`)
-  console.log(`🇷🇺 ${SITE_URL}/ru/blog/${post.slug}`)
+  console.log(`🇬🇧 ${SITE_URL}/en/blog/${post.slug_en || post.slug}`)
+  console.log(`🇷🇺 ${SITE_URL}/ru/blog/${post.slug_ru || post.slug}`)
 }
 
 main().catch((err) => {

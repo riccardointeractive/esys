@@ -1,7 +1,7 @@
 import type { Locale } from '@/config/i18n'
 import { localizedRoutes } from '@/config/i18n/routes'
 import { siteConfig } from '@/config/site'
-import { absoluteUrl } from '@/lib/seo/alternates'
+import { absoluteUrl, slugForLocale } from '@/lib/seo/alternates'
 import type { BlogPostWithCategory } from '@/types/blog'
 import type { PropertyWithRelations } from '@/types/property'
 
@@ -60,7 +60,7 @@ export function articleJsonLd(
   locale: Locale,
 ): JsonLd {
   const routes = localizedRoutes(locale)
-  const canonical = absoluteUrl(routes.blogPost(post.slug))
+  const canonical = absoluteUrl(routes.blogPost(slugForLocale(post, locale)))
 
   const headline = pickLocalized(post as unknown as Record<string, unknown>, 'title', locale)
   const description = pickLocalized(post as unknown as Record<string, unknown>, 'excerpt', locale)

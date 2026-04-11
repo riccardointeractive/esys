@@ -3,6 +3,7 @@ import Link from 'next/link'
 import type { BlogPostWithCategory } from '@/types/blog'
 import type { Locale } from '@/config/i18n'
 import { localizedRoutes } from '@/config/i18n/routes'
+import { slugForLocale } from '@/lib/seo/alternates'
 
 interface BlogPostCardProps {
   post: BlogPostWithCategory
@@ -28,6 +29,7 @@ function formatDate(value: string | null, locale: Locale): string | null {
 
 export function BlogPostCard({ post, locale, readingTimeTemplate }: BlogPostCardProps) {
   const routes = localizedRoutes(locale)
+  const postSlug = slugForLocale(post, locale)
   const title = pickLocalized(post, 'title', locale)
   const excerpt = pickLocalized(post, 'excerpt', locale)
   const categoryLabel = post.category
@@ -38,7 +40,7 @@ export function BlogPostCard({ post, locale, readingTimeTemplate }: BlogPostCard
 
   return (
     <article className="vip-blog-card">
-      <Link href={routes.blogPost(post.slug)} className="vip-blog-card__media">
+      <Link href={routes.blogPost(postSlug)} className="vip-blog-card__media">
         {post.cover_thumb_url ? (
           <Image
             src={post.cover_thumb_url}
@@ -62,7 +64,7 @@ export function BlogPostCard({ post, locale, readingTimeTemplate }: BlogPostCard
           </Link>
         )}
         <h3 className="vip-blog-card__title">
-          <Link href={routes.blogPost(post.slug)}>{title}</Link>
+          <Link href={routes.blogPost(postSlug)}>{title}</Link>
         </h3>
         {excerpt && (
           <p className="ds-text-sm ds-text-secondary ds-line-clamp-2">{excerpt}</p>

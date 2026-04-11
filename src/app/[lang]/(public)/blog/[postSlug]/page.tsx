@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getDictionary } from '@/config/i18n'
@@ -8,7 +8,7 @@ import { localizedRoutes } from '@/config/i18n/routes'
 import { BlogPostContent } from '@/components/blog/BlogPostContent'
 import { BlogPostGrid } from '@/components/blog/BlogPostGrid'
 import { fetchPostBySlug, fetchRelatedPosts } from '@/lib/blog'
-import { hreflang, absoluteUrl } from '@/lib/seo/alternates'
+import { hreflang, absoluteUrl, slugForLocale } from '@/lib/seo/alternates'
 import { articleJsonLd, breadcrumbListJsonLd } from '@/lib/seo/jsonld'
 import { JsonLd } from '@/components/seo/JsonLd'
 
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: BlogDetailProps): Promise<Met
   const { lang, postSlug } = await params
   const locale = lang as Locale
   const dict = getDictionary(locale)
-  const post = await fetchPostBySlug(postSlug)
+  const post = await fetchPostBySlug(postSlug, locale)
   if (!post) {
     return {
       title: dict.blog.notFound,
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: BlogDetailProps): Promise<Met
   return {
     title: `${title} — ${dict.blog.title}`,
     description,
-    alternates: hreflang.blogPost(locale, postSlug),
+    alternates: hreflang.blogPost(locale, post),
     openGraph: post.cover_image_url ? { images: [{ url: post.cover_image_url }] } : undefined,
   }
 }
@@ -51,8 +51,16 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
   const dict = getDictionary(locale)
   const routes = localizedRoutes(locale)
 
-  const post = await fetchPostBySlug(postSlug)
+  const post = await fetchPostBySlug(postSlug, locale)
   if (!post) notFound()
+
+  // 301 redirect from a legacy/ES slug to the localised slug when the user
+  // lands on /en/blog/<es-slug> or /ru/blog/<es-slug> and an actual EN/RU
+  // slug exists. Keeps old links + the Google index unified on the new URL.
+  const expectedSlug = slugForLocale(post, locale)
+  if (expectedSlug && expectedSlug !== postSlug) {
+    permanentRedirect(routes.blogPost(expectedSlug))
+  }
 
   const title = pickLocalized(post as unknown as Record<string, unknown>, 'title', locale)
   const excerpt = pickLocalized(post as unknown as Record<string, unknown>, 'excerpt', locale)
@@ -85,7 +93,7 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
           },
         ]
       : []),
-    { name: title, url: absoluteUrl(routes.blogPost(post.slug)) },
+    { name: title, url: absoluteUrl(routes.blogPost(slugForLocale(post, locale))) },
   ])
   const article = articleJsonLd(post, locale)
 
