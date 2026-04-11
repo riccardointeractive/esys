@@ -4,11 +4,17 @@
       "allowed": {
         "origins": [
           "http://localhost:3000",
+          "http://localhost:4005",
+          "http://localhost:4020",
+          "http://esys.test",
           "https://esysvip.vercel.app",
-          "https://esysvip2.vercel.app"
+          "https://esysvip2.vercel.app",
+          "https://esysvip.com",
+          "https://www.esysvip.com"
         ],
-        "methods": ["GET", "PUT", "HEAD"],
-        "headers": ["Content-Type", "Content-Length"]
+        "methods": ["GET", "PUT", "HEAD", "POST"],
+        "headers": ["Content-Type", "Content-Length", "Authorization"],
+        "exposeHeaders": ["ETag"]
       },
       "maxAgeSeconds": 3600
     }
