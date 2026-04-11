@@ -6,7 +6,8 @@ import { Save, ArrowLeft, Loader2 } from 'lucide-react'
 import { CustomSelect } from '@digiko-npm/cms/ui'
 import { LocalePills } from '@/components/admin/LocalePills'
 import { BlogContentEditor } from '@/components/admin/BlogContentEditor'
-import { UnsplashPicker, EMPTY_UNSPLASH_SELECTION, type UnsplashSelection } from '@/components/admin/UnsplashPicker'
+import { BlogCoverPicker } from '@/components/admin/BlogCoverPicker'
+import type { UnsplashSelection } from '@/components/admin/UnsplashPicker'
 import { ADMIN_ROUTES, ADMIN_API_ROUTES } from '@/config/routes'
 import type { BlogCategory, BlogPostFormData, BlogPostWithCategory, BlogStatus } from '@/types/blog'
 
@@ -151,7 +152,6 @@ export function BlogPostForm({ post, categories }: BlogPostFormProps) {
     cover_photo_page_url: form.cover_photo_page_url,
     cover_unsplash_id: form.cover_unsplash_id,
   }
-  void EMPTY_UNSPLASH_SELECTION
 
   return (
     <form onSubmit={handleSubmit} className="vip-blog-form" autoComplete="off">
@@ -269,7 +269,7 @@ export function BlogPostForm({ post, categories }: BlogPostFormProps) {
               <h2 className="ds-card__title">Imagen de portada</h2>
             </div>
             <div className="ds-card__body">
-              <UnsplashPicker value={currentSelection} onChange={updateCover} />
+              <BlogCoverPicker value={currentSelection} onChange={updateCover} />
             </div>
           </div>
         </div>

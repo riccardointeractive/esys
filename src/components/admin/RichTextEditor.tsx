@@ -4,7 +4,7 @@ import { useEditor, EditorContent, type Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Bold,
   Italic,
@@ -17,11 +17,14 @@ import {
   Code,
   Link2,
   Image as ImageIcon,
+  ImageUp,
   Undo2,
   Redo2,
   FileCode2,
+  Loader2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { uploadBlogImage } from '@/lib/blog-upload'
 
 interface RichTextEditorProps {
   value: string
@@ -60,6 +63,31 @@ function ToolbarButton({
 }
 
 function Toolbar({ editor }: { editor: Editor }) {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = '' // reset so same file can be picked again
+    if (!file) return
+    setUploading(true)
+    try {
+      const result = await uploadBlogImage(file)
+      editor
+        .chain()
+        .focus()
+        .setImage({
+          src: result.url,
+          alt: result.filename,
+        })
+        .run()
+    } catch (err) {
+      window.alert(err instanceof Error ? err.message : 'Error al subir imagen')
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const promptLink = () => {
     const previous = editor.getAttributes('link').href as string | undefined
     const url = window.prompt('URL', previous ?? 'https://')
@@ -154,9 +182,23 @@ function Toolbar({ editor }: { editor: Editor }) {
       <ToolbarButton title="Enlace" onClick={promptLink} isActive={editor.isActive('link')}>
         <Link2 size={16} />
       </ToolbarButton>
-      <ToolbarButton title="Imagen" onClick={promptImage}>
+      <ToolbarButton title="Imagen desde URL" onClick={promptImage}>
         <ImageIcon size={16} />
       </ToolbarButton>
+      <ToolbarButton
+        title="Subir imagen"
+        onClick={() => fileInputRef.current?.click()}
+        disabled={uploading}
+      >
+        {uploading ? <Loader2 size={16} className="ds-animate-spin" /> : <ImageUp size={16} />}
+      </ToolbarButton>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/avif"
+        onChange={onFileChange}
+        className="vip-rte__file-input"
+      />
       <ToolbarButton title="Pegar HTML" onClick={pasteHtml}>
         <FileCode2 size={16} />
       </ToolbarButton>

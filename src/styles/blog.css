@@ -587,3 +587,155 @@ a.vip-blog-eyebrow:hover {
 .vip-blog-table__actions-col {
   width: 120px;
 }
+
+/* ==========================================================================
+   Blog Cover Picker — tabs + upload dropzone + library tab
+   ========================================================================== */
+
+.vip-blog-cover-picker {
+  display: block;
+}
+
+/* --- Tabs --- */
+.vip-blog-tabs {
+  display: flex;
+  gap: var(--ds-space-1);
+  padding: var(--ds-space-1);
+  background: var(--ds-color-surface-muted);
+  border-radius: var(--ds-radius-md);
+  margin-bottom: var(--ds-space-4);
+}
+
+/* Tab — active state (selected) */
+.vip-blog-tab--active {
+  background: var(--ds-color-surface-active);
+  color: var(--ds-color-text-primary);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+/* Tab — base */
+.vip-blog-tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ds-space-2) var(--ds-space-3);
+  background: transparent;
+  color: var(--ds-color-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: var(--ds-weight-medium);
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  cursor: pointer;
+  transition:
+    background var(--ds-duration-fast) var(--ds-ease-default),
+    color var(--ds-duration-fast) var(--ds-ease-default);
+}
+
+/* Tab — hover (transient) */
+.vip-blog-tab:hover {
+  color: var(--ds-color-text-primary);
+}
+
+.vip-blog-tabs__panel {
+  display: block;
+}
+
+/* --- Upload dropzone --- */
+.vip-blog-upload {
+  display: block;
+}
+.vip-blog-upload__dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 220px;
+  padding: var(--ds-space-6);
+  background: var(--ds-color-surface-muted);
+  border: 2px dashed var(--ds-color-border);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-color-text-tertiary);
+  cursor: pointer;
+  transition:
+    border-color var(--ds-duration-fast) var(--ds-ease-default),
+    background var(--ds-duration-fast) var(--ds-ease-default);
+}
+.vip-blog-upload__dropzone:hover:not(:disabled) {
+  border-color: var(--ds-color-border-strong);
+  background: var(--ds-color-surface-hover);
+}
+.vip-blog-upload__dropzone:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --- Library tab --- */
+.vip-blog-library-tab {
+  display: block;
+  padding: var(--ds-space-4) 0;
+}
+
+/* --- File input (hidden but accessible) --- */
+.vip-rte__file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Blog media picker modal --- */
+.vip-blog-picker-modal {
+  max-height: 85dvh;
+}
+.vip-blog-picker-modal__state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ds-space-12);
+  text-align: center;
+}
+.vip-blog-picker-modal__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ds-space-3);
+}
+@media (min-width: 640px) {
+  .vip-blog-picker-modal__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .vip-blog-picker-modal__grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+.vip-blog-picker-modal__thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-color-surface-muted);
+  padding: 0;
+  cursor: pointer;
+  transition:
+    border-color var(--ds-duration-fast) var(--ds-ease-default),
+    transform var(--ds-duration-fast) var(--ds-ease-default);
+}
+.vip-blog-picker-modal__thumb:hover {
+  border-color: var(--ds-color-border-strong);
+  transform: scale(1.02);
+}
+.vip-blog-picker-modal__thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
