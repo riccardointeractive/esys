@@ -77,8 +77,8 @@ export default async function BlogCategoryPage({ params }: CategoryPageProps) {
       <JsonLd data={breadcrumbs} />
       <header className="vip-blog-detail__header">
         <span className="ds-overline">{dict.blog.title}</span>
-        <h1 className="ds-hero-title">{label}</h1>
-        {description && <p className="ds-text-lg ds-text-secondary">{description}</p>}
+        <h1 className="vip-blog-hero-title">{label}</h1>
+        {description && <p className="vip-blog-lede">{description}</p>}
       </header>
 
       <div className="vip-blog-layout">

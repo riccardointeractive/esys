@@ -45,8 +45,8 @@ export default async function BlogIndexPage({ params, searchParams }: BlogIndexP
     <div className="ds-container vip-blog-section">
       <header className="vip-blog-detail__header">
         <span className="ds-overline">{dict.blog.journalEyebrow}</span>
-        <h1 className="ds-hero-title">{dict.blog.title}</h1>
-        <p className="ds-text-lg ds-text-secondary">{dict.blog.subtitle}</p>
+        <h1 className="vip-blog-hero-title">{dict.blog.title}</h1>
+        <p className="vip-blog-lede">{dict.blog.subtitle}</p>
       </header>
 
       <div className="vip-blog-layout">

@@ -1,19 +1,52 @@
 /* ==========================================================================
    Blog — Public
-   Documented in DS_CUSTOM.md (approved: 2026-04-10, redesigned 2026-04-11,
-   typography unified to DS 2026-04-11).
+   Documented in DS_CUSTOM.md (approved: 2026-04-10, redesigned 2026-04-11).
 
-   Typography policy: ZERO custom font-size / font-weight / line-height /
-   letter-spacing / text-transform / font-family in this file. Every text
-   element uses a DS class (ds-hero-title, ds-section-title, ds-overline,
-   ds-text-*, ds-prose) or inherits from DS base. Only layout, grid,
-   spacing, background, and border remain project-specific.
+   Editorial long-form typography: fluid clamp-based hero, prominent lede,
+   17px reading body with h2/h3/h4 scale designed for magazine-style long
+   reads. All values use DS tokens; the scale itself is project-specific
+   because the DS does not (yet) ship an editorial long-form preset —
+   ds-hero-title is too large, ds-prose is too compact, and ds-prose-block
+   uses 36px h2 which flattens the reading hierarchy.
    ========================================================================== */
+
+/* --- Fluid typographic scale (clamp-based) --- */
+:root {
+  /* Hero title: 40px mobile → 72px desktop */
+  --vip-blog-title-xl: clamp(2.5rem, 4vw + 1.5rem, 4.5rem);
+  /* Section title: 24px → 32px */
+  --vip-blog-title-lg: clamp(1.5rem, 1.5vw + 1rem, 2rem);
+  /* Lede / lead paragraph: 18px → 22px */
+  --vip-blog-lede-size: clamp(1.125rem, 0.5vw + 1rem, 1.375rem);
+  /* Reading column max width */
+  --vip-blog-read-width: 720px;
+}
 
 /* --- Generous page section respiro --- */
 .vip-blog-section {
   padding-top: clamp(3rem, 4vw + 2rem, 5rem);
   padding-bottom: clamp(2rem, 3vw + 1rem, 4rem);
+}
+
+/* --- Hero title (editorial scale, between DS section and hero) --- */
+.vip-blog-hero-title {
+  font-family: var(--ds-font-display);
+  font-size: var(--vip-blog-title-xl);
+  font-weight: var(--ds-font-display-weight);
+  line-height: var(--ds-leading-tight);
+  letter-spacing: var(--ds-tracking-tight);
+  color: var(--ds-color-text);
+  margin: 0;
+  max-width: var(--vip-blog-read-width);
+}
+
+/* --- Lede (lead paragraph under the title) --- */
+.vip-blog-lede {
+  font-size: var(--vip-blog-lede-size);
+  line-height: var(--ds-leading-normal);
+  color: var(--ds-color-text-secondary);
+  margin: var(--ds-space-6) 0 0;
+  max-width: 600px;
 }
 
 .vip-blog-layout {
@@ -222,15 +255,97 @@
 }
 
 /* --- Sanitized HTML content (TipTap output) ---
-   Wrapper only. Typography comes from DS base (h2/h3/h4/blockquote/pre/code)
-   and ds-prose utility applied in JSX. */
+   Editorial long-form scale. 17px body, 1.75 line-height, 24px h2, 20px h3.
+   All values use DS tokens; the scale itself is project-specific because no
+   DS prose utility targets long-form reading (ds-prose is compact, ds-prose-
+   block uses 36px h2 which overpowers the reading rhythm). */
 .vip-blog-content {
-  max-width: 760px;
+  max-width: var(--vip-blog-read-width);
+  color: var(--ds-color-text);
+  font-size: 1.0625rem;
+  line-height: var(--ds-leading-loose);
+}
+.vip-blog-content > * + * {
+  margin-top: var(--ds-space-4);
+}
+.vip-blog-content h2 {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-text-2xl);
+  font-weight: var(--ds-font-display-weight);
+  line-height: var(--ds-leading-tight);
+  letter-spacing: var(--ds-tracking-tight);
+  color: var(--ds-color-text);
+  margin-top: var(--ds-space-8);
+  margin-bottom: 0;
+}
+.vip-blog-content h3 {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-text-xl);
+  font-weight: var(--ds-font-display-weight);
+  line-height: var(--ds-leading-snug);
+  letter-spacing: var(--ds-tracking-tight);
+  color: var(--ds-color-text);
+  margin-top: var(--ds-space-6);
+  margin-bottom: 0;
+}
+.vip-blog-content h4 {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-text-lg);
+  font-weight: var(--ds-font-display-weight);
+  color: var(--ds-color-text);
+  margin-top: var(--ds-space-5);
+  margin-bottom: 0;
+}
+.vip-blog-content a {
+  color: var(--ds-color-interactive);
+  text-decoration: underline;
+}
+.vip-blog-content a:hover {
+  text-decoration: none;
+}
+.vip-blog-content strong {
+  color: var(--ds-color-text);
+  font-weight: var(--ds-weight-semibold);
+}
+.vip-blog-content ul,
+.vip-blog-content ol {
+  padding-inline-start: 1.5rem;
+}
+.vip-blog-content ul { list-style-type: disc; }
+.vip-blog-content ol { list-style-type: decimal; }
+.vip-blog-content li + li {
+  margin-top: var(--ds-space-2);
+}
+.vip-blog-content blockquote {
+  border-inline-start: 3px solid var(--ds-color-border-strong);
+  padding-inline-start: var(--ds-space-4);
+  color: var(--ds-color-text-secondary);
+  font-style: italic;
 }
 .vip-blog-content img {
   max-width: 100%;
   height: auto;
   border-radius: var(--ds-radius-md);
+}
+.vip-blog-content hr {
+  border: 0;
+  border-block-start: 1px solid var(--ds-color-border);
+  margin-block: var(--ds-space-6);
+}
+.vip-blog-content pre {
+  background: var(--ds-color-surface-muted);
+  padding: var(--ds-space-4);
+  border-radius: var(--ds-radius-md);
+  overflow-x: auto;
+}
+.vip-blog-content code {
+  background: var(--ds-color-surface-muted);
+  padding: 0.125em 0.375em;
+  border-radius: var(--ds-radius-sm);
+}
+.vip-blog-content pre code {
+  background: transparent;
+  padding: 0;
 }
 
 /* ==========================================================================

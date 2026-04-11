@@ -104,9 +104,9 @@ export default async function BlogPostPage({ params }: BlogDetailProps) {
           </Link>
         ) : null}
 
-        <h1 className="ds-hero-title">{title}</h1>
+        <h1 className="vip-blog-hero-title">{title}</h1>
 
-        {excerpt && <p className="ds-text-lg ds-text-secondary">{excerpt}</p>}
+        {excerpt && <p className="vip-blog-lede">{excerpt}</p>}
 
         <div className="vip-blog-meta ds-overline">
           {publishedDate && <span>{publishedDate}</span>}

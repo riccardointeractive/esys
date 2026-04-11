@@ -2,24 +2,37 @@
 
 Inventario delle customizzazioni CSS project-specific rispetto al Design System.
 
-**Ultimo aggiornamento:** 11 Apr 2026 (blog typography unified to DS)
+**Ultimo aggiornamento:** 11 Apr 2026 (editorial long-form typography restored for blog)
 **DS Version:** 0.9.36
-**File CSS custom:** `src/styles/components.css` (712 righe), `src/styles/blog.css` (~470 righe, ~320 di pure layout/grid/spacing), `src/app/globals.css` (23 righe)
+**File CSS custom:** `src/styles/components.css` (712 righe), `src/styles/blog.css` (~540 righe), `src/app/globals.css` (23 righe)
 
 ---
 
-## Blog (src/styles/blog.css — approvato 10 Apr 2026, typography unified 11 Apr 2026)
+## Blog (src/styles/blog.css — approvato 10 Apr 2026, editorial typography restored 11 Apr 2026)
 
 File separato per pattern di **layout, grid, spacing, surface, border** project-specific del modulo blog (public + admin).
 
-**Typography policy (11 Apr 2026):** ZERO custom font-size / font-weight / line-height / letter-spacing / text-transform / font-family in blog.css. Ogni elemento testuale usa classi DS (`ds-hero-title`, `ds-section-title`, `ds-overline`, `ds-text-*`, `ds-prose`) o eredita da DS base (h1-h6, p, blockquote, pre, code). Le classi BEM `.vip-blog-*` sono ora pure layout.
+**Typography policy (rev. 11 Apr 2026, after user feedback):**
 
-**Rimosse in questa passata:**
-- 7 variabili fluid `--vip-blog-title-xl/lg/card`, `--vip-blog-lede`, `--vip-blog-eyebrow-size/tracking`, `--vip-blog-read-width` (ora il reading width è hardcoded a 720/760/1080 come layout constraint, fuori scope typography)
-- Classi eliminate integralmente: `.vip-blog-eyebrow`, `.vip-blog-hero-title`, `.vip-blog-lede`, `.vip-blog-cta__eyebrow`, `.vip-blog-cta__title`, `.vip-blog-cta__text`, `.vip-blog-detail__related-title`, `.vip-blog-card__excerpt`
-- Regole `.vip-blog-content h2/h3/h4/a/ul/ol/blockquote/pre/code/hr` — sostituite da `ds-prose` + DS base
-- Regole `.vip-rte__content h2/h3` — tolte, ereditano da DS base
-- Typography da `.vip-blog-card__title`, `.vip-blog-meta`, `.vip-blog-detail__credit`, `.vip-blog-tab`
+Il precedente refactor "unify typography to DS classful patterns" ha cancellato `.vip-blog-hero-title`, `.vip-blog-lede` e tutte le regole `.vip-blog-content h2/h3/h4` — sostituendole con `ds-hero-title` (troppo grande: scala fino a 7xl/72px ed è la classe da homepage-hero), `ds-text-lg` (troppo piccolo per lede editoriale), e `ds-prose` (versione leggera, zero margin per headings). Il risultato: titoli oversized, lede collassato al body, h2 attaccati ai paragrafi precedenti.
+
+Queste 3 classi custom sono state ripristinate perché il DS **non offre** una scala editoriale long-form equivalente:
+- `ds-section-title` è 3xl→4xl — troppo piccolo per un article hero fluid 40-72px
+- `ds-prose-block` usa 36px h2 — appiattisce la gerarchia di lettura (il target è 24px)
+- Nessuna utility DS copre un lede 18-22px clamp con max-width dedicato
+
+Tutti i valori nelle classi ripristinate usano **solo token DS** (`--ds-font-display`, `--ds-text-*`, `--ds-space-*`, `--ds-color-*`, `--ds-leading-*`, `--ds-tracking-*`) — zero hardcoded. L'unico valore hardcoded residuo è `1.0625rem` (17px) per il body, che è fuori dalla scala DS perché il DS base p è 16px e non c'è un `--ds-text-md-plus`.
+
+Classi editorial ripristinate:
+- `.vip-blog-hero-title` — h1 fluid 40-72px (su blog index, category, post detail)
+- `.vip-blog-lede` — lead paragraph 18-22px fluid con max-width 600px
+- `.vip-blog-content` — long-form wrapper: 17px body 1.75 line-height, h2 24px, h3 20px, h4 18px, spacing `* + *` = space-4, ul/ol/blockquote/pre/code/hr coerenti
+
+Variabili CSS ripristinate in `:root`:
+- `--vip-blog-title-xl: clamp(2.5rem, 4vw + 1.5rem, 4.5rem)`
+- `--vip-blog-title-lg: clamp(1.5rem, 1.5vw + 1rem, 2rem)`
+- `--vip-blog-lede-size: clamp(1.125rem, 0.5vw + 1rem, 1.375rem)`
+- `--vip-blog-read-width: 720px`
 
 **JUSTIFIED residui:**
 - `.vip-blog-sidebar__link--active font-weight: semibold` — stato BEM coerente, no custom size
