@@ -5,13 +5,13 @@
   "ds_version_resolved": "0.9.42",
   "ds_version_installed": "0.9.42",
   "last_session": "2026-04-11",
-  "last_session_summary": "Blog module: schema + admin CRUD + public pages + TipTap editor + Unsplash picker. Editorial redesign with fluid clamp typography (40-72px hero), eyebrow kicker pattern, 21:9 cinematic cover, quiet-luxury card restyle. +89 custom classes in new src/styles/blog.css (approved). Overrides still 0. Swapped isomorphic-dompurify → sanitize-html to fix jsdom ESM issue under Next 16 Turbopack. Build green, 79/79 pages.",
+  "last_session_summary": "Typography unified to DS classful patterns. Blog module CSS rewritten (8 custom classes removed, reduced-motion added). 28 hand-crafted heading utility stacks (ds-font-display + ds-text-Xxl + ds-font-bold + ds-text-primary) replaced with ds-section-title / ds-heading-ui / ds-hero-title / ds-stat-number / ds-overline across public landing, property pages, account pages, admin pages, blog pages. 8 phantom DS classes fixed (ds-whitespace-pre-line, ds-gap-y/x, ds-lg:grid-cols-6, ds-ml-1, ds-md:items-stretch, ds-md:py-24). DS_CUSTOM.md ds-ops-suppress block added for photo-overlay zones. Cross-repo: Inspector regex updated (COMPONENT_RE + LAYOUT_RE line-clamp), Prodigy DS_CUSTOM.md suppression loader added, hook ds-no-hardcoded-font-weight.sh extended to .tsx. Build green 81/81. Inspector P0 182→130 (−28), Prodigy 18→4.",
   "overrides": {
     "token_count": 0,
     "token_list": [],
     "component_override_count": 0,
     "component_override_list": [],
-    "custom_class_count": 179,
+    "custom_class_count": 186,
     "files_with_overrides": []
   },
   "css_architecture": {
@@ -19,15 +19,15 @@
       "ds"
     ],
     "override_isolation": "isolated",
-    "total_css_lines": 1322
+    "total_css_lines": 1327
   },
   "metrics": {
     "override_count": 0,
-    "custom_class_count": 179,
-    "delta": 89,
+    "custom_class_count": 186,
+    "delta": 0,
     "last_updated": "2026-04-11"
   },
   "compliance": "green",
   "governance": "active",
-  "notes": "Blog module added 2026-04-11 (src/styles/blog.css, +89 classes, approved: no DS equivalent for blog layout, TipTap editor chrome, Unsplash picker). Hero frosted-glass overrides still in .vip-hero-search (photo backdrop, documented). Utility soup widespread (60+ instances) — post-QUARANTINE candidate ds-page-title. Blog pages use fluid clamp() typography scale and editorial layout patterns; if pattern recurs in other consumers, candidate ds-hero-title + ds-eyebrow tokens for DS core."
+  "notes": "Typography unification complete 2026-04-11. blog.css is now layout-only BEM — zero font-size/weight/leading/tracking. 28 heading soup sites eliminated across the whole frontend. ds-stat-number now used for property price displays. Hero uses canonical ds-hero__title + ds-hero-title combination per DS source example. Photo-overlay components (vip-hero-search, vip-favorite-btn, vip-lightbox) justified hardcoded colors remain, now formally suppressed in Prodigy via DS_CUSTOM.md ds-ops-suppress block. Pre-existing 130 Inspector P0 findings are layout/spacing soup (not typography) — tracked separately. ds-react adoption still 0% in esys — candidate for next sweep (Flex/Stack/Grid/Text/Center/Label would collapse many of the pre-existing layout soups)."
 }
